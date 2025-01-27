@@ -111,7 +111,7 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
     worms += 5
     state_data['worms'] = worms
     await state.set_data(state_data)
-
+    await message.reply(text="Червей: " + str(worms))
     kb = [
         [KeyboardButton(text="Пойти в домик Тигра")],
         [KeyboardButton(text="Копать червей")],
@@ -124,7 +124,7 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
 async def go_to_tiger_home(message: Message, state: FSMContext):
     state_data = await state.get_data()
     has_fishing_rods = state_data.get('fishing_rods')
-    has_worms = state_data.get('worms')
+    worms = int(state_data.get('worms', 0))
     if not has_fishing_rods:
         await message.answer(
             "Эх, без удочек тяжело ловить... Вот бы где-ниубдь добыть рыболовный инструмент...",
@@ -136,7 +136,7 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
         ]
         keyboard = ReplyKeyboardMarkup(keyboard=kb)
         await message.reply(text="Что будем делать?", reply_markup=keyboard)
-    elif not has_worms:
+    elif worms <= 0:
         await message.answer(
             "Что-то подсказывает Тигру, что без червей рыба сегодня ловиться не будет... Вот бы где-ниубдь добыть червей...",
             reply_markup=ReplyKeyboardRemove(),
@@ -152,10 +152,64 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
             "Начинаем рыбалку",
             reply_markup=ReplyKeyboardRemove(),
         )
-        photo_path = "./imgs/Fish_caught.png"
-        photo = FSInputFile(photo_path)
-        await bot.send_photo(chat_id=message.chat.id, photo=photo)
+        await message.reply(text="Червей осталось: " + str(worms))
+        kb = [
+            [KeyboardButton(text="Ловить в луже")],
+            [KeyboardButton(text="Ловить в речке")],
+            [KeyboardButton(text="Ловить в море")],
+        ]
+        keyboard = ReplyKeyboardMarkup(keyboard=kb)
+        await message.reply(text="Ловить можно где помельче - там легче поймать, но и рыба не такая интересная. Или же ловить там где поглубже - но и рыба там поинтересней", reply_markup=keyboard)
 
+@dp.message(F.text == 'Ловить в речке' or F.text == 'Ловить в море')
+async def go_to_tiger_home(message: Message, state: FSMContext):
+    await message.answer(
+        text="Пока нет - там сегодня непогода",
+    )
+
+
+@dp.message(F.text == 'Ловить в луже')
+async def go_to_tiger_home(message: Message, state: FSMContext):
+    await message.answer(
+        "Тут рыба полеге. Моно забрасывать удочку на расстояние от 1 до 5 метров",
+        reply_markup=ReplyKeyboardRemove(),
+    )
+
+    the_number = random.randint(1, 5)
+    await state.update_data(the_number=the_number)
+
+    kb = [
+        [KeyboardButton(text="Пойти в домик Тигра")],
+        [KeyboardButton(text="Пойти в домик к Ёжику")],
+        [KeyboardButton(text="Ловить")],
+    ]
+    keyboard = ReplyKeyboardMarkup(keyboard=kb)
+    await message.reply(text="На какое расстояние забрасывать удочку?", reply_markup=keyboard)
+
+@dp.message(F.text == '1' or F.text == '2' or F.text == '3' or F.text == '4' or F.text == '5')
+async def go_to_tiger_home(message: Message, state: FSMContext):
+    state_data = await state.get_data()
+    worms = state_data.get('worms', 0)
+    worms -= 1
+    state_data['worms'] = worms
+    await state.set_data(state_data)
+
+    try:
+        the_number = int(state_data.get('the_number'))
+        a_number = int(message.text)
+        if a_number == the_number:
+            await message.answer('Клюёт!')
+            photo_path = "./imgs/Fish_caught.png"
+            photo = FSInputFile(photo_path)
+            await bot.send_photo(chat_id=message.chat.id, photo=photo)
+        else:
+            # не отгадал. дадим подсказку
+            if the_number > a_number:
+                await message.answer('Ёжик подсказывает, что забрасывать удочку нужно дальше')
+            else:
+                await message.answer('Ёжик подсказывает, что забрасывать удочку нужно ближе')
+    except Exception as e:
+        await message.answer('Это не число')
 
     # await message.answer("Начнём игру. Я загадал число от 1 до 100 (1 тоже может быть, и 100 тоже может быть). Число целое. Попробуй угадать какое за наименьшее количество попыток.")
     # await state.set_state(Story.guesses)
