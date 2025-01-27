@@ -186,7 +186,11 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
     keyboard = ReplyKeyboardMarkup(keyboard=kb)
     await message.reply(text="На какое расстояние забрасывать удочку?", reply_markup=keyboard)
 
-@dp.message(F.text == '1' or F.text == '2' or F.text == '3' or F.text == '4' or F.text == '5')
+@dp.message(F.text == '1')
+@dp.message(F.text == '2')
+@dp.message(F.text == '3')
+@dp.message(F.text == '4')
+@dp.message(F.text == '5')
 async def go_to_tiger_home(message: Message, state: FSMContext):
     state_data = await state.get_data()
     worms = state_data.get('worms', 0)
