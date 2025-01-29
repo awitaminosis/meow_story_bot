@@ -10,6 +10,9 @@ from aiogram.fsm.state import State, StatesGroup
 import random
 from aiogram.types import FSInputFile
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+
 from aiogram import F
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -21,19 +24,19 @@ class Story(StatesGroup):
     guesses = State()
     finish = State()
 
+t_start_new_story = "Начать новое приключение"
 
 @dp.message(Command("start"))
 async def cmd_start(message: Message, state: FSMContext):
     await message.reply("Это небольшое приключение из жизни Тигра и Ёжика.")
     await message.reply("Остальные приключения можно увидеть https://awitaminosis.github.io/pi_meow_fir/")
 
-    kb = [
-        [KeyboardButton(text="Начать новое приключение")],
-    ]
-    keyboard = ReplyKeyboardMarkup(keyboard=kb)
+    builder = InlineKeyboardBuilder()
+    builder.button(text=t_start_new_story, callback_data=t_start_new_story)
+    keyboard = builder.as_markup()
     await message.reply(text="Начинаем?", reply_markup=keyboard)
 
-@dp.message(F.text == 'Начать новое приключение')
+@dp.callback_query(F.data == t_start_new_story)
 async def start_new_story(message: Message, state: FSMContext):
     await state.clear()
     await message.answer(
@@ -42,7 +45,7 @@ async def start_new_story(message: Message, state: FSMContext):
     )
     photo_path = "./imgs/Tiger.png"
     photo = FSInputFile(photo_path)
-    await bot.send_photo(chat_id=message.chat.id, photo=photo)
+    await bot.send_photo(chat_id=message.message.chat.id, photo=photo)
 
     kb = [
         [KeyboardButton(text="Пойти в домик Тигра")],
@@ -50,7 +53,7 @@ async def start_new_story(message: Message, state: FSMContext):
         [KeyboardButton(text="Пойти на рыбалку")],
     ]
     keyboard = ReplyKeyboardMarkup(keyboard=kb)
-    await message.reply(text="Куда пойдём?", reply_markup=keyboard)
+    await message.message.reply(text="Куда пойдём?", reply_markup=keyboard)
 
 @dp.message(F.text == 'Пойти в домик Тигра')
 async def go_to_tiger_home(message: Message, state: FSMContext):
