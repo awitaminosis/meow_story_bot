@@ -67,7 +67,7 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
     await message.reply(text="Что будем делать?", reply_markup=keyboard)
 
 @dp.message(F.text == 'Взять удочки')
-async def go_to_tiger_home(message: Message, state: FSMContext):
+async def take_the_rods(message: Message, state: FSMContext):
     await message.answer(
         "Вот они, любимые инструменты Тигра. Теперь и на рыбалку можно",
         reply_markup=ReplyKeyboardRemove(),
@@ -84,7 +84,7 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
     await message.reply(text="Что будем делать?", reply_markup=keyboard)
 
 @dp.message(F.text == 'Пойти в домик к Ёжику')
-async def go_to_tiger_home(message: Message, state: FSMContext):
+async def go_to_hedgehog_home(message: Message, state: FSMContext):
     await message.answer(
         "Ёжик встречает Тигра рядом с компостной ямой, в которой он разводит червей. Ёжик тепло приветствует Тигра и намекает, что было бы хорошо помочь ему в выкапывании вкусных червей",
         reply_markup=ReplyKeyboardRemove(),
@@ -101,7 +101,7 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
     await message.reply(text="Что будем делать?", reply_markup=keyboard)
 
 @dp.message(F.text == 'Копать червей')
-async def go_to_tiger_home(message: Message, state: FSMContext):
+async def dig_for_worms(message: Message, state: FSMContext):
     await message.answer(
         "Тигр помогает Ёжику копать червей. Ёжик облизывается и помогает",
         reply_markup=ReplyKeyboardRemove(),
@@ -121,7 +121,7 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
     await message.reply(text="Что будем делать?", reply_markup=keyboard)
 
 @dp.message(F.text == 'Пойти на рыбалку')
-async def go_to_tiger_home(message: Message, state: FSMContext):
+async def go_fishing(message: Message, state: FSMContext):
     state_data = await state.get_data()
     has_fishing_rods = state_data.get('fishing_rods')
     worms = int(state_data.get('worms', 0))
@@ -163,14 +163,14 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
 
 @dp.message(F.text == 'Ловить в речке')
 @dp.message(F.text == 'Ловить в море')
-async def go_to_tiger_home(message: Message, state: FSMContext):
+async def go_fishing_further(message: Message, state: FSMContext):
     await message.answer(
         text="Пока нет - там сегодня непогода",
     )
 
 
 @dp.message(F.text == 'Ловить в луже')
-async def go_to_tiger_home(message: Message, state: FSMContext):
+async def go_fish_in_pool(message: Message, state: FSMContext):
     await message.answer(
         "Тут рыба полеге. Моно забрасывать удочку на расстояние от 1 до 5 метров",
         reply_markup=ReplyKeyboardRemove(),
@@ -192,7 +192,7 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
 @dp.message(F.text == '3')
 @dp.message(F.text == '4')
 @dp.message(F.text == '5')
-async def go_to_tiger_home(message: Message, state: FSMContext):
+async def do_fishing_in_pool(message: Message, state: FSMContext):
     state_data = await state.get_data()
     worms = state_data.get('worms', 0)
     worms -= 1
