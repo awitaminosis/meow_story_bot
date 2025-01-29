@@ -161,7 +161,8 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
         keyboard = ReplyKeyboardMarkup(keyboard=kb)
         await message.reply(text="Ловить можно где помельче - там легче поймать, но и рыба не такая интересная. Или же ловить там где поглубже - но и рыба там поинтересней", reply_markup=keyboard)
 
-@dp.message(F.text == 'Ловить в речке' or F.text == 'Ловить в море')
+@dp.message(F.text == 'Ловить в речке')
+@dp.message(F.text == 'Ловить в море')
 async def go_to_tiger_home(message: Message, state: FSMContext):
     await message.answer(
         text="Пока нет - там сегодня непогода",
