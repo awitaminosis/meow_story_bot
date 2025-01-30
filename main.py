@@ -251,19 +251,15 @@ async def go_fish_in_pool(message: Message, state: FSMContext):
     # ]
     # keyboard = ReplyKeyboardMarkup(keyboard=kb)
 
-    builder = InlineKeyboardBuilder()
-    builder.row(InlineKeyboardButton(text=t_go_to_tiger_home, callback_data=t_go_to_tiger_home))
-    builder.row(InlineKeyboardButton(text=t_go_to_hedgehog_home, callback_data=t_go_to_hedgehog_home))
-    builder.row(InlineKeyboardButton(text="Ловить", callback_data="Ловить"))
-    keyboard = builder.as_markup()
-    await message.message.reply(text="На какое расстояние забрасывать удочку?", reply_markup=keyboard)
+    # builder = InlineKeyboardBuilder()
+    # builder.row(InlineKeyboardButton(text=t_go_to_tiger_home, callback_data=t_go_to_tiger_home))
+    # builder.row(InlineKeyboardButton(text=t_go_to_hedgehog_home, callback_data=t_go_to_hedgehog_home))
+    # builder.row(InlineKeyboardButton(text="Ловить", callback_data="Ловить"))
+    # keyboard = builder.as_markup()
+    await message.message.reply(text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
 
 
-@dp.message(F.text == '1')
-@dp.message(F.text == '2')
-@dp.message(F.text == '3')
-@dp.message(F.text == '4')
-@dp.message(F.text == '5')
+@dp.message(F.text.in_([str(x) for x in range(1, 6)]))
 async def do_fishing_in_pool(message: Message, state: FSMContext):
     state_data = await state.get_data()
     worms = state_data.get('worms', 0)
