@@ -16,7 +16,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 from helper.funcs import *
 
 version = '1.2.0'
-fishing_range = None
+fishing_range = 0
 pool_range = 5
 river_range = 20
 sea_range = 100
@@ -248,7 +248,7 @@ async def go_fish_in_sea(message: Message, state: FSMContext):
 @dp.message(F.text.in_([str(x) for x in range(1, 101)]))
 async def do_fishing_in_pool(message: Message, state: FSMContext):
     state_data = await state.get_data()
-    applicable_fishing_range = int(state_data.get('fishing_range'))
+    applicable_fishing_range = int(state_data.get('fishing_range', 0))
     requested_range = int(message.text)
     if requested_range > 0 and requested_range <= applicable_fishing_range:
         worms = state_data.get('worms', 0)
