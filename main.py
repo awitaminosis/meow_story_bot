@@ -13,10 +13,13 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemo
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from helper.funcs import *
+
 version = '1.1.0'
 fishing_range = None
 pool_range = 5
 river_range = 20
+sea_range = 100
 
 from aiogram import F
 
@@ -122,6 +125,7 @@ async def go_to_hedgehog_home(message: Message, state: FSMContext):
     await message.message.reply(text="Что будем делать?", reply_markup=keyboard)
 
 
+
 @dp.callback_query(F.data == t_dig_for_worms)
 async def dig_for_worms(message: Message, state: FSMContext):
     await message.message.reply(
@@ -130,7 +134,8 @@ async def dig_for_worms(message: Message, state: FSMContext):
     )
     state_data = await state.get_data()
     worms = state_data.get('worms', 0)
-    worms += 5
+    worms += await add_worms()
+    worms = await maybe_eat_worms(worms, message, bot)
     state_data['worms'] = worms
     await state.set_data(state_data)
     await message.message.reply(text="Червей: " + str(worms))
@@ -209,7 +214,7 @@ async def go_fish_in_pool(message: Message, state: FSMContext):
 
 
 @dp.callback_query(F.data == t_go_fish_in_river)
-async def go_fish_in_pool(message: Message, state: FSMContext):
+async def go_fish_in_river(message: Message, state: FSMContext):
     global fishing_range
     fishing_range = river_range
     await state.update_data(fishing_range=fishing_range)
@@ -231,29 +236,36 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
     if requested_range > 0 and requested_range <= applicable_fishing_range:
         worms = state_data.get('worms', 0)
         worms -= 1
+        worms = await maybe_eat_worms(worms, message, bot)
         state_data['worms'] = worms
-
         await state.set_data(state_data)
 
-        try:
-            the_number = int(state_data.get('the_number'))
-            a_number = int(message.text)
-            if a_number == the_number:
-                await message.reply('Клюёт!')
-                if applicable_fishing_range == pool_range:
-                    photo_path = "./imgs/Fish_caught.png"
-                if applicable_fishing_range == river_range:
-                    photo_path = "./imgs/Fish_caught_big.png"
-                photo = FSInputFile(photo_path)
-                await bot.send_photo(chat_id=message.chat.id, photo=photo)
-            else:
-                # не отгадал. дадим подсказку
-                if the_number > a_number:
-                    await message.reply('Ёжик подсказывает, что забрасывать удочку нужно дальше')
+        if worms > 0:
+            try:
+                the_number = int(state_data.get('the_number'))
+                a_number = int(message.text)
+                if a_number == the_number:
+                    await message.reply('Клюёт!')
+                    if applicable_fishing_range == pool_range:
+                        photo_path = "./imgs/Fish_caught.png"
+                    if applicable_fishing_range == river_range:
+                        photo_path = "./imgs/Fish_caught_big.png"
+                    photo = FSInputFile(photo_path)
+                    await bot.send_photo(chat_id=message.chat.id, photo=photo)
                 else:
-                    await message.reply('Ёжик подсказывает, что забрасывать удочку нужно ближе')
-        except Exception as e:
-            await message.reply('Это не число')
+                    # не отгадал. дадим подсказку
+                    if the_number > a_number:
+                        await message.reply('Ёжик подсказывает, что забрасывать удочку нужно дальше')
+                    else:
+                        await message.reply('Ёжик подсказывает, что забрасывать удочку нужно ближе')
+            except Exception as e:
+                await message.reply('Это не число')
+        else:
+            builder = InlineKeyboardBuilder()
+            builder.row(InlineKeyboardButton(text=t_go_to_tiger_home, callback_data=t_go_to_tiger_home))
+            builder.row(InlineKeyboardButton(text=t_go_to_hedgehog_home, callback_data=t_go_to_hedgehog_home))
+            keyboard = builder.as_markup()
+            await message.reply(text="Всё, Тигр, черви закончились. Пойдём отсюда", reply_markup=keyboard)
 
     # await message.answer("Начнём игру. Я загадал число от 1 до 100 (1 тоже может быть, и 100 тоже может быть). Число целое. Попробуй угадать какое за наименьшее количество попыток.")
     # await state.set_state(Story.guesses)
