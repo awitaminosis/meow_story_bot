@@ -15,7 +15,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from helper.funcs import *
 
-version = '1.1.0'
+version = '1.2.0'
 fishing_range = None
 pool_range = 5
 river_range = 20
@@ -190,11 +190,11 @@ async def go_fishing(message: Message, state: FSMContext):
         await message.message.reply(text="Ловить можно где помельче - там легче поймать, но и рыба не такая интересная. Или же ловить там где поглубже - но и рыба там поинтересней", reply_markup=keyboard)
 
 
-@dp.callback_query(F.data == t_go_fish_in_sea)
-async def go_fishing_further(message: Message, state: FSMContext):
-    await message.message.reply(
-        text="Пока нет - там сегодня непогода",
-    )
+# @dp.callback_query(F.data == t_go_fish_in_sea)
+# async def go_fishing_further(message: Message, state: FSMContext):
+#     await message.message.reply(
+#         text="Пока нет - там сегодня непогода",
+#     )
 
 
 @dp.callback_query(F.data == t_go_fish_in_pool)
@@ -228,6 +228,23 @@ async def go_fish_in_river(message: Message, state: FSMContext):
 
     await message.message.reply(text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
 
+
+@dp.callback_query(F.data == t_go_fish_in_sea)
+async def go_fish_in_sea(message: Message, state: FSMContext):
+    global fishing_range
+    fishing_range = sea_range
+    await state.update_data(fishing_range=fishing_range)
+    the_number = random.randint(1, fishing_range)
+    await state.update_data(the_number=the_number)
+
+    await message.message.reply(
+        "Тут такая рыба, что аж даже немножко страшно! Нет, не так! Страшно интересно! Вперёд, Ёжик, поймаем её! Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров",
+        reply_markup=ReplyKeyboardRemove(),
+    )
+
+    await message.message.reply(text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
+
+
 @dp.message(F.text.in_([str(x) for x in range(1, 101)]))
 async def do_fishing_in_pool(message: Message, state: FSMContext):
     state_data = await state.get_data()
@@ -250,6 +267,8 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
                         photo_path = "./imgs/Fish_caught.png"
                     if applicable_fishing_range == river_range:
                         photo_path = "./imgs/Fish_caught_big.png"
+                    if applicable_fishing_range == sea_range:
+                        photo_path = "./imgs/Fish_caught_bigest.png"
                     photo = FSInputFile(photo_path)
                     await bot.send_photo(chat_id=message.chat.id, photo=photo)
                 else:
