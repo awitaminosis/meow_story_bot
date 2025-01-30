@@ -14,6 +14,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 version = '1.1.0'
+fishing_range = None
 
 from aiogram import F
 
@@ -182,7 +183,6 @@ async def go_fishing(message: Message, state: FSMContext):
         await message.message.reply(text="Ловить можно где помельче - там легче поймать, но и рыба не такая интересная. Или же ловить там где поглубже - но и рыба там поинтересней", reply_markup=keyboard)
 
 
-@dp.callback_query(F.data == t_go_fish_in_river)
 @dp.callback_query(F.data == t_go_fish_in_sea)
 async def go_fishing_further(message: Message, state: FSMContext):
     await message.message.reply(
@@ -192,41 +192,63 @@ async def go_fishing_further(message: Message, state: FSMContext):
 
 @dp.callback_query(F.data == t_go_fish_in_pool)
 async def go_fish_in_pool(message: Message, state: FSMContext):
+    global fishing_range
+    fishing_range = 5
+    await state.update_data(fishing_range=fishing_range)
+    the_number = random.randint(1, fishing_range)
+    await state.update_data(the_number=the_number)
+
     await message.message.reply(
-        "Тут рыба полеге. Моно забрасывать удочку на расстояние от 1 до 5 метров",
+        "Тут рыба полеге. Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров",
         reply_markup=ReplyKeyboardRemove(),
     )
-
-    the_number = random.randint(1, 5)
-    await state.update_data(the_number=the_number)
 
     await message.message.reply(text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
 
 
-@dp.message(F.text.in_([str(x) for x in range(1, 6)]))
+@dp.callback_query(F.data == t_go_fish_in_river)
+async def go_fish_in_pool(message: Message, state: FSMContext):
+    global fishing_range
+    fishing_range = 20
+    await state.update_data(fishing_range=fishing_range)
+    the_number = random.randint(1, fishing_range)
+    await state.update_data(the_number=the_number)
+
+    await message.message.reply(
+        "Тут рыба хороша! Аж слюнки текут! Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров",
+        reply_markup=ReplyKeyboardRemove(),
+    )
+
+    await message.message.reply(text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
+
+@dp.message(F.text.in_([str(x) for x in range(1, 101)]))
 async def do_fishing_in_pool(message: Message, state: FSMContext):
     state_data = await state.get_data()
-    worms = state_data.get('worms', 0)
-    worms -= 1
-    state_data['worms'] = worms
-    await state.set_data(state_data)
+    applicable_fishing_range = int(state_data.get('fishing_range'))
+    requested_range = int(message.text)
+    if requested_range > 0 and requested_range <= applicable_fishing_range:
+        worms = state_data.get('worms', 0)
+        worms -= 1
+        state_data['worms'] = worms
 
-    try:
-        the_number = int(state_data.get('the_number'))
-        a_number = int(message.text)
-        if a_number == the_number:
-            await message.reply('Клюёт!')
-            photo_path = "./imgs/Fish_caught.png"
-            photo = FSInputFile(photo_path)
-            await bot.send_photo(chat_id=message.chat.id, photo=photo)
-        else:
-            # не отгадал. дадим подсказку
-            if the_number > a_number:
-                await message.reply('Ёжик подсказывает, что забрасывать удочку нужно дальше')
+        await state.set_data(state_data)
+
+        try:
+            the_number = int(state_data.get('the_number'))
+            a_number = int(message.text)
+            if a_number == the_number:
+                await message.reply('Клюёт!')
+                photo_path = "./imgs/Fish_caught.png"
+                photo = FSInputFile(photo_path)
+                await bot.send_photo(chat_id=message.chat.id, photo=photo)
             else:
-                await message.reply('Ёжик подсказывает, что забрасывать удочку нужно ближе')
-    except Exception as e:
-        await message.reply('Это не число')
+                # не отгадал. дадим подсказку
+                if the_number > a_number:
+                    await message.reply('Ёжик подсказывает, что забрасывать удочку нужно дальше')
+                else:
+                    await message.reply('Ёжик подсказывает, что забрасывать удочку нужно ближе')
+        except Exception as e:
+            await message.reply('Это не число')
 
     # await message.answer("Начнём игру. Я загадал число от 1 до 100 (1 тоже может быть, и 100 тоже может быть). Число целое. Попробуй угадать какое за наименьшее количество попыток.")
     # await state.set_state(Story.guesses)
