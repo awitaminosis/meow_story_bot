@@ -15,6 +15,8 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 version = '1.1.0'
 fishing_range = None
+pool_range = 5
+river_range = 20
 
 from aiogram import F
 
@@ -193,7 +195,7 @@ async def go_fishing_further(message: Message, state: FSMContext):
 @dp.callback_query(F.data == t_go_fish_in_pool)
 async def go_fish_in_pool(message: Message, state: FSMContext):
     global fishing_range
-    fishing_range = 5
+    fishing_range = pool_range
     await state.update_data(fishing_range=fishing_range)
     the_number = random.randint(1, fishing_range)
     await state.update_data(the_number=the_number)
@@ -209,7 +211,7 @@ async def go_fish_in_pool(message: Message, state: FSMContext):
 @dp.callback_query(F.data == t_go_fish_in_river)
 async def go_fish_in_pool(message: Message, state: FSMContext):
     global fishing_range
-    fishing_range = 20
+    fishing_range = river_range
     await state.update_data(fishing_range=fishing_range)
     the_number = random.randint(1, fishing_range)
     await state.update_data(the_number=the_number)
@@ -238,7 +240,10 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
             a_number = int(message.text)
             if a_number == the_number:
                 await message.reply('Клюёт!')
-                photo_path = "./imgs/Fish_caught.png"
+                if applicable_fishing_range == pool_range:
+                    photo_path = "./imgs/Fish_caught.png"
+                if applicable_fishing_range == river_range:
+                    photo_path = "./imgs/Fish_caught_big.png"
                 photo = FSInputFile(photo_path)
                 await bot.send_photo(chat_id=message.chat.id, photo=photo)
             else:
