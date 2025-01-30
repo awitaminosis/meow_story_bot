@@ -13,6 +13,8 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemo
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+version = '1.1.0'
+
 from aiogram import F
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -40,6 +42,7 @@ t_go_fish_in_sea = "Ловить в море"
 async def cmd_start(message: Message, state: FSMContext):
     await message.reply("Это небольшое приключение из жизни Тигра и Ёжика.")
     await message.reply("Остальные приключения можно увидеть https://awitaminosis.github.io/pi_meow_fir/")
+    await message.reply("Версия: " + version)
 
     builder = InlineKeyboardBuilder()
     builder.button(text=t_start_new_story, callback_data=t_start_new_story)
