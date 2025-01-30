@@ -10,7 +10,7 @@ async def add_worms():
     return random.randint(1, worms_pack)
 
 
-async def maybe_eat_worms(worms, message: Message, bot):
+async def maybe_eat_worms(worms, message: Message, bot, chat_id):
     chance = random.randint(1, 100)
     if chance > 100 - WORMS_EAT_CHANCE:
         worms = worms - random.randint(1, worms_pack)
@@ -32,8 +32,8 @@ async def maybe_eat_worms(worms, message: Message, bot):
 
         photo_path = "./imgs/Hedgehog_worms.png"
         photo = FSInputFile(photo_path)
-        await bot.send_photo(chat_id=message.message.chat.id, photo=photo)
-        await bot.send_message(chat_id=message.message.chat.id, text=hedgehog_phrases[phrase_index])
+        await bot.send_photo(chat_id=chat_id, photo=photo)
+        await bot.send_message(chat_id=chat_id, text=hedgehog_phrases[phrase_index])
         if worms < 0:
             worms = 0
 

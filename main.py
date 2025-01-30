@@ -15,7 +15,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 from helper.funcs import *
 
-version = '1.2.0'
+version = '1.2.4'
 fishing_range = 0
 pool_range = 5
 river_range = 20
@@ -135,7 +135,7 @@ async def dig_for_worms(message: Message, state: FSMContext):
     state_data = await state.get_data()
     worms = state_data.get('worms', 0)
     worms += await add_worms()
-    worms = await maybe_eat_worms(worms, message, bot)
+    worms = await maybe_eat_worms(worms, message, bot, message.message.chat.id)
     state_data['worms'] = worms
     await state.set_data(state_data)
     await message.message.reply(text="Червей: " + str(worms))
@@ -253,7 +253,7 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
     if requested_range > 0 and requested_range <= applicable_fishing_range:
         worms = state_data.get('worms', 0)
         worms -= 1
-        worms = await maybe_eat_worms(worms, message, bot)
+        worms = await maybe_eat_worms(worms, message, bot, message.chat.id)
         state_data['worms'] = worms
         await state.set_data(state_data)
 
@@ -271,6 +271,15 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
                         photo_path = "./imgs/Fish_caught_bigest.png"
                     photo = FSInputFile(photo_path)
                     await bot.send_photo(chat_id=message.chat.id, photo=photo)
+
+                    await state.update_data(fishing_range=0)
+                    builder = InlineKeyboardBuilder()
+                    builder.row(InlineKeyboardButton(text=t_go_to_tiger_home, callback_data=t_go_to_tiger_home))
+                    builder.row(InlineKeyboardButton(text=t_dig_for_worms, callback_data=t_dig_for_worms))
+                    builder.row(InlineKeyboardButton(text=t_go_fishing, callback_data=t_go_fishing))
+                    keyboard = builder.as_markup()
+                    await message.reply(text="Что будем делать?", reply_markup=keyboard)
+
                 else:
                     # не отгадал. дадим подсказку
                     if the_number > a_number:
@@ -278,6 +287,7 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
                     else:
                         await message.reply('Ёжик подсказывает, что забрасывать удочку нужно ближе')
             except Exception as e:
+                print(e)
                 await message.reply('Это не число')
         else:
             builder = InlineKeyboardBuilder()
