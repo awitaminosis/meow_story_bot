@@ -61,13 +61,6 @@ async def start_new_story(message: Message, state: FSMContext):
     photo = FSInputFile(photo_path)
     await bot.send_photo(chat_id=message.message.chat.id, photo=photo)
 
-    # kb = [
-    #     [KeyboardButton(text=t_go_to_tiger_home)],
-    #     [KeyboardButton(text=t_go_to_hedgehog_home)],
-    #     [KeyboardButton(text=t_go_fishing)],
-    # ]
-    # keyboard = ReplyKeyboardMarkup(keyboard=kb)
-
     builder = InlineKeyboardBuilder()
     builder.row(InlineKeyboardButton(text=t_go_to_tiger_home, callback_data=t_go_to_tiger_home))
     builder.row(InlineKeyboardButton(text=t_go_to_hedgehog_home, callback_data=t_go_to_hedgehog_home))
@@ -82,12 +75,6 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
         "Тигр пришёл в свой дом. Хорошо тут среди множества рыболовных принадлежностей",
         reply_markup=ReplyKeyboardRemove(),
     )
-    # kb = [
-    #     [KeyboardButton(text=t_take_the_rods)],
-    #     [KeyboardButton(text=t_go_to_hedgehog_home)],
-    #     [KeyboardButton(text=t_go_fishing)],
-    # ]
-    # keyboard = ReplyKeyboardMarkup(keyboard=kb)
 
     builder = InlineKeyboardBuilder()
     builder.row(InlineKeyboardButton(text=t_take_the_rods, callback_data=t_take_the_rods))
@@ -107,12 +94,6 @@ async def take_the_rods(message: Message, state: FSMContext):
     state_data['fishing_rods'] = True
     await state.set_data(state_data)
 
-    # kb = [
-    #     [KeyboardButton(text=t_go_to_hedgehog_home)],
-    #     [KeyboardButton(text=t_go_fishing)],
-    # ]
-    # keyboard = ReplyKeyboardMarkup(keyboard=kb)
-
     builder = InlineKeyboardBuilder()
     builder.row(InlineKeyboardButton(text=t_go_to_hedgehog_home, callback_data=t_go_to_hedgehog_home))
     builder.row(InlineKeyboardButton(text=t_go_fishing, callback_data=t_go_fishing))
@@ -129,12 +110,6 @@ async def go_to_hedgehog_home(message: Message, state: FSMContext):
     photo_path = "./imgs/Hedgehog.png"
     photo = FSInputFile(photo_path)
     await bot.send_photo(chat_id=message.message.chat.id, photo=photo)
-    # kb = [
-    #     [KeyboardButton(text=t_go_to_tiger_home)],
-    #     [KeyboardButton(text=t_dig_for_worms)],
-    #     [KeyboardButton(text=t_go_fishing)],
-    # ]
-    # keyboard = ReplyKeyboardMarkup(keyboard=kb)
 
     builder = InlineKeyboardBuilder()
     builder.row(InlineKeyboardButton(text=t_go_to_tiger_home, callback_data=t_go_to_tiger_home))
@@ -156,12 +131,6 @@ async def dig_for_worms(message: Message, state: FSMContext):
     state_data['worms'] = worms
     await state.set_data(state_data)
     await message.message.reply(text="Червей: " + str(worms))
-    # kb = [
-    #     [KeyboardButton(text=t_go_to_tiger_home)],
-    #     [KeyboardButton(text=t_dig_for_worms)],
-    #     [KeyboardButton(text=t_go_fishing)],
-    # ]
-    # keyboard = ReplyKeyboardMarkup(keyboard=kb)
 
     builder = InlineKeyboardBuilder()
     builder.row(InlineKeyboardButton(text=t_go_to_tiger_home, callback_data=t_go_to_tiger_home))
@@ -181,11 +150,6 @@ async def go_fishing(message: Message, state: FSMContext):
             "Эх, без удочек тяжело ловить... Вот бы где-ниубдь добыть рыболовный инструмент...",
             reply_markup=ReplyKeyboardRemove(),
         )
-        # kb = [
-        #     [KeyboardButton(text=t_go_to_tiger_home)],
-        #     [KeyboardButton(text=t_go_to_hedgehog_home)],
-        # ]
-        # keyboard = ReplyKeyboardMarkup(keyboard=kb)
 
         builder = InlineKeyboardBuilder()
         builder.row(InlineKeyboardButton(text=t_go_to_tiger_home, callback_data=t_go_to_tiger_home))
@@ -197,11 +161,6 @@ async def go_fishing(message: Message, state: FSMContext):
             "Что-то подсказывает Тигру, что без червей рыба сегодня ловиться не будет... Вот бы где-ниубдь добыть червей...",
             reply_markup=ReplyKeyboardRemove(),
         )
-        # kb = [
-        #     [KeyboardButton(text=t_go_to_tiger_home)],
-        #     [KeyboardButton(text=t_go_to_hedgehog_home)],
-        # ]
-        # keyboard = ReplyKeyboardMarkup(keyboard=kb)
 
         builder = InlineKeyboardBuilder()
         builder.row(InlineKeyboardButton(text=t_go_to_tiger_home, callback_data=t_go_to_tiger_home))
@@ -214,12 +173,6 @@ async def go_fishing(message: Message, state: FSMContext):
             reply_markup=ReplyKeyboardRemove(),
         )
         await message.message.reply(text="Червей осталось: " + str(worms))
-        # kb = [
-        #     [KeyboardButton(text=t_go_fish_in_pool)],
-        #     [KeyboardButton(text=t_go_fish_in_river)],
-        #     [KeyboardButton(text=t_go_fish_in_sea)],
-        # ]
-        # keyboard = ReplyKeyboardMarkup(keyboard=kb)
 
         builder = InlineKeyboardBuilder()
         builder.row(InlineKeyboardButton(text=t_go_fish_in_pool, callback_data=t_go_fish_in_pool))
@@ -247,18 +200,6 @@ async def go_fish_in_pool(message: Message, state: FSMContext):
     the_number = random.randint(1, 5)
     await state.update_data(the_number=the_number)
 
-    # kb = [
-    #     [KeyboardButton(text=t_go_to_tiger_home)],
-    #     [KeyboardButton(text=t_go_to_hedgehog_home)],
-    #     [KeyboardButton(text="Ловить")],
-    # ]
-    # keyboard = ReplyKeyboardMarkup(keyboard=kb)
-
-    # builder = InlineKeyboardBuilder()
-    # builder.row(InlineKeyboardButton(text=t_go_to_tiger_home, callback_data=t_go_to_tiger_home))
-    # builder.row(InlineKeyboardButton(text=t_go_to_hedgehog_home, callback_data=t_go_to_hedgehog_home))
-    # builder.row(InlineKeyboardButton(text="Ловить", callback_data="Ловить"))
-    # keyboard = builder.as_markup()
     await message.message.reply(text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
 
 
