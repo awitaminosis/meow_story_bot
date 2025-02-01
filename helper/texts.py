@@ -7,3 +7,5 @@ t_dig_for_worms = "Копать червей"
 t_go_fish_in_pool = "Ловить в луже"
 t_go_fish_in_river = "Ловить в речке"
 t_go_fish_in_sea = "Ловить в море"
+
+t_go_to_forest = "Пойти в лес"
