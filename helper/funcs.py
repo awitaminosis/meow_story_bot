@@ -46,13 +46,13 @@ async def maybe_eat_worms(worms, message: Message, bot, chat_id, state: FSMConte
 
         # открываем дорогу в лес
         state_data = await state.get_data()
-        if not state_data.get('swowel_mentioned', False):
+        if not g_showel_mentioned:
             await bot.send_message(chat_id=chat_id, text='Кстати, Тигр, а я тут вспомнил... Я недавно лопату забыл в лесу... Лопатой бы копать поудобнее было бы...')
             await bot.send_message(chat_id=chat_id, text='Внимание! Открыта новая локация')
-            await state.update_data(swowel_mentioned=True)
+            await state.update_data(showel_mentioned=True)
             g_showel_mentioned = True
 
-    return worms
+    return worms, state
 
 
 async def add_fish(state: FSMContext, applicable_fishing_range):

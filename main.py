@@ -21,7 +21,7 @@ from helper.constants import *
 from helper.keyboards import *
 
 
-version = '1.3.3'
+version = '1.3.4'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -115,7 +115,7 @@ async def dig_for_worms(message: Message, state: FSMContext):
     state_data = await state.get_data()
     worms = state_data.get('worms', 0)
     worms += await add_worms(state)
-    worms = await maybe_eat_worms(worms, message, bot, message.message.chat.id, state)
+    worms, state = await maybe_eat_worms(worms, message, bot, message.message.chat.id, state)
     state_data['worms'] = worms
     await state.set_data(state_data)
     await bot.send_message(chat_id=chat_id, text="Червей: " + str(worms))
@@ -211,7 +211,7 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
     if requested_range > 0 and requested_range <= applicable_fishing_range:
         worms = state_data.get('worms', 0)
         worms -= 1
-        worms = await maybe_eat_worms(worms, message, bot, message.chat.id, state)
+        worms, state = await maybe_eat_worms(worms, message, bot, message.chat.id, state)
         state_data['worms'] = worms
         await state.set_data(state_data)
 
