@@ -21,7 +21,7 @@ from helper.constants import *
 from helper.keyboards import *
 
 
-version = '1.3.4'
+version = '1.3.5'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -279,14 +279,14 @@ async def show_invenotry(message: Message, state: FSMContext):
         text = f'рыбы из лужи (г): {pool_fish_weight}'
         await bot.send_message(chat_id=chat_id, text=text)
     if river_fish_pcs:
-        text = f'рыбы из лужи (штук): {river_fish_pcs}'
+        text = f'рыбы из речки (штук): {river_fish_pcs}'
         await bot.send_message(chat_id=chat_id, text=text)
-        text = f'рыбы из лужи (г): {river_fish_weight}'
+        text = f'рыбы из речки (г): {river_fish_weight}'
         await bot.send_message(chat_id=chat_id, text=text)
     if sea_fish_pcs:
-        text = f'рыбы из лужи (штук): {sea_fish_pcs}'
+        text = f'рыбы из моря (штук): {sea_fish_pcs}'
         await bot.send_message(chat_id=chat_id, text=text)
-        text = f'рыбы из лужи (г): {sea_fish_weight}'
+        text = f'рыбы из моря (г): {sea_fish_weight}'
         await bot.send_message(chat_id=chat_id, text=text)
     if not worms and not helper.funcs.g_rods_taken and not helper.funcs.g_showel_taken and not pool_fish_pcs and not river_fish_pcs and not sea_fish_pcs:
         await bot.send_message(chat_id=chat_id, text='Пока что пусто')
