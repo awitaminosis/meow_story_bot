@@ -26,14 +26,15 @@ async def get_keyboard(state: FSMContext):
 
     builder = InlineKeyboardBuilder()
     for place in locations[location]:
+        if place == t_take_the_rods and helper.funcs.g_rods_taken:
+            continue
         builder.row(InlineKeyboardButton(text=place, callback_data=place))
 
     #special
-    # if state_data.get('swowel_mentioned', False):
     if helper.funcs.g_showel_taken:
         if location != 'forest':
             builder.row(InlineKeyboardButton(text=t_go_to_forest, callback_data=t_go_to_forest))
 
+
     keyboard = builder.as_markup()
     return keyboard
-

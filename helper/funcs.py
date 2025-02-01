@@ -4,7 +4,9 @@ from aiogram.types import FSInputFile
 from aiogram.fsm.context import FSMContext
 
 from helper.constants import *
+
 g_showel_taken = False
+g_rods_taken = False
 
 async def add_worms(state: FSMContext):
     state_data = await state.get_data()

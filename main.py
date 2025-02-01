@@ -14,13 +14,14 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram import F
 
+import helper.funcs
 from helper.funcs import *
 from helper.texts import *
 from helper.constants import *
 from helper.keyboards import *
 
 
-version = '1.3.0'
+version = '1.3.1'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -85,6 +86,7 @@ async def take_the_rods(message: Message, state: FSMContext):
     state_data = await state.get_data()
     state_data['fishing_rods'] = True
     await state.set_data(state_data)
+    helper.funcs.g_rods_taken = True
 
     await state.update_data(location='rods_taken')
     await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
