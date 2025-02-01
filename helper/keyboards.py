@@ -31,7 +31,7 @@ async def get_keyboard(state: FSMContext):
         builder.row(InlineKeyboardButton(text=place, callback_data=place))
 
     #special
-    if helper.funcs.g_showel_taken:
+    if helper.funcs.g_showel_mentioned:
         if location != 'forest':
             builder.row(InlineKeyboardButton(text=t_go_to_forest, callback_data=t_go_to_forest))
 

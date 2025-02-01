@@ -21,7 +21,7 @@ from helper.constants import *
 from helper.keyboards import *
 
 
-version = '1.3.1'
+version = '1.3.3'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -39,8 +39,11 @@ async def cmd_start(message: Message, state: FSMContext):
     chat_id = message.chat.id
     await bot.send_message(chat_id=chat_id, text="Это небольшое приключение из жизни Тигра и Ёжика.")
     await bot.send_message(chat_id=chat_id, text="Остальные приключения можно увидеть https://awitaminosis.github.io/pi_meow_fir/")
-    await bot.send_message(chat_id=chat_id, text="Версия: " + version)
-    await message.reply(text="Подсказка: теперь обновления приходят в таком виде - в виде ответа")
+    menu_kb = ReplyKeyboardMarkup(keyboard=[
+        [KeyboardButton(text="Инвентарь")],
+        # [KeyboardButton(text="Что нового?")],
+    ],resize_keyboard=True)
+    await bot.send_message(chat_id=chat_id, text="Версия: " + version, reply_markup=menu_kb)
 
     builder = InlineKeyboardBuilder()
     builder.button(text=t_start_new_story, callback_data=t_start_new_story)
@@ -54,7 +57,6 @@ async def start_new_story(message: Message, state: FSMContext):
     await state.clear()
     await bot.send_message(chat_id=chat_id,
         text="Однажды Тигр проснулся на полянке и подумал, а почему бы не пойти на рыбалку",
-        reply_markup=ReplyKeyboardRemove(),
     )
     photo_path = "./imgs/Tiger.png"
     photo = FSInputFile(photo_path)
@@ -69,7 +71,6 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
     chat_id = message.message.chat.id
     await bot.send_message(chat_id=chat_id,
         text="Тигр пришёл в свой дом. Хорошо тут среди множества рыболовных принадлежностей",
-        reply_markup=ReplyKeyboardRemove(),
     )
 
     await state.update_data(location='tiger_home')
@@ -81,7 +82,6 @@ async def take_the_rods(message: Message, state: FSMContext):
     chat_id = message.message.chat.id
     await bot.send_message(chat_id=chat_id,
         text="Вот они, любимые инструменты Тигра. Теперь и на рыбалку можно",
-        reply_markup=ReplyKeyboardRemove(),
     )
     state_data = await state.get_data()
     state_data['fishing_rods'] = True
@@ -97,7 +97,6 @@ async def go_to_hedgehog_home(message: Message, state: FSMContext):
     chat_id = message.message.chat.id
     await bot.send_message(chat_id=chat_id,
         text="Ёжик встречает Тигра рядом с компостной ямой, в которой он разводит червей. Ёжик тепло приветствует Тигра и намекает, что было бы хорошо помочь ему в выкапывании вкусных червей",
-        reply_markup=ReplyKeyboardRemove(),
     )
     photo_path = "./imgs/Hedgehog.png"
     photo = FSInputFile(photo_path)
@@ -112,7 +111,6 @@ async def dig_for_worms(message: Message, state: FSMContext):
     chat_id = message.message.chat.id
     await bot.send_message(chat_id=chat_id,
         text="Тигр помогает Ёжику копать червей. Ёжик облизывается и помогает",
-        reply_markup=ReplyKeyboardRemove(),
     )
     state_data = await state.get_data()
     worms = state_data.get('worms', 0)
@@ -135,7 +133,6 @@ async def go_fishing(message: Message, state: FSMContext):
     if not has_fishing_rods:
         await bot.send_message(chat_id=chat_id,
             text="Эх, без удочек тяжело ловить... Вот бы где-ниубдь добыть рыболовный инструмент...",
-            reply_markup=ReplyKeyboardRemove(),
         )
 
         await state.update_data(location='fishing_requisites_missing')
@@ -143,7 +140,6 @@ async def go_fishing(message: Message, state: FSMContext):
     elif worms <= 0:
         await bot.send_message(chat_id=chat_id,
             text="Что-то подсказывает Тигру, что без червей рыба сегодня ловиться не будет... Вот бы где-ниубдь добыть червей...",
-            reply_markup=ReplyKeyboardRemove(),
         )
 
         await state.update_data(location='fishing_requisites_missing')
@@ -151,7 +147,6 @@ async def go_fishing(message: Message, state: FSMContext):
     else:
         await bot.send_message(chat_id=chat_id,
             text="Начинаем рыбалку",
-            reply_markup=ReplyKeyboardRemove(),
         )
         await bot.send_message(chat_id=chat_id, text="Червей осталось: " + str(worms))
 
@@ -170,7 +165,6 @@ async def go_fish_in_pool(message: Message, state: FSMContext):
 
     await bot.send_message(chat_id=chat_id,
         text="Тут рыба полеге. Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров",
-        reply_markup=ReplyKeyboardRemove(),
     )
 
     await bot.send_message(chat_id=chat_id, text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
@@ -187,7 +181,6 @@ async def go_fish_in_river(message: Message, state: FSMContext):
 
     await bot.send_message(chat_id=chat_id,
         text="Тут рыба хороша! Аж слюнки текут! Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров",
-        reply_markup=ReplyKeyboardRemove(),
     )
 
     await bot.send_message(chat_id=chat_id, text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
@@ -204,7 +197,6 @@ async def go_fish_in_sea(message: Message, state: FSMContext):
 
     await bot.send_message(chat_id=chat_id,
         text="Тут такая рыба, что аж даже немножко страшно! Нет, не так! Страшно интересно! Вперёд, Ёжик, поймаем её! Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров",
-        reply_markup=ReplyKeyboardRemove(),
     )
 
     await bot.send_message(chat_id=chat_id, text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
@@ -241,6 +233,8 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
                     await state.update_data(fishing_range=0)
 
                     await state.update_data(location='fishing_did_fished')
+                    await add_fish(state, applicable_fishing_range)
+
                     await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
 
                 else:
@@ -257,18 +251,61 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
             await bot.send_message(chat_id=chat_id, text="Всё, Тигр, черви закончились. Пойдём отсюда", reply_markup=await get_keyboard(state))
 
 
+@dp.message(F.text == 'Инвентарь')
+async def show_invenotry(message: Message, state: FSMContext):
+    chat_id = message.chat.id
+    state_data = await state.get_data()
+    worms = state_data.get('worms', 0)
+    pool_fish_pcs = state_data.get('pool_fish_pcs', 0)
+    pool_fish_weight = state_data.get('pool_fish_weight', 0)
+    river_fish_pcs = state_data.get('river_fish_pcs', 0)
+    river_fish_weight = state_data.get('river_fish_weight', 0)
+    sea_fish_pcs = state_data.get('sea_fish_pcs', 0)
+    sea_fish_weight = state_data.get('sea_fish_weight', 0)
+    rods_taken = state_data.get('fishing_rods', False)
+
+    if worms:
+        text = f'червей: {worms}'
+        await bot.send_message(chat_id=chat_id, text=text)
+    if rods_taken:
+        text = f'удочки: есть'
+        await bot.send_message(chat_id=chat_id, text=text)
+    if helper.funcs.g_showel_taken:
+        text = f'лопата: есть'
+        await bot.send_message(chat_id=chat_id, text=text)
+    if pool_fish_pcs:
+        text = f'рыбы из лужи (штук): {pool_fish_pcs}'
+        await bot.send_message(chat_id=chat_id, text=text)
+        text = f'рыбы из лужи (г): {pool_fish_weight}'
+        await bot.send_message(chat_id=chat_id, text=text)
+    if river_fish_pcs:
+        text = f'рыбы из лужи (штук): {river_fish_pcs}'
+        await bot.send_message(chat_id=chat_id, text=text)
+        text = f'рыбы из лужи (г): {river_fish_weight}'
+        await bot.send_message(chat_id=chat_id, text=text)
+    if sea_fish_pcs:
+        text = f'рыбы из лужи (штук): {sea_fish_pcs}'
+        await bot.send_message(chat_id=chat_id, text=text)
+        text = f'рыбы из лужи (г): {sea_fish_weight}'
+        await bot.send_message(chat_id=chat_id, text=text)
+    if not worms and not helper.funcs.g_rods_taken and not helper.funcs.g_showel_taken and not pool_fish_pcs and not river_fish_pcs and not sea_fish_pcs:
+        await bot.send_message(chat_id=chat_id, text='Пока что пусто')
+
+
+
 @dp.callback_query(F.data == t_go_to_forest)
 async def go_to_forest(message: Message, state: FSMContext):
     chat_id = message.message.chat.id
     await bot.send_message(chat_id=chat_id,
         text="Тигр заходит в лес. Красиво зедсь, и пахнет прелыми листьями, грибами. Тут и там попадаются цветы и лесные ягоды. Кое-где виднеются раскопанные муравейники.",
-        reply_markup=ReplyKeyboardRemove(),
     )
-    await bot.send_message(chat_id=chat_id,
-        text="О! А вот и лопата Ёжика! Да такой лопатой до пары десятков червей можно за раз накопать! И чего её Ёжик тут забыл? Возьму.",
-        reply_markup=ReplyKeyboardRemove(),
-    )
+    state_data = await state.get_data()
+    if not state_data.get('showel_taken', False):
+        await bot.send_message(chat_id=chat_id,
+            text="О! А вот и лопата Ёжика! Да такой лопатой до пары десятков червей можно за раз накопать! И чего её Ёжик тут забыл? Возьму."
+        )
     await state.update_data(showel_taken=True)
+    helper.funcs.g_showel_taken = True
 
     await state.update_data(location='forest')
     await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))

@@ -6,6 +6,7 @@ from aiogram.fsm.context import FSMContext
 from helper.constants import *
 
 g_showel_taken = False
+g_showel_mentioned = False
 g_rods_taken = False
 
 async def add_worms(state: FSMContext):
@@ -16,8 +17,7 @@ async def add_worms(state: FSMContext):
 
 
 async def maybe_eat_worms(worms, message: Message, bot, chat_id, state: FSMContext):
-    global g_showel_taken
-
+    global g_showel_mentioned
     chance = random.randint(1, 100)
     if chance > 100 - WORMS_EAT_CHANCE:
         worms = worms - random.randint(1, hedgehog_eat_worms_max_pcs)
@@ -48,8 +48,37 @@ async def maybe_eat_worms(worms, message: Message, bot, chat_id, state: FSMConte
         state_data = await state.get_data()
         if not state_data.get('swowel_mentioned', False):
             await bot.send_message(chat_id=chat_id, text='Кстати, Тигр, а я тут вспомнил... Я недавно лопату забыл в лесу... Лопатой бы копать поудобнее было бы...')
-            await message.message.reply(text='Внимание! Открыта новая локация')
+            await bot.send_message(chat_id=chat_id, text='Внимание! Открыта новая локация')
             await state.update_data(swowel_mentioned=True)
-            g_showel_taken = True
+            g_showel_mentioned = True
 
     return worms
+
+
+async def add_fish(state: FSMContext, applicable_fishing_range):
+    state_data = await state.get_data()
+    if applicable_fishing_range == pool_range:
+        pool_fish_pcs = state_data.get('pool_fish_pcs', 0)
+        pool_fish_pcs = int(pool_fish_pcs) + 1
+        await state.update_data(pool_fish_pcs=pool_fish_pcs)
+        weight = random.randint(weight_pool_fish_min, weight_pool_fish_max)
+        pool_fish_weight = state_data.get('pool_fish_weight', 0)
+        pool_fish_weight = int(pool_fish_weight) + weight
+        await state.update_data(pool_fish_weight=pool_fish_weight)
+    if applicable_fishing_range == river_range:
+        river_fish_pcs = state_data.get('river_fish_pcs', 0)
+        river_fish_pcs = int(river_fish_pcs) + 1
+        await state.update_data(river_fish_pcs=river_fish_pcs)
+        weight = random.randint(weight_river_fish_min, weight_river_fish_max)
+        river_fish_weight = state_data.get('river_fish_weight', 0)
+        river_fish_weight = int(river_fish_weight) + weight
+        await state.update_data(river_fish_weight=river_fish_weight)
+    if applicable_fishing_range == sea_range:
+        sea_fish_pcs = state_data.get('sea_fish_pcs', 0)
+        sea_fish_pcs = int(sea_fish_pcs) + 1
+        await state.update_data(sea_fish_pcs=sea_fish_pcs)
+        weight = random.randint(weight_sea_fish_min, weight_sea_fish_max)
+        sea_fish_weight = state_data.get('sea_fish_weight', 0)
+        sea_fish_weight = int(sea_fish_weight) + weight
+        await state.update_data(sea_fish_weight=sea_fish_weight)
+
