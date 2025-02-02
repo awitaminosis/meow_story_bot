@@ -42,7 +42,7 @@ async def cmd_start(message: Message, state: FSMContext):
     await bot.send_message(chat_id=chat_id, text="Остальные приключения можно увидеть https://awitaminosis.github.io/pi_meow_fir/")
     menu_kb = ReplyKeyboardMarkup(keyboard=[
         [KeyboardButton(text="Инвентарь")],
-        # [KeyboardButton(text="Что нового?")],
+        [KeyboardButton(text="Что нового?")],
     ],resize_keyboard=True)
     await bot.send_message(chat_id=chat_id, text="Версия: " + version, reply_markup=menu_kb)
 
@@ -254,6 +254,14 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
         else:
             await state.update_data(location='fishing_worms_ended')
             await bot.send_message(chat_id=chat_id, text="Всё, Тигр, черви закончились. Пойдём отсюда", reply_markup=await get_keyboard(state))
+
+
+
+
+@dp.message(F.text == 'Что нового?')
+async def show_invenotry(message: Message, state: FSMContext):
+    chat_id = message.chat.id
+    await bot.send_message(chat_id=chat_id, text='Появился инвентарь. Ёжик ещё не кушал червей - он может рассказать что-то интересное')
 
 
 @dp.message(F.text == 'Инвентарь')
