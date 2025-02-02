@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 
 from helper.constants import *
 
-g_showel_taken = False
+# g_showel_taken = False
 g_showel_mentioned = False
 g_rods_taken = False
 
@@ -82,3 +82,21 @@ async def add_fish(state: FSMContext, applicable_fishing_range):
         sea_fish_weight = int(sea_fish_weight) + weight
         await state.update_data(sea_fish_weight=sea_fish_weight)
 
+async def init_new_state(state: FSMContext):
+    await state.update_data(location='clearing')
+    await state.update_data(worms=0)
+    await state.update_data(pool_fish_pcs=0)
+    await state.update_data(pool_fish_weight=0)
+    await state.update_data(river_fish_pcs=0)
+    await state.update_data(river_fish_weight=0)
+    await state.update_data(sea_fish_pcs=0)
+    await state.update_data(sea_fish_weight= 0)
+    await state.update_data(fishing_rods=False)
+    await state.update_data(pool_fish_pcs=0)
+    await state.update_data(pool_fish_weight=0)
+    await state.update_data(river_fish_pcs=0)
+    await state.update_data(river_fish_weight=0)
+    await state.update_data(sea_fish_pcs=0)
+    await state.update_data(sea_fish_weight=0)
+    await state.update_data(showel_mentioned=False)
+    await state.update_data(showel_taken=False)

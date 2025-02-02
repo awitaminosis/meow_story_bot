@@ -21,7 +21,7 @@ from helper.constants import *
 from helper.keyboards import *
 
 
-version = '1.3.5'
+version = '1.3.6'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -32,6 +32,7 @@ bot_router = Router()
 class Story(StatesGroup):
     guesses = State()
     finish = State()
+
 
 
 @dp.message(Command("start"))
@@ -55,6 +56,7 @@ async def cmd_start(message: Message, state: FSMContext):
 async def start_new_story(message: Message, state: FSMContext):
     chat_id = message.message.chat.id
     await state.clear()
+    await init_new_state(state)
     await bot.send_message(chat_id=chat_id,
         text="Однажды Тигр проснулся на полянке и подумал, а почему бы не пойти на рыбалку",
     )
@@ -263,6 +265,7 @@ async def show_invenotry(message: Message, state: FSMContext):
     sea_fish_pcs = state_data.get('sea_fish_pcs', 0)
     sea_fish_weight = state_data.get('sea_fish_weight', 0)
     rods_taken = state_data.get('fishing_rods', False)
+    showel_taken = state_data.get('showel_taken', False)
 
     if worms:
         text = f'червей: {worms}'
@@ -270,7 +273,7 @@ async def show_invenotry(message: Message, state: FSMContext):
     if rods_taken:
         text = f'удочки: есть'
         await bot.send_message(chat_id=chat_id, text=text)
-    if helper.funcs.g_showel_taken:
+    if showel_taken:
         text = f'лопата: есть'
         await bot.send_message(chat_id=chat_id, text=text)
     if pool_fish_pcs:
@@ -288,7 +291,7 @@ async def show_invenotry(message: Message, state: FSMContext):
         await bot.send_message(chat_id=chat_id, text=text)
         text = f'рыбы из моря (г): {sea_fish_weight}'
         await bot.send_message(chat_id=chat_id, text=text)
-    if not worms and not helper.funcs.g_rods_taken and not helper.funcs.g_showel_taken and not pool_fish_pcs and not river_fish_pcs and not sea_fish_pcs:
+    if not worms and not helper.funcs.g_rods_taken and not showel_taken and not pool_fish_pcs and not river_fish_pcs and not sea_fish_pcs:
         await bot.send_message(chat_id=chat_id, text='Пока что пусто')
 
 
@@ -304,8 +307,8 @@ async def go_to_forest(message: Message, state: FSMContext):
         await bot.send_message(chat_id=chat_id,
             text="О! А вот и лопата Ёжика! Да такой лопатой до пары десятков червей можно за раз накопать! И чего её Ёжик тут забыл? Возьму."
         )
-    await state.update_data(showel_taken=True)
-    helper.funcs.g_showel_taken = True
+        await state.update_data(showel_taken=True)
+    # helper.funcs.g_showel_taken = True
 
     await state.update_data(location='forest')
     await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
