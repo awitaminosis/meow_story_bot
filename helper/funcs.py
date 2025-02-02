@@ -6,8 +6,8 @@ from aiogram.fsm.context import FSMContext
 from helper.constants import *
 
 # g_showel_taken = False
-g_showel_mentioned = False
-g_rods_taken = False
+# g_showel_mentioned = False
+# g_rods_taken = False
 
 async def add_worms(state: FSMContext):
     state_data = await state.get_data()
@@ -17,7 +17,6 @@ async def add_worms(state: FSMContext):
 
 
 async def maybe_eat_worms(worms, message: Message, bot, chat_id, state: FSMContext):
-    global g_showel_mentioned
     chance = random.randint(1, 100)
     if chance > 100 - WORMS_EAT_CHANCE:
         worms = worms - random.randint(1, hedgehog_eat_worms_max_pcs)
@@ -46,13 +45,13 @@ async def maybe_eat_worms(worms, message: Message, bot, chat_id, state: FSMConte
 
         # открываем дорогу в лес
         state_data = await state.get_data()
-        if not g_showel_mentioned:
+        is_showel_mentioned = state_data.get('showel_mentioned', False)
+        if not is_showel_mentioned:
             await bot.send_message(chat_id=chat_id, text='Кстати, Тигр, а я тут вспомнил... Я недавно лопату забыл в лесу... Лопатой бы копать поудобнее было бы...')
             await bot.send_message(chat_id=chat_id, text='Внимание! Открыта новая локация')
             await state.update_data(showel_mentioned=True)
-            g_showel_mentioned = True
 
-    return worms, state
+    return worms
 
 
 async def add_fish(state: FSMContext, applicable_fishing_range):

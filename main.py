@@ -21,7 +21,7 @@ from helper.constants import *
 from helper.keyboards import *
 
 
-version = '1.3.6'
+version = '1.3.7'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -85,10 +85,11 @@ async def take_the_rods(message: Message, state: FSMContext):
     await bot.send_message(chat_id=chat_id,
         text="Вот они, любимые инструменты Тигра. Теперь и на рыбалку можно",
     )
-    state_data = await state.get_data()
-    state_data['fishing_rods'] = True
-    await state.set_data(state_data)
-    helper.funcs.g_rods_taken = True
+    # state_data = await state.get_data()
+    # state_data['fishing_rods'] = True
+    # await state.set_data(state_data)
+    # helper.funcs.g_rods_taken = True
+    await state.update_data(fishing_rods=True)
 
     await state.update_data(location='rods_taken')
     await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
@@ -117,9 +118,10 @@ async def dig_for_worms(message: Message, state: FSMContext):
     state_data = await state.get_data()
     worms = state_data.get('worms', 0)
     worms += await add_worms(state)
-    worms, state = await maybe_eat_worms(worms, message, bot, message.message.chat.id, state)
-    state_data['worms'] = worms
-    await state.set_data(state_data)
+    worms = await maybe_eat_worms(worms, message, bot, message.message.chat.id, state)
+
+    # await state.set_data(state_data)
+    await state.update_data(worms=worms)
     await bot.send_message(chat_id=chat_id, text="Червей: " + str(worms))
 
     await state.update_data(location='worms_dig')
@@ -213,9 +215,10 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
     if requested_range > 0 and requested_range <= applicable_fishing_range:
         worms = state_data.get('worms', 0)
         worms -= 1
-        worms, state = await maybe_eat_worms(worms, message, bot, message.chat.id, state)
-        state_data['worms'] = worms
-        await state.set_data(state_data)
+        worms = await maybe_eat_worms(worms, message, bot, message.chat.id, state)
+        # state_data['worms'] = worms
+        # await state.set_data(state_data)
+        await state.update_data(worms=worms)
 
         if worms > 0:
             try:
@@ -291,7 +294,7 @@ async def show_invenotry(message: Message, state: FSMContext):
         await bot.send_message(chat_id=chat_id, text=text)
         text = f'рыбы из моря (г): {sea_fish_weight}'
         await bot.send_message(chat_id=chat_id, text=text)
-    if not worms and not helper.funcs.g_rods_taken and not showel_taken and not pool_fish_pcs and not river_fish_pcs and not sea_fish_pcs:
+    if not worms and not rods_taken and not showel_taken and not pool_fish_pcs and not river_fish_pcs and not sea_fish_pcs:
         await bot.send_message(chat_id=chat_id, text='Пока что пусто')
 
 

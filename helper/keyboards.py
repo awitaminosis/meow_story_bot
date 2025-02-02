@@ -23,15 +23,17 @@ locations = {
 async def get_keyboard(state: FSMContext):
     state_data = await state.get_data()
     location = state_data.get('location')
+    rods_taken = state_data.get('fishing_rods',False)
 
     builder = InlineKeyboardBuilder()
     for place in locations[location]:
-        if place == t_take_the_rods and helper.funcs.g_rods_taken:
+        if place == t_take_the_rods and rods_taken:
             continue
         builder.row(InlineKeyboardButton(text=place, callback_data=place))
 
     #special
-    if helper.funcs.g_showel_mentioned:
+    is_showel_mentioned = state_data.get('showel_mentioned', False)
+    if is_showel_mentioned:
         if location != 'forest':
             builder.row(InlineKeyboardButton(text=t_go_to_forest, callback_data=t_go_to_forest))
 
