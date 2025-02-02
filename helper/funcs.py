@@ -33,6 +33,7 @@ async def maybe_eat_worms(worms, message: Message, bot, chat_id, state: FSMConte
             'Зато я в следующий раз тебе помогу',
             'Ой, а что произошло?',
             'А я думал, что это была рыба...',
+            'Раз, два, три, четыре, пять - Ёж червей идёт считать!',
         ]
         phrase_index = random.randint(0, len(hedgehog_phrases) - 1)
 
