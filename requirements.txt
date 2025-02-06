@@ -1,2 +1,5 @@
 aiogram
 python-decouple
+psycopg2
+sqlalchemy
+sqlalchemy_utils

@@ -19,9 +19,10 @@ from helper.funcs import *
 from helper.texts import *
 from helper.constants import *
 from helper.keyboards import *
+from db.database import *
 
 
-version = '1.3.7'
+version = '1.4.0'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -43,6 +44,8 @@ async def cmd_start(message: Message, state: FSMContext):
     menu_kb = ReplyKeyboardMarkup(keyboard=[
         [KeyboardButton(text="Инвентарь")],
         [KeyboardButton(text="Что нового?")],
+        [KeyboardButton(text="Сохранить")],
+        [KeyboardButton(text="Загрузить")],
     ],resize_keyboard=True)
     await bot.send_message(chat_id=chat_id, text="Версия: " + version, reply_markup=menu_kb)
 
@@ -256,12 +259,31 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
             await bot.send_message(chat_id=chat_id, text="Всё, Тигр, черви закончились. Пойдём отсюда", reply_markup=await get_keyboard(state))
 
 
-
-
 @dp.message(F.text == 'Что нового?')
-async def show_invenotry(message: Message, state: FSMContext):
+async def show_changelog(message: Message, state: FSMContext):
     chat_id = message.chat.id
-    await bot.send_message(chat_id=chat_id, text='Появился инвентарь. Ёжик ещё не кушал червей - он может рассказать что-то интересное')
+    await bot.send_message(chat_id=chat_id, text='Появился инвентарь. Ёжик ещё не кушал червей - он может рассказать что-то интересное. Появилась возможность сохраняться и загружаться')
+
+
+@dp.message(F.text == 'Сохранить')
+async def save(message: Message, state: FSMContext):
+    chat_id = message.chat.id
+    save_ok = await save_journey(chat_id, state)
+    await bot.send_message(chat_id=chat_id, text='Сохранение прошло: '+save_ok)
+    await state.update_data(location='clearing')
+    await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await get_keyboard(state))
+
+@dp.message(F.text == 'Загрузить')
+async def load(message: Message, state: FSMContext):
+    chat_id = message.chat.id
+    loaded_data = await load_journey(chat_id)
+    print(loaded_data)
+    if loaded_data:
+        await bot.send_message(chat_id=chat_id, text='Загрузуить удалось')
+        await state.set_data(loaded_data)
+        await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await get_keyboard(state))
+    else:
+        await bot.send_message(chat_id=chat_id, text='Ошибка загрузки')
 
 
 @dp.message(F.text == 'Инвентарь')
