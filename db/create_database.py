@@ -5,7 +5,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from sqlalchemy_utils import database_exists, create_database
 from decouple import config
 
-from db.models.journey import Journey
+from models.journey import Journey
 
 
 db_user = config('DB_USER')
