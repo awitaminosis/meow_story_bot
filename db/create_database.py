@@ -11,7 +11,9 @@ from models.journey import Journey
 db_user = config('DB_USER')
 db_user_password = config('DB_USER_PASSWORD')
 db_database = config('DB_DATABASE')
-DATABASE_URL = f"postgresql://{db_user}:{db_user_password}@localhost:5432/{db_database}"
+db_host = config('DB_HOST')
+db_port = config('DB_PORT')
+DATABASE_URL = f"postgresql://{db_user}:{db_user_password}@{db_host}:{db_port}/{db_database}"
 
 # Create a base class for declarative models
 Base = declarative_base()
