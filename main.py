@@ -19,10 +19,10 @@ from helper.funcs import *
 from helper.texts import *
 from helper.constants import *
 from helper.keyboards import *
-from db.database import *
+from db.mongo_database import *
 
 
-version = '1.5.0'
+version = '1.5.1'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
