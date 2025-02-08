@@ -22,7 +22,7 @@ from helper.keyboards import *
 from db.database import *
 
 
-version = '1.4.0'
+version = '1.5.0'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -44,8 +44,8 @@ async def cmd_start(message: Message, state: FSMContext):
     menu_kb = ReplyKeyboardMarkup(keyboard=[
         [KeyboardButton(text="Инвентарь")],
         [KeyboardButton(text="Что нового?")],
-        [KeyboardButton(text="Сохранить")],
-        [KeyboardButton(text="Загрузить")],
+        # [KeyboardButton(text="Сохранить")],
+        # [KeyboardButton(text="Загрузить")],
     ],resize_keyboard=True)
     await bot.send_message(chat_id=chat_id, text="Версия: " + version, reply_markup=menu_kb)
 
@@ -262,7 +262,7 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
 @dp.message(F.text == 'Что нового?')
 async def show_changelog(message: Message, state: FSMContext):
     chat_id = message.chat.id
-    await bot.send_message(chat_id=chat_id, text='Появился инвентарь. Ёжик ещё не кушал червей - он может рассказать что-то интересное. Появилась возможность сохраняться и загружаться')
+    await bot.send_message(chat_id=chat_id, text='Ёжик ещё не кушал червей - он может рассказать что-то интересное. Угости Ёжика червяком. Фыр!')
 
 
 @dp.message(F.text == 'Сохранить')
@@ -270,7 +270,7 @@ async def save(message: Message, state: FSMContext):
     chat_id = message.chat.id
     save_ok = await save_journey(chat_id, state)
     await bot.send_message(chat_id=chat_id, text='Сохранение прошло: '+save_ok)
-    await state.update_data(location='clearing')
+    await state.update_data(location='t_visit_mouse')
     await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await get_keyboard(state))
 
 @dp.message(F.text == 'Загрузить')
@@ -344,6 +344,36 @@ async def go_to_forest(message: Message, state: FSMContext):
     # helper.funcs.g_showel_taken = True
 
     await state.update_data(location='forest')
+    await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
+
+
+@dp.callback_query(F.data == t_feed_hedgehog)
+async def go_to_forest(message: Message, state: FSMContext):
+    chat_id = message.message.chat.id
+    await bot.send_message(chat_id=chat_id, text="Ёжик, будешь червяка? Расскажи мне что-нибудь интересно.")
+    await feed_hedgehog(bot, chat_id, state)
+    await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
+
+
+@dp.callback_query(F.data == t_visit_mouse)
+async def visit_mouse(message: Message, state: FSMContext):
+    chat_id = message.message.chat.id
+    await state.update_data(location='t_visit_mouse')
+
+    await bot.send_message(chat_id=chat_id,
+       text="Пытхя и фырча они пробираются через заросли лесной чащи. Потом через кусты крыжовника. Потом через овраги. Потом, уже отчаявшись найти Мышку, решают отдохнуть под кустом барбариса. Там они и встречают Мышку",
+    )
+
+    photo_path = "./imgs/Mouse.png"
+    photo = FSInputFile(photo_path)
+    await bot.send_photo(chat_id=chat_id, photo=photo)
+    await bot.send_message(chat_id=chat_id, text="Привет, Тигр. Привет, Ёжик.")
+    menu_kb = ReplyKeyboardMarkup(keyboard=[
+        [KeyboardButton(text="Инвентарь")],
+        [KeyboardButton(text="Сохранить")],
+        [KeyboardButton(text="Загрузить")],
+    ], resize_keyboard=True)
+    await bot.send_message(chat_id=chat_id, text="Я сейчас гуляю с книжкой - могу записать приключение. Или могу прочитать что уже было записано", reply_markup=menu_kb)
     await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
 
 

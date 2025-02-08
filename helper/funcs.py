@@ -54,6 +54,44 @@ async def maybe_eat_worms(worms, message: Message, bot, chat_id, state: FSMConte
 
     return worms
 
+async def feed_hedgehog(bot, chat_id, state: FSMContext):
+    state_data = await state.get_data()
+    hedgehog_hints_level = state_data.get('hedgehog_hints_level',0)
+    worms = state_data.get('worms',0)
+    river_fish_pcs = state_data.get('river_fish_pcs',0)
+    if hedgehog_hints_level == 0:
+        if worms >= 10:
+            photo_path = "./imgs/Hedgehog_worms.png"
+            photo = FSInputFile(photo_path)
+            await bot.send_photo(chat_id=chat_id, photo=photo)
+            await bot.send_message(chat_id=chat_id, text="Чем крупнее водоём, тем рыба вкуснее, но тем сложнее её поймать")
+            worms -= 10
+            hedgehog_hints_level += 1
+            await state.update_data(worms=worms)
+            await state.update_data(hedgehog_hints_level=hedgehog_hints_level)
+        else:
+            await bot.send_message(chat_id=chat_id, text="Ёжик смотрит на червяка. Червяк смотрит на Ежа. Ёжик вздыхает и говорит, что силы слишком не равны. Вот если бы червей было 10 штук...")
+    elif hedgehog_hints_level == 1:
+        if worms >= 50 and river_fish_pcs >=5:
+            photo_path = "./imgs/Hedgehog_worms.png"
+            photo = FSInputFile(photo_path)
+            await bot.send_photo(chat_id=chat_id, photo=photo)
+            await bot.send_message(chat_id=chat_id, text="Я недавно видел в лесу Мышку. Тебе стоит сходить к ней - она может научить тебя плезным штукам")
+            worms -= 50
+            river_fish_pcs -= 5
+            hedgehog_hints_level += 1
+            await state.update_data(worms=worms)
+            await state.update_data(river_fish_pcs=river_fish_pcs)
+            await state.update_data(hedgehog_hints_level=hedgehog_hints_level)
+            await state.update_data(mouse_mentioned=True)
+        else:
+            await bot.send_message(chat_id=chat_id, text="Тигр, вот если бы червей было штук 50...а Ещё мне нужно 5 речных рыб - я опарышей хочу развести")
+    else:
+        photo_path = "./imgs/Hedgehog_worms.png"
+        photo = FSInputFile(photo_path)
+        await bot.send_photo(chat_id=chat_id, photo=photo)
+        await bot.send_message(chat_id=chat_id, text="Нет, Тигр, спасибо. Я пока ещё не доживал...")
+
 
 async def add_fish(state: FSMContext, applicable_fishing_range):
     state_data = await state.get_data()
@@ -100,3 +138,4 @@ async def init_new_state(state: FSMContext):
     await state.update_data(sea_fish_weight=0)
     await state.update_data(showel_mentioned=False)
     await state.update_data(showel_taken=False)
+    await state.update_data(hedgehog_hints_level=0)
