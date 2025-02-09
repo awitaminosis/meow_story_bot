@@ -22,7 +22,7 @@ from helper.keyboards import *
 from db.mongo_database import *
 
 
-version = '1.5.1'
+version = '1.5.2'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -41,12 +41,15 @@ async def cmd_start(message: Message, state: FSMContext):
     chat_id = message.chat.id
     await bot.send_message(chat_id=chat_id, text="Это небольшое приключение из жизни Тигра и Ёжика.")
     await bot.send_message(chat_id=chat_id, text="Остальные приключения можно увидеть https://awitaminosis.github.io/pi_meow_fir/")
-    menu_kb = ReplyKeyboardMarkup(keyboard=[
-        [KeyboardButton(text="Инвентарь")],
+
+    keyboad_actions = [[KeyboardButton(text="Инвентарь")],
         [KeyboardButton(text="Что нового?")],
-        # [KeyboardButton(text="Сохранить")],
-        # [KeyboardButton(text="Загрузить")],
-    ],resize_keyboard=True)
+    ]
+    if await load_journey(chat_id):
+        keyboad_actions.append([KeyboardButton(text="Загрузить")])
+
+    menu_kb = ReplyKeyboardMarkup(keyboard=keyboad_actions,resize_keyboard=True)
+
     await bot.send_message(chat_id=chat_id, text="Версия: " + version, reply_markup=menu_kb)
 
     builder = InlineKeyboardBuilder()
@@ -269,7 +272,7 @@ async def show_changelog(message: Message, state: FSMContext):
 async def save(message: Message, state: FSMContext):
     chat_id = message.chat.id
     save_ok = await save_journey(chat_id, state)
-    await bot.send_message(chat_id=chat_id, text='Сохранение прошло: '+save_ok)
+    await bot.send_message(chat_id=chat_id, text='Мышка говорит, что записала приключение. Вот держи книжку. Если захочешь загрузиться, и вспомнить приключение - просто прочитай его из книжки.')
     await state.update_data(location='t_visit_mouse')
     await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await get_keyboard(state))
 
@@ -279,7 +282,7 @@ async def load(message: Message, state: FSMContext):
     loaded_data = await load_journey(chat_id)
     print(loaded_data)
     if loaded_data:
-        await bot.send_message(chat_id=chat_id, text='Загрузуить удалось')
+        await bot.send_message(chat_id=chat_id, text='Тигр читает что Мышка записала в книжке про приключение')
         await state.set_data(loaded_data)
         await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await get_keyboard(state))
     else:
@@ -371,9 +374,9 @@ async def visit_mouse(message: Message, state: FSMContext):
     menu_kb = ReplyKeyboardMarkup(keyboard=[
         [KeyboardButton(text="Инвентарь")],
         [KeyboardButton(text="Сохранить")],
-        [KeyboardButton(text="Загрузить")],
+        # [KeyboardButton(text="Загрузить")],
     ], resize_keyboard=True)
-    await bot.send_message(chat_id=chat_id, text="Я сейчас гуляю с книжкой - могу записать приключение. Или могу прочитать что уже было записано", reply_markup=menu_kb)
+    await bot.send_message(chat_id=chat_id, text="Я сейчас гуляю с книжкой - могу записать приключение", reply_markup=menu_kb)
     await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
 
 
