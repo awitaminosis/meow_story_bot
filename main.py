@@ -277,11 +277,11 @@ async def show_invenotry(message: Message, state: FSMContext):
     state_data = await state.get_data()
     worms = state_data.get('worms', 0)
     pool_fish_pcs = state_data.get('pool_fish_pcs', 0)
-    pool_fish_weight = state_data.get('pool_fish_weight', 0)
+    # pool_fish_weight = state_data.get('pool_fish_weight', 0)
     river_fish_pcs = state_data.get('river_fish_pcs', 0)
-    river_fish_weight = state_data.get('river_fish_weight', 0)
+    # river_fish_weight = state_data.get('river_fish_weight', 0)
     sea_fish_pcs = state_data.get('sea_fish_pcs', 0)
-    sea_fish_weight = state_data.get('sea_fish_weight', 0)
+    # sea_fish_weight = state_data.get('sea_fish_weight', 0)
     rods_taken = state_data.get('fishing_rods', False)
     showel_taken = state_data.get('showel_taken', False)
 
@@ -297,18 +297,18 @@ async def show_invenotry(message: Message, state: FSMContext):
     if pool_fish_pcs:
         text = f'рыбы из лужи (штук): {pool_fish_pcs}'
         await bot.send_message(chat_id=chat_id, text=text)
-        text = f'рыбы из лужи (г): {pool_fish_weight}'
-        await bot.send_message(chat_id=chat_id, text=text)
+        # text = f'рыбы из лужи (г): {pool_fish_weight}'
+        # await bot.send_message(chat_id=chat_id, text=text)
     if river_fish_pcs:
         text = f'рыбы из речки (штук): {river_fish_pcs}'
         await bot.send_message(chat_id=chat_id, text=text)
-        text = f'рыбы из речки (г): {river_fish_weight}'
-        await bot.send_message(chat_id=chat_id, text=text)
+        # text = f'рыбы из речки (г): {river_fish_weight}'
+        # await bot.send_message(chat_id=chat_id, text=text)
     if sea_fish_pcs:
         text = f'рыбы из моря (штук): {sea_fish_pcs}'
         await bot.send_message(chat_id=chat_id, text=text)
-        text = f'рыбы из моря (г): {sea_fish_weight}'
-        await bot.send_message(chat_id=chat_id, text=text)
+        # text = f'рыбы из моря (г): {sea_fish_weight}'
+        # await bot.send_message(chat_id=chat_id, text=text)
     if not worms and not rods_taken and not showel_taken and not pool_fish_pcs and not river_fish_pcs and not sea_fish_pcs:
         await bot.send_message(chat_id=chat_id, text='Пока что пусто')
 

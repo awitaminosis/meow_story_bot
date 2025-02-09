@@ -97,42 +97,42 @@ async def add_fish(state: FSMContext, applicable_fishing_range):
         pool_fish_pcs = int(pool_fish_pcs) + 1
         await state.update_data(pool_fish_pcs=pool_fish_pcs)
         weight = random.randint(weight_pool_fish_min, weight_pool_fish_max)
-        pool_fish_weight = state_data.get('pool_fish_weight', 0)
-        pool_fish_weight = int(pool_fish_weight) + weight
-        await state.update_data(pool_fish_weight=pool_fish_weight)
+        # pool_fish_weight = state_data.get('pool_fish_weight', 0)
+        # pool_fish_weight = int(pool_fish_weight) + weight
+        # await state.update_data(pool_fish_weight=pool_fish_weight)
     if applicable_fishing_range == river_range:
         river_fish_pcs = state_data.get('river_fish_pcs', 0)
         river_fish_pcs = int(river_fish_pcs) + 1
         await state.update_data(river_fish_pcs=river_fish_pcs)
         weight = random.randint(weight_river_fish_min, weight_river_fish_max)
-        river_fish_weight = state_data.get('river_fish_weight', 0)
-        river_fish_weight = int(river_fish_weight) + weight
-        await state.update_data(river_fish_weight=river_fish_weight)
+        # river_fish_weight = state_data.get('river_fish_weight', 0)
+        # river_fish_weight = int(river_fish_weight) + weight
+        # await state.update_data(river_fish_weight=river_fish_weight)
     if applicable_fishing_range == sea_range:
         sea_fish_pcs = state_data.get('sea_fish_pcs', 0)
         sea_fish_pcs = int(sea_fish_pcs) + 1
         await state.update_data(sea_fish_pcs=sea_fish_pcs)
         weight = random.randint(weight_sea_fish_min, weight_sea_fish_max)
-        sea_fish_weight = state_data.get('sea_fish_weight', 0)
-        sea_fish_weight = int(sea_fish_weight) + weight
-        await state.update_data(sea_fish_weight=sea_fish_weight)
+        # sea_fish_weight = state_data.get('sea_fish_weight', 0)
+        # sea_fish_weight = int(sea_fish_weight) + weight
+        # await state.update_data(sea_fish_weight=sea_fish_weight)
 
 async def init_new_state(state: FSMContext):
     await state.update_data(location='clearing')
     await state.update_data(worms=0)
     await state.update_data(pool_fish_pcs=0)
-    await state.update_data(pool_fish_weight=0)
+    # await state.update_data(pool_fish_weight=0)
     await state.update_data(river_fish_pcs=0)
-    await state.update_data(river_fish_weight=0)
+    # await state.update_data(river_fish_weight=0)
     await state.update_data(sea_fish_pcs=0)
-    await state.update_data(sea_fish_weight= 0)
+    # await state.update_data(sea_fish_weight= 0)
     await state.update_data(fishing_rods=False)
     await state.update_data(pool_fish_pcs=0)
-    await state.update_data(pool_fish_weight=0)
+    # await state.update_data(pool_fish_weight=0)
     await state.update_data(river_fish_pcs=0)
-    await state.update_data(river_fish_weight=0)
+    # await state.update_data(river_fish_weight=0)
     await state.update_data(sea_fish_pcs=0)
-    await state.update_data(sea_fish_weight=0)
+    # await state.update_data(sea_fish_weight=0)
     await state.update_data(showel_mentioned=False)
     await state.update_data(showel_taken=False)
     await state.update_data(hedgehog_hints_level=0)
