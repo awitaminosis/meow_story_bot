@@ -332,7 +332,7 @@ async def go_to_forest(message: Message, state: FSMContext):
 
 
 @dp.callback_query(F.data == t_feed_hedgehog)
-async def go_to_forest(message: Message, state: FSMContext):
+async def feed_hedgehog(message: Message, state: FSMContext):
     chat_id = message.message.chat.id
     await bot.send_message(chat_id=chat_id, text="Ёжик, будешь червяка? Расскажи мне что-нибудь интересно.")
     await feed_hedgehog(bot, chat_id, state)
