@@ -2,22 +2,11 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram import Router
 from aiogram.fsm.storage.memory import MemoryStorage
-from aiogram.types import Message
 from aiogram.filters.command import Command
-from decouple import config
-from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-import random
-from aiogram.types import FSInputFile
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram import F
 
-import helper.funcs
-from helper.funcs import *
-from helper.texts import *
-from helper.constants import *
 from helper.keyboards import *
 from db.mongo_database import *
 
@@ -91,10 +80,6 @@ async def take_the_rods(message: Message, state: FSMContext):
     await bot.send_message(chat_id=chat_id,
         text="Вот они, любимые инструменты Тигра. Теперь и на рыбалку можно",
     )
-    # state_data = await state.get_data()
-    # state_data['fishing_rods'] = True
-    # await state.set_data(state_data)
-    # helper.funcs.g_rods_taken = True
     await state.update_data(fishing_rods=True)
 
     await state.update_data(location='rods_taken')
@@ -126,7 +111,6 @@ async def dig_for_worms(message: Message, state: FSMContext):
     worms += await add_worms(state)
     worms = await maybe_eat_worms(worms, message, bot, message.message.chat.id, state)
 
-    # await state.set_data(state_data)
     await state.update_data(worms=worms)
     await bot.send_message(chat_id=chat_id, text="Червей: " + str(worms))
 
@@ -222,8 +206,6 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
         worms = state_data.get('worms', 0)
         worms -= 1
         worms = await maybe_eat_worms(worms, message, bot, message.chat.id, state)
-        # state_data['worms'] = worms
-        # await state.set_data(state_data)
         await state.update_data(worms=worms)
 
         if worms > 0:
@@ -344,7 +326,6 @@ async def go_to_forest(message: Message, state: FSMContext):
             text="О! А вот и лопата Ёжика! Да такой лопатой до пары десятков червей можно за раз накопать! И чего её Ёжик тут забыл? Возьму."
         )
         await state.update_data(showel_taken=True)
-    # helper.funcs.g_showel_taken = True
 
     await state.update_data(location='forest')
     await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
@@ -374,7 +355,6 @@ async def visit_mouse(message: Message, state: FSMContext):
     menu_kb = ReplyKeyboardMarkup(keyboard=[
         [KeyboardButton(text="Инвентарь")],
         [KeyboardButton(text="Сохранить")],
-        # [KeyboardButton(text="Загрузить")],
     ], resize_keyboard=True)
     await bot.send_message(chat_id=chat_id, text="Я сейчас гуляю с книжкой - могу записать приключение", reply_markup=menu_kb)
     await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))

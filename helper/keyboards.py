@@ -1,8 +1,6 @@
-from aiogram.fsm.context import FSMContext
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-import helper.funcs
 from helper.texts import *
 from helper.funcs import *
 
