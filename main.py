@@ -11,7 +11,7 @@ from helper.keyboards import *
 from db.mongo_database import *
 
 
-version = '1.5.2'
+version = '1.5.3'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -34,8 +34,6 @@ async def cmd_start(message: Message, state: FSMContext):
     keyboad_actions = [[KeyboardButton(text="Инвентарь")],
         [KeyboardButton(text="Что нового?")],
     ]
-    if await load_journey(chat_id):
-        keyboad_actions.append([KeyboardButton(text="Загрузить")])
 
     menu_kb = ReplyKeyboardMarkup(keyboard=keyboad_actions,resize_keyboard=True)
 
@@ -43,6 +41,8 @@ async def cmd_start(message: Message, state: FSMContext):
 
     builder = InlineKeyboardBuilder()
     builder.button(text=t_start_new_story, callback_data=t_start_new_story)
+    if await load_journey(chat_id):
+        builder.button(text="Загрузить", callback_data="Загрузить")
     keyboard = builder.as_markup()
     await bot.send_message(chat_id=chat_id, text="Начинаем?", reply_markup=keyboard)
 
@@ -258,13 +258,13 @@ async def save(message: Message, state: FSMContext):
     await state.update_data(location='t_visit_mouse')
     await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await get_keyboard(state))
 
-@dp.message(F.text == 'Загрузить')
+@dp.callback_query(F.data == 'Загрузить')
 async def load(message: Message, state: FSMContext):
-    chat_id = message.chat.id
+    chat_id = message.message.chat.id
     loaded_data = await load_journey(chat_id)
     print(loaded_data)
     if loaded_data:
-        await bot.send_message(chat_id=chat_id, text='Тигр читает что Мышка записала в книжке про приключение')
+        await bot.send_message(chat_id=chat_id, text='Тигр читает, что Мышка записала в книжке про приключение. Вроде всё вспомнил')
         await state.set_data(loaded_data)
         await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await get_keyboard(state))
     else:
