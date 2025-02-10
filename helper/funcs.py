@@ -51,7 +51,7 @@ async def maybe_eat_worms(worms, message: Message, bot, chat_id, state: FSMConte
 
     return worms
 
-async def feed_hedgehog(bot, chat_id, state: FSMContext):
+async def feed_hedgehog_level(bot, chat_id, state: FSMContext):
     state_data = await state.get_data()
     hedgehog_hints_level = state_data.get('hedgehog_hints_level', 0)
     worms = state_data.get('worms', 0)
@@ -91,49 +91,74 @@ async def feed_hedgehog(bot, chat_id, state: FSMContext):
         await bot.send_message(chat_id=chat_id, text="Нет, Тигр, спасибо. Я пока ещё не дожевал...")
 
 
+async def mouse_quest_levels(bot, chat_id, state: FSMContext):
+    state_data = await state.get_data()
+    mouse_quest_level = state_data.get('mouse_quest_level', 0)
+    worms = state_data.get('worms', 0)
+    river_fish_pcs = state_data.get('river_fish_pcs', 0)
+
+    photo_path = "./imgs/Mouse.png"
+    photo = FSInputFile(photo_path)
+    await bot.send_photo(chat_id=chat_id, photo=photo)
+
+    if mouse_quest_level == 0:
+        await bot.send_message(chat_id=chat_id, text="Да у меня разные книжки есть, и в них разные истории записаны... Давай подумаем, что тебе интересно...")
+        await bot.send_message(chat_id=chat_id, text="Мышка смотрит на удочки Тигра...")
+        await bot.send_message(chat_id=chat_id, text="Ну, например... Я знаю, что вдоль речки сейчас много крапивы растёт, а тебе наверное на речку хотелось бы попасть. Вот в этой книжке написано как можно идти через крапиву, чтобы она не жалилась.")
+        await bot.send_message(chat_id=chat_id, text="Внимание, рыбалка в речке стала доступна!")
+        await bot.send_message(chat_id=chat_id, text="Мышка продолжает что-то рассказывать, но Тигр и Ёжик уже уходт и не слышат подробностей...")
+        mouse_quest_level += 1
+        await state.update_data(mouse_quest_level=mouse_quest_level)
+
+    # elif hedgehog_hints_level == 1:
+    #     if worms >= 50 and pool_fish_pcs >= 5:
+    #         photo_path = "./imgs/Hedgehog_worms.png"
+    #         photo = FSInputFile(photo_path)
+    #         await bot.send_photo(chat_id=chat_id, photo=photo)
+    #         await bot.send_message(chat_id=chat_id, text="Я недавно видел в лесу Мышку. Тебе стоит сходить к ней - она может научить тебя плезным штукам")
+    #         worms -= 50
+    #         pool_fish_pcs -= 5
+    #         hedgehog_hints_level += 1
+    #         await state.update_data(worms=worms)
+    #         await state.update_data(river_fish_pcs=pool_fish_pcs)
+    #         await state.update_data(hedgehog_hints_level=hedgehog_hints_level)
+    #         await state.update_data(mouse_mentioned=True)
+    #         await bot.send_message(chat_id=chat_id, text='Внимание! В лесу открыта новая локация')
+    #     else:
+    #         await bot.send_message(chat_id=chat_id, text="Тигр, вот если бы червей было штук 50...а Ещё мне нужно 5 рыб из ближайшей лужи - я опарышей хочу развести")
+    # else:
+    #     photo_path = "./imgs/Hedgehog_worms.png"
+    #     photo = FSInputFile(photo_path)
+    #     await bot.send_photo(chat_id=chat_id, photo=photo)
+    #     await bot.send_message(chat_id=chat_id, text="Нет, Тигр, спасибо. Я пока ещё не дожевал...")
+
+
 async def add_fish(state: FSMContext, applicable_fishing_range):
     state_data = await state.get_data()
     if applicable_fishing_range == pool_range:
         pool_fish_pcs = state_data.get('pool_fish_pcs', 0)
         pool_fish_pcs = int(pool_fish_pcs) + 1
         await state.update_data(pool_fish_pcs=pool_fish_pcs)
-        weight = random.randint(weight_pool_fish_min, weight_pool_fish_max)
-        # pool_fish_weight = state_data.get('pool_fish_weight', 0)
-        # pool_fish_weight = int(pool_fish_weight) + weight
-        # await state.update_data(pool_fish_weight=pool_fish_weight)
     if applicable_fishing_range == river_range:
         river_fish_pcs = state_data.get('river_fish_pcs', 0)
         river_fish_pcs = int(river_fish_pcs) + 1
         await state.update_data(river_fish_pcs=river_fish_pcs)
-        weight = random.randint(weight_river_fish_min, weight_river_fish_max)
-        # river_fish_weight = state_data.get('river_fish_weight', 0)
-        # river_fish_weight = int(river_fish_weight) + weight
-        # await state.update_data(river_fish_weight=river_fish_weight)
     if applicable_fishing_range == sea_range:
         sea_fish_pcs = state_data.get('sea_fish_pcs', 0)
         sea_fish_pcs = int(sea_fish_pcs) + 1
         await state.update_data(sea_fish_pcs=sea_fish_pcs)
-        weight = random.randint(weight_sea_fish_min, weight_sea_fish_max)
-        # sea_fish_weight = state_data.get('sea_fish_weight', 0)
-        # sea_fish_weight = int(sea_fish_weight) + weight
-        # await state.update_data(sea_fish_weight=sea_fish_weight)
 
 async def init_new_state(state: FSMContext):
     await state.update_data(location='clearing')
     await state.update_data(worms=0)
     await state.update_data(pool_fish_pcs=0)
-    # await state.update_data(pool_fish_weight=0)
     await state.update_data(river_fish_pcs=0)
-    # await state.update_data(river_fish_weight=0)
     await state.update_data(sea_fish_pcs=0)
-    # await state.update_data(sea_fish_weight= 0)
     await state.update_data(fishing_rods=False)
     await state.update_data(pool_fish_pcs=0)
-    # await state.update_data(pool_fish_weight=0)
     await state.update_data(river_fish_pcs=0)
-    # await state.update_data(river_fish_weight=0)
     await state.update_data(sea_fish_pcs=0)
-    # await state.update_data(sea_fish_weight=0)
     await state.update_data(showel_mentioned=False)
     await state.update_data(showel_taken=False)
     await state.update_data(hedgehog_hints_level=0)
+    await state.update_data(mouse_quest_level=0)

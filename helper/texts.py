@@ -11,3 +11,5 @@ t_go_fish_in_sea = "Ловить в море"
 t_go_to_forest = "Пойти в лес"
 t_feed_hedgehog = "Угостить Ёжика"
 t_visit_mouse = "Поискать Мышку"
+
+t_mouse_quest = 'Мышка, научи чему-нибудь'

@@ -11,7 +11,7 @@ from helper.keyboards import *
 from db.mongo_database import *
 
 
-version = '1.5.3'
+version = '1.6.0'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -173,11 +173,20 @@ async def go_fish_in_river(message: Message, state: FSMContext):
     the_number = random.randint(1, fishing_range)
     await state.update_data(the_number=the_number)
 
-    await bot.send_message(chat_id=chat_id,
-        text="Тут рыба хороша! Аж слюнки текут! Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров",
-    )
+    state_data = await state.get_data()
+    mouse_quest_level = state_data.get('mouse_quest_level', 0)
 
-    await bot.send_message(chat_id=chat_id, text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
+    # действует ли ограничение?
+    if fishing_range == river_range and mouse_quest_level < 1:
+        await state.update_data(location='fishing_go_fishing_requisites_ok')
+        await bot.send_message(chat_id=chat_id, text="Похоже, что вся речка заросла крапивой. Жжётся, однако. Не добраться...",
+                               reply_markup=await get_keyboard(state))
+    else:
+        await bot.send_message(chat_id=chat_id,
+            text="Тут рыба хороша! Аж слюнки текут! Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров",
+        )
+
+        await bot.send_message(chat_id=chat_id, text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
 
 
 @dp.callback_query(F.data == t_go_fish_in_sea)
@@ -189,11 +198,20 @@ async def go_fish_in_sea(message: Message, state: FSMContext):
     the_number = random.randint(1, fishing_range)
     await state.update_data(the_number=the_number)
 
-    await bot.send_message(chat_id=chat_id,
-        text="Тут такая рыба, что аж даже немножко страшно! Нет, не так! Страшно интересно! Вперёд, Ёжик, поймаем её! Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров",
-    )
+    state_data = await state.get_data()
+    mouse_quest_level = state_data.get('mouse_quest_level', 0)
 
-    await bot.send_message(chat_id=chat_id, text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
+    # действует ли ограничение?
+    if fishing_range == sea_range and mouse_quest_level < 2:
+        await state.update_data(location='fishing_go_fishing_requisites_ok')
+        await bot.send_message(chat_id=chat_id, text="На море бушуют волны. Они выбрасывают солёную пену на берег. Весь берег покрыт солью и она щиплет лапки. Не подойти...",
+                               reply_markup=await get_keyboard(state))
+    else:
+        await bot.send_message(chat_id=chat_id,
+            text="Тут такая рыба, что аж даже немножко страшно! Нет, не так! Страшно интересно! Вперёд, Ёжик, поймаем её! Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров",
+        )
+
+        await bot.send_message(chat_id=chat_id, text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
 
 
 @dp.message(F.text.in_([str(x) for x in range(1, 101)]))
@@ -201,6 +219,8 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
     chat_id = message.chat.id
     state_data = await state.get_data()
     applicable_fishing_range = int(state_data.get('fishing_range', 0))
+
+
     requested_range = int(message.text)
     if requested_range > 0 and requested_range <= applicable_fishing_range:
         worms = state_data.get('worms', 0)
@@ -275,6 +295,7 @@ async def load(message: Message, state: FSMContext):
 async def show_invenotry(message: Message, state: FSMContext):
     chat_id = message.chat.id
     state_data = await state.get_data()
+    print('Инвентарь: ',state_data)
     worms = state_data.get('worms', 0)
     pool_fish_pcs = state_data.get('pool_fish_pcs', 0)
     # pool_fish_weight = state_data.get('pool_fish_weight', 0)
@@ -335,7 +356,17 @@ async def go_to_forest(message: Message, state: FSMContext):
 async def feed_hedgehog(message: Message, state: FSMContext):
     chat_id = message.message.chat.id
     await bot.send_message(chat_id=chat_id, text="Ёжик, будешь червяка? Расскажи мне что-нибудь интересно.")
-    await feed_hedgehog(bot, chat_id, state)
+    state_data = await state.get_data()
+    print(state_data)
+    await feed_hedgehog_level(bot, chat_id, state)
+    await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
+
+
+@dp.callback_query(F.data == t_mouse_quest)
+async def mouse_quest(message: Message, state: FSMContext):
+    chat_id = message.message.chat.id
+    await bot.send_message(chat_id=chat_id, text="Мышка, а что у тебя там в книжках ещё интересного пишут? Научи меня чему-нибудь. ")
+    await mouse_quest_levels(bot, chat_id, state)
     await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
 
 

@@ -22,6 +22,7 @@ locations = {
 async def get_keyboard(state: FSMContext):
     state_data = await state.get_data()
     location = state_data.get('location')
+    print(location)
     rods_taken = state_data.get('fishing_rods',False)
     mouse_mentioned = state_data.get('mouse_mentioned',False)
 
@@ -34,11 +35,14 @@ async def get_keyboard(state: FSMContext):
     #special
     is_showel_mentioned = state_data.get('showel_mentioned', False)
     if is_showel_mentioned:
-        if location != 'forest':
+        if location != 'forest' and location != 't_visit_mouse':
             builder.row(InlineKeyboardButton(text=t_go_to_forest, callback_data=t_go_to_forest))
         builder.row(InlineKeyboardButton(text=t_feed_hedgehog, callback_data=t_feed_hedgehog))
     if mouse_mentioned and location == 'forest':
         builder.row(InlineKeyboardButton(text=t_visit_mouse, callback_data=t_visit_mouse))
+        #
+    if location == 't_visit_mouse':
+        builder.row(InlineKeyboardButton(text=t_mouse_quest, callback_data=t_mouse_quest))
 
     keyboard = builder.as_markup()
     return keyboard
