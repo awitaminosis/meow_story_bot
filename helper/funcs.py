@@ -96,6 +96,7 @@ async def mouse_quest_levels(bot, chat_id, state: FSMContext):
     mouse_quest_level = state_data.get('mouse_quest_level', 0)
     worms = state_data.get('worms', 0)
     river_fish_pcs = state_data.get('river_fish_pcs', 0)
+    sea_fish_pcs = state_data.get('sea_fish_pcs', 0)
 
     photo_path = "./imgs/Mouse.png"
     photo = FSInputFile(photo_path)
@@ -123,6 +124,29 @@ async def mouse_quest_levels(bot, chat_id, state: FSMContext):
         else:
             await bot.send_message(chat_id=chat_id,
                                    text="Тигр, я сейчас книжку по аквариумистике дочитываю - мне совершенно необходимо 10 барбусов (речные рыбки). Обитают в Амазонке. Но вдруг и в нашей речке тоже...)")
+    elif mouse_quest_level == 2:
+        if sea_fish_pcs <= 15:
+            sea_fish_pcs -= 15
+            await state.update_data(river_fish_pcs=sea_fish_pcs)
+            await bot.send_message(chat_id=chat_id, text="Так, аккуратно извлекаем фосфор. Осталное не нужно. Тигр, будь так любезен, доешь эти кусочки")
+            await bot.send_message(chat_id=chat_id, text="Мышка достаёт из рюкзака какие-то фляжки и другие принадлежности. Что-то рассказывает...")
+            await bot.send_message(chat_id=chat_id, text="Тигр не слышит подробностей того, что Мышка рассказывает - он слишком занят")
+            await bot.send_message(chat_id=chat_id, text="Ёжик не слышит подробностей того, что Мышка рассказывает - Тигр слишком громко занят рыбой")
+            await bot.send_message(chat_id=chat_id, text="Вот, готово! Держи. Теперь у тебя есть светящаяся удочка. Возможно с её помощью даже ночью в лесу сможешь ориентироваться")
+            await bot.send_message(chat_id=chat_id, text="Мышка продолжает что-то рассказывать, но Тигр и Ёжик уже уходт и не слышат подробностей...")
+            mouse_quest_level += 1
+            await state.update_data(mouse_quest_level=mouse_quest_level)
+
+            await state.update_data(glowing_rod=True)
+            photo_path = "./imgs/Hedgehog_worms.png"
+            photo = FSInputFile(photo_path)
+            await bot.send_photo(chat_id=chat_id, photo=photo)
+            await bot.send_message(chat_id=chat_id,
+                                   text="Тигр, это хорошо, что у нас появилась такая светящаяся штука, я думаю нам она скоро понадобится")
+
+        else:
+            await bot.send_message(chat_id=chat_id,
+                                   text="Тигр, а вот тут напиисано, что в морской рыбе содержится много фосфора. А вот в той книжке, сразу под пятном от сыра написано, как сделать фосфоресцирующую подсветку. Для этого требуется 15 морских рыб")
     else:
         await bot.send_message(chat_id=chat_id,
                                text="Мышка слишком увлечённо шуршит страницами книги и не слышит обращённые к ней вопросы")

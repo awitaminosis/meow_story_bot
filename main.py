@@ -13,7 +13,7 @@ from helper.keyboards import *
 from db.mongo_database import *
 
 
-version = '1.7.0'
+version = '1.8.0'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -278,6 +278,7 @@ async def show_changelog(message: Message, state: FSMContext):
         'Говорят, в лесу видели Мышку',
         'Мышка опять читает книжки',
         'Какая рыба живёт в речке?',
+        'Морская рыба полезна',
     ]
     a_news = random.choice(news)
     await bot.send_message(chat_id=chat_id, text=a_news)
@@ -315,6 +316,7 @@ async def show_invenotry(message: Message, state: FSMContext):
     sea_fish_pcs = state_data.get('sea_fish_pcs', 0)
     rods_taken = state_data.get('fishing_rods', False)
     showel_taken = state_data.get('showel_taken', False)
+    glowing_rod = state_data.get('glowing_rod', False)
 
     if worms:
         text = f'червей: {worms}'
@@ -333,6 +335,9 @@ async def show_invenotry(message: Message, state: FSMContext):
         await bot.send_message(chat_id=chat_id, text=text)
     if sea_fish_pcs:
         text = f'рыбы из моря (штук): {sea_fish_pcs}'
+        await bot.send_message(chat_id=chat_id, text=text)
+    if glowing_rod:
+        text = f'Светящаяся удочка: есть'
         await bot.send_message(chat_id=chat_id, text=text)
     if not worms and not rods_taken and not showel_taken and not pool_fish_pcs and not river_fish_pcs and not sea_fish_pcs:
         await bot.send_message(chat_id=chat_id, text='Пока что пусто')
