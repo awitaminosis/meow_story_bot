@@ -110,8 +110,8 @@ async def mouse_quest_levels(bot, chat_id, state: FSMContext):
         mouse_quest_level += 1
         await state.update_data(mouse_quest_level=mouse_quest_level)
     elif mouse_quest_level == 1:
-        if river_fish_pcs <= 1:
-            river_fish_pcs -= 1
+        if river_fish_pcs <= 10:
+            river_fish_pcs -= 10
             await state.update_data(river_fish_pcs=river_fish_pcs)
             await bot.send_message(chat_id=chat_id, text="Ой. Спасибо. Хм... Кажется это караси. Но ничего, я буду звать их барбусы.")
             await bot.send_message(chat_id=chat_id, text="Кстати, ты знаешь, я тут на днях прочитала ещё одну интересную книжку. Буквально проглотила её от корки до корки.")
