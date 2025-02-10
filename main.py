@@ -377,16 +377,24 @@ async def mouse_quest(message: Message, state: FSMContext):
 @dp.callback_query(F.data == t_visit_mouse)
 async def visit_mouse(message: Message, state: FSMContext):
     chat_id = message.message.chat.id
+    state_data = await state.get_data()
     await state.update_data(location='t_visit_mouse')
+    mouse_quest_level = state_data.get('mouse_quest_level', 0)
 
-    await bot.send_message(chat_id=chat_id,
-       text="Пыхтя и фырча они пробираются через заросли лесной чащи. Потом через кусты крыжовника. Потом через овраги. Потом, уже отчаявшись найти Мышку, решают отдохнуть под кустом барбариса. Там они и встречают Мышку",
-    )
+    if mouse_quest_level == 0:
+        await bot.send_message(chat_id=chat_id,
+           text="Пыхтя и фырча они пробираются через заросли лесной чащи. Потом через кусты крыжовника. Потом через овраги. Потом, уже отчаявшись найти Мышку, решают отдохнуть под кустом барбариса. Там они и встречают Мышку",
+        )
+    elif mouse_quest_level == 1:
+        await bot.send_message(chat_id=chat_id,
+            text="У куста барбариса Мышки нет. На земле лежит несколько надгрызанных ягод. И видны следы, уходящие в направлении берёзовой рощицы. Там Мышка собирает опавшую бересту. Она замечает Тигра и Ёжика, и приветственно машет им лапкой",
+        )
 
     photo_path = "./imgs/Mouse.png"
     photo = FSInputFile(photo_path)
     await bot.send_photo(chat_id=chat_id, photo=photo)
-    await bot.send_message(chat_id=chat_id, text="Привет, Тигр. Привет, Ёжик.")
+    if mouse_quest_level == 0:
+        await bot.send_message(chat_id=chat_id, text="Привет, Тигр. Привет, Ёжик.")
     menu_kb = ReplyKeyboardMarkup(keyboard=[
         [KeyboardButton(text="Инвентарь")],
         [KeyboardButton(text="Сохранить")],
