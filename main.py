@@ -1,4 +1,6 @@
 import asyncio
+import random
+
 from aiogram import Bot, Dispatcher
 from aiogram import Router
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -11,7 +13,7 @@ from helper.keyboards import *
 from db.mongo_database import *
 
 
-version = '1.6.0'
+version = '1.6.1'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -267,7 +269,16 @@ async def do_fishing_in_pool(message: Message, state: FSMContext):
 @dp.message(F.text == 'Что нового?')
 async def show_changelog(message: Message, state: FSMContext):
     chat_id = message.chat.id
-    await bot.send_message(chat_id=chat_id, text='Ёжик ещё не кушал червей - он может рассказать что-то интересное. Угости Ёжика червяком. Фыр!')
+    news = ['Ёжик ещё не кушал червей - он может рассказать что-то интересное',
+        'Угости Ёжика червяком!',
+        'Фыр!',
+        'Речка заросла крапивой',
+        'Море сейчас не доступно',
+        'Р-р-р-рыба!',
+        'Говорят, в лесу видели Мышку',
+    ]
+    a_news = random.choice(news)
+    await bot.send_message(chat_id=chat_id, text=a_news)
 
 
 @dp.message(F.text == 'Сохранить')
