@@ -109,6 +109,23 @@ async def mouse_quest_levels(bot, chat_id, state: FSMContext):
         await bot.send_message(chat_id=chat_id, text="Мышка продолжает что-то рассказывать, но Тигр и Ёжик уже уходт и не слышат подробностей...")
         mouse_quest_level += 1
         await state.update_data(mouse_quest_level=mouse_quest_level)
+    elif mouse_quest_level == 1:
+        if river_fish_pcs <= 1:
+            river_fish_pcs -= 1
+            await state.update_data(river_fish_pcs=river_fish_pcs)
+            await bot.send_message(chat_id=chat_id, text="Ой. Спасибо. Хм... Кажется это караси. Но ничего, я буду звать их барбусы.")
+            await bot.send_message(chat_id=chat_id, text="Кстати, ты знаешь, я тут на днях прочитала ещё одну интересную книжку. Буквально проглотила её от корки до корки.")
+            await bot.send_message(chat_id=chat_id, text="О том, что, представляешь, вполне себе можно ходить по углям. И по снегу. Но и для того и для того нужна особая техника - сейчас я тебе покажу её!")
+            await bot.send_message(chat_id=chat_id, text="Внимание, рыбалка в море стала доступна!")
+            await bot.send_message(chat_id=chat_id, text="Мышка продолжает что-то рассказывать, но Тигр и Ёжик уже уходт и не слышат подробностей...")
+            mouse_quest_level += 1
+            await state.update_data(mouse_quest_level=mouse_quest_level)
+        else:
+            await bot.send_message(chat_id=chat_id,
+                                   text="Тигр, я сейчас книжку по аквариумистике дочитываю - мне совершенно необходимо 10 барбусов (речные рыбки). Обитают в Амазонке. Но вдруг и в нашей речке тоже...)")
+    else:
+        await bot.send_message(chat_id=chat_id,
+                               text="Мышка слишком увлечённо шуршит страницами книги и не слышит обращённые к ней вопросы")
 
     # elif hedgehog_hints_level == 1:
     #     if worms >= 50 and pool_fish_pcs >= 5:
