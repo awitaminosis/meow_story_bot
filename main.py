@@ -13,7 +13,7 @@ from helper.keyboards import *
 from db.mongo_database import *
 
 
-version = '1.8.0'
+version = '1.8.1'
 
 
 bot = Bot(token=config('BOT_TOKEN'))
@@ -68,9 +68,7 @@ async def start_new_story(message: Message, state: FSMContext):
 @dp.callback_query(F.data == t_go_to_tiger_home)
 async def go_to_tiger_home(message: Message, state: FSMContext):
     chat_id = message.message.chat.id
-    await bot.send_message(chat_id=chat_id,
-        text="Тигр пришёл в свой дом. Хорошо тут среди множества рыболовных принадлежностей",
-    )
+    await t_say(bot, chat_id, ["Вот я и дома. Хорошо тут среди множества рыболовных принадлежностей."])
 
     await state.update_data(location='tiger_home')
     await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
@@ -79,11 +77,9 @@ async def go_to_tiger_home(message: Message, state: FSMContext):
 @dp.callback_query(F.data == t_take_the_rods)
 async def take_the_rods(message: Message, state: FSMContext):
     chat_id = message.message.chat.id
-    await bot.send_message(chat_id=chat_id,
-        text="Вот они, любимые инструменты Тигра. Теперь и на рыбалку можно",
-    )
-    await state.update_data(fishing_rods=True)
+    await t_say(bot, chat_id, ["Вот они, мои любимые инструменты. Теперь и на рыбалку можно!"])
 
+    await state.update_data(fishing_rods=True)
     await state.update_data(location='rods_taken')
     await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
 
@@ -91,12 +87,8 @@ async def take_the_rods(message: Message, state: FSMContext):
 @dp.callback_query(F.data == t_go_to_hedgehog_home)
 async def go_to_hedgehog_home(message: Message, state: FSMContext):
     chat_id = message.message.chat.id
-    await bot.send_message(chat_id=chat_id,
-        text="Ёжик встречает Тигра рядом с компостной ямой, в которой он разводит червей. Ёжик тепло приветствует Тигра и намекает, что было бы хорошо помочь ему в выкапывании вкусных червей",
-    )
-    photo_path = "./imgs/Hedgehog.png"
-    photo = FSInputFile(photo_path)
-    await bot.send_photo(chat_id=message.message.chat.id, photo=photo)
+    await bot.send_message(chat_id=chat_id,text="Ёжик встречает Тигра рядом с компостной ямой, в которой он разводит червей.")
+    await h_say(bot, chat_id,["Привет, Тигр! Поможешь мне с червяками?"])
 
     await state.update_data(location='hedgehog_home')
     await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
@@ -127,16 +119,12 @@ async def go_fishing(message: Message, state: FSMContext):
     has_fishing_rods = state_data.get('fishing_rods')
     worms = int(state_data.get('worms', 0))
     if not has_fishing_rods:
-        await bot.send_message(chat_id=chat_id,
-            text="Эх, без удочек тяжело ловить... Вот бы где-ниубдь добыть рыболовный инструмент...",
-        )
+        await t_say(bot, chat_id, ["Эх, без удочек тяжело ловить... Вот бы где-ниубдь добыть рыболовный инструмент..."])
 
         await state.update_data(location='fishing_requisites_missing')
         await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
     elif worms <= 0:
-        await bot.send_message(chat_id=chat_id,
-            text="Что-то подсказывает Тигру, что без червей рыба сегодня ловиться не будет... Вот бы где-ниубдь добыть червей...",
-        )
+        await t_say(bot, chat_id, ["Что-то мне подсказывает, что без червей рыба сегодня ловиться не будет... Вот бы где-ниубдь добыть червей..."])
 
         await state.update_data(location='fishing_requisites_missing')
         await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
@@ -287,8 +275,8 @@ async def show_changelog(message: Message, state: FSMContext):
 @dp.message(F.text == 'Сохранить')
 async def save(message: Message, state: FSMContext):
     chat_id = message.chat.id
-    save_ok = await save_journey(chat_id, state)
-    await bot.send_message(chat_id=chat_id, text='Мышка говорит, что записала приключение. Вот держи книжку. Если захочешь загрузиться, и вспомнить приключение - просто прочитай его из книжки.')
+    await save_journey(chat_id, state)
+    await m_say(bot, chat_id, ['Готово, приключение записано. Вот держи книжку. Если захочешь загрузиться, и вспомнить приключение - просто прочитай его из книжки.'])
     await state.update_data(location='t_visit_mouse')
     await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await get_keyboard(state))
 
@@ -309,7 +297,7 @@ async def load(message: Message, state: FSMContext):
 async def show_invenotry(message: Message, state: FSMContext):
     chat_id = message.chat.id
     state_data = await state.get_data()
-    print('Инвентарь: ',state_data)
+    print('Инвентарь: ', state_data)
     worms = state_data.get('worms', 0)
     pool_fish_pcs = state_data.get('pool_fish_pcs', 0)
     river_fish_pcs = state_data.get('river_fish_pcs', 0)
@@ -364,7 +352,8 @@ async def go_to_forest(message: Message, state: FSMContext):
 @dp.callback_query(F.data == t_feed_hedgehog)
 async def feed_hedgehog(message: Message, state: FSMContext):
     chat_id = message.message.chat.id
-    await bot.send_message(chat_id=chat_id, text="Ёжик, будешь червяка? Расскажи мне что-нибудь интересно.")
+    await t_say(bot, chat_id, ["Ёжик, будешь червяка? Расскажи мне что-нибудь интересное."])
+
     state_data = await state.get_data()
     print(state_data)
     await feed_hedgehog_level(bot, chat_id, state)
@@ -374,7 +363,8 @@ async def feed_hedgehog(message: Message, state: FSMContext):
 @dp.callback_query(F.data == t_mouse_quest)
 async def mouse_quest(message: Message, state: FSMContext):
     chat_id = message.message.chat.id
-    await bot.send_message(chat_id=chat_id, text="Мышка, а что у тебя там в книжках ещё интересного пишут? Научи меня чему-нибудь. ")
+    await t_say(bot, chat_id, ["Мышка, а что у тебя там в книжках ещё интересного пишут? Научи меня чему-нибудь."])
+
     await mouse_quest_levels(bot, chat_id, state)
     await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
 
@@ -395,11 +385,7 @@ async def visit_mouse(message: Message, state: FSMContext):
             text="У куста барбариса Мышки нет. На земле лежит несколько надгрызанных ягод. И видны следы, уходящие в направлении берёзовой рощицы. Там Мышка собирает опавшую бересту. Она замечает Тигра и Ёжика, и приветственно машет им лапкой",
         )
 
-    photo_path = "./imgs/Mouse.png"
-    photo = FSInputFile(photo_path)
-    await bot.send_photo(chat_id=chat_id, photo=photo)
-    if mouse_quest_level == 0:
-        await bot.send_message(chat_id=chat_id, text="Привет, Тигр. Привет, Ёжик.")
+    await m_say(bot, chat_id,["Привет, Тигр. Привет, Ёжик."])
     menu_kb = ReplyKeyboardMarkup(keyboard=[
         [KeyboardButton(text="Инвентарь")],
         [KeyboardButton(text="Сохранить")],
