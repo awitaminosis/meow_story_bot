@@ -275,7 +275,7 @@ async def show_changelog(message: Message, state: FSMContext):
 @dp.message(F.text == 'Сохранить')
 async def save(message: Message, state: FSMContext):
     chat_id = message.chat.id
-    await save_journey(chat_id, state)
+    await save_journey(chat_id, state, message.chat.first_name, message.chat.full_name)
     await m_say(bot, chat_id, ['Готово, приключение записано. Вот держи книжку. Если захочешь загрузиться, и вспомнить приключение - просто прочитай его из книжки.'])
     await state.update_data(location='t_visit_mouse')
     await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await get_keyboard(state))

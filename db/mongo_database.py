@@ -41,24 +41,32 @@ async def load_journey(chat_id: int):
         return None
 
 
-async def upsert(chat_id: int, state: FSMContext = None):
+async def upsert(chat_id: int, state: FSMContext = None, first_name=None, full_name=None):
     journey_data = await state.get_data()
     journey_data = json.dumps(journey_data)
     record = get_by_filter(chat_id)
     print(record)
     if record is not None and len(record):
         filter_query = {'chat_id': chat_id}
-        update_query = {'$set': {'journey_data': journey_data}}
+        update_query = {
+            '$set': {
+                'journey_data': journey_data,
+                'user_first_name': first_name,
+                'user_full_name': full_name,
+            }
+        }
         result = collection.update_one(filter_query, update_query)
     else:
         new_entry = {
             'chat_id': chat_id,
-            'journey_data': journey_data
+            'journey_data': journey_data,
+            'user_first_name': first_name,
+            'user_full_name': full_name
         }
         result = collection.insert_one(new_entry)
     return result
 
 
-async def save_journey(chat_id: int, state: FSMContext):
-    await upsert(chat_id, state)
+async def save_journey(chat_id: int, state: FSMContext, first_name, full_name):
+    await upsert(chat_id, state, first_name, full_name)
     return 'успешно'
