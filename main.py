@@ -1,7 +1,7 @@
 import asyncio
 import random
 
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, types
 from aiogram import Router
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.filters.command import Command
@@ -10,6 +10,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram import F
 
 from helper.keyboards import *
+from helper.filters import *
 from db.mongo_database import *
 
 
@@ -24,7 +25,6 @@ bot_router = Router()
 class Story(StatesGroup):
     guesses = State()
     finish = State()
-
 
 
 @dp.message(Command("start"))
@@ -191,17 +191,61 @@ async def go_fish_in_sea(message: Message, state: FSMContext):
     state_data = await state.get_data()
     mouse_quest_level = state_data.get('mouse_quest_level', 0)
 
+    # builder = InlineKeyboardBuilder()
+    # builder.row(InlineKeyboardButton(text="Закинуть удочку", web_app=types.WebAppInfo(url=config('SEA_FISH_URL'))))
+    # fish_markup = builder.as_markup()
+    #
+    # await bot.send_message(chat_id=chat_id,text='fish',reply_markup=fish_markup)
+    #
+    #
+    # keyboad_actions = [[KeyboardButton(text="fish", web_app=types.WebAppInfo(url=config('SEA_FISH_URL')))]]
+    # menu_kb = ReplyKeyboardMarkup(keyboard=keyboad_actions, resize_keyboard=True)
+    # await bot.send_message(chat_id=chat_id, text="Версия: " + version, reply_markup=menu_kb)
+
     # действует ли ограничение?
     if fishing_range == sea_range and mouse_quest_level < 2:
         await state.update_data(location='fishing_go_fishing_requisites_ok')
         await bot.send_message(chat_id=chat_id, text="На море бушуют волны. Они выбрасывают солёную пену на берег. Весь берег покрыт солью и она щиплет лапки. Не подойти...",
                                reply_markup=await get_keyboard(state))
     else:
-        await bot.send_message(chat_id=chat_id,
-            text="Тут такая рыба, что аж даже немножко страшно! Нет, не так! Страшно интересно! Вперёд, Ёжик, поймаем её! Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров",
-        )
+        # await bot.send_message(chat_id=chat_id,
+        #     text="Тут такая рыба, что аж даже немножко страшно! Нет, не так! Страшно интересно! Вперёд, Ёжик, поймаем её! Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров",
+        # )
+        keyboad_actions = [[KeyboardButton(text="Отправиться на морскую рыбалку", web_app=types.WebAppInfo(url=config('SEA_FISH_URL')))]]
+        menu_kb = ReplyKeyboardMarkup(keyboard=keyboad_actions, resize_keyboard=True)
+        await bot.send_message(chat_id=chat_id, text="Чтобы отправить на морскую рыбалку нажми на кнопку в меню", reply_markup=menu_kb)
 
-        await bot.send_message(chat_id=chat_id, text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
+        # await bot.send_message(chat_id=chat_id, text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
+
+
+@dp.message(WebAppDataFilter())
+async def enter_date(message: Message, state: FSMContext) -> None:
+    if message.web_app_data:
+        chat_id = message.chat.id
+        state_data = await state.get_data()
+        print(message.web_app_data)
+
+        worms = state_data.get('worms', 0)
+        worms -= 1
+        worms = await maybe_eat_worms(worms, message, bot, message.chat.id, state)
+        await state.update_data(worms=worms)
+        photo_path = "./imgs/Fish_caught_bigest.png"
+        photo = FSInputFile(photo_path)
+        await bot.send_photo(chat_id=message.chat.id, photo=photo)
+
+        await state.update_data(fishing_range=0)
+
+        await state.update_data(location='fishing_did_fished')
+        applicable_fishing_range = int(state_data.get('fishing_range', 0))
+        await add_fish(state, applicable_fishing_range)
+
+        keyboad_actions = [[KeyboardButton(text="Инвентарь")],
+                           [KeyboardButton(text="Что нового?")],
+                           ]
+
+        menu_kb = ReplyKeyboardMarkup(keyboard=keyboad_actions, resize_keyboard=True)
+        await bot.send_message(chat_id=chat_id, text="Поймал!", reply_markup=menu_kb)
+        await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
 
 
 @dp.message(F.text.in_([str(x) for x in range(1, 101)]))

@@ -101,7 +101,7 @@ async def mouse_quest_levels(bot, chat_id, state: FSMContext):
         mouse_quest_level += 1
         await state.update_data(mouse_quest_level=mouse_quest_level)
     elif mouse_quest_level == 1:
-        if river_fish_pcs <= 10:
+        if river_fish_pcs >= 10:
             river_fish_pcs -= 10
             await state.update_data(river_fish_pcs=river_fish_pcs)
             await m_say(bot, chat_id,[
@@ -117,7 +117,7 @@ async def mouse_quest_levels(bot, chat_id, state: FSMContext):
             await m_say(bot, chat_id, ["Тигр, я сейчас книжку по аквариумистике дочитываю - мне совершенно необходимо 10 барбусов (речные рыбки). Обитают в Амазонке. Но вдруг и в нашей речке тоже...)"])
 
     elif mouse_quest_level == 2:
-        if sea_fish_pcs <= 15:
+        if sea_fish_pcs >= 15:
             sea_fish_pcs -= 15
             await state.update_data(river_fish_pcs=sea_fish_pcs)
             await m_say(bot, chat_id, [
