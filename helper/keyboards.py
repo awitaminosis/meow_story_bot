@@ -12,7 +12,7 @@ locations = {
     'worms_dig': [t_go_to_tiger_home, t_dig_for_worms, t_go_fishing],
     'fishing_requisites_missing': [t_go_to_tiger_home, t_go_to_hedgehog_home],
     'fishing_go_fishing_requisites_ok': [t_go_fish_in_pool, t_go_fish_in_river, t_go_fish_in_sea],
-    'fishing_did_fished': [t_go_to_tiger_home, t_dig_for_worms, t_go_fishing],
+    'fishing_did_fished': [t_go_to_tiger_home, t_dig_for_worms, t_go_fish_in_pool, t_go_fish_in_river, t_go_fish_in_sea],
     'fishing_worms_ended': [t_go_to_tiger_home, t_go_to_hedgehog_home],
     'forest': [t_go_to_tiger_home, t_go_to_hedgehog_home, t_go_fishing],
     't_visit_mouse': [t_go_to_tiger_home, t_go_to_hedgehog_home, t_go_fishing],
