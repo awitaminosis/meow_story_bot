@@ -1,3 +1,4 @@
 aiogram
 python-decouple
 pymongo[srv]
+requests
