@@ -1,8 +1,10 @@
 from places.states.base import *
 
-class News(Location):
-    def __init__(self, location, handler_type):
-        super().__init__(location, handler_type)
+class News(LocationMessage):
+    location = 'news'
+
+    def __init__(self):
+        super().__init__(self.location)
 
     async def handler(self, message: Message, state: FSMContext):
         try:

@@ -1,9 +1,11 @@
 from places.states.base import *
 from helper.filters import *
 
-class DoFishingInSea(Location):
-    def __init__(self, location, handler_type):
-        super().__init__(location, handler_type)
+class DoFishingInSea(LocationWebApp):
+    location = 'do_fishing_in_sea'
+
+    def __init__(self):
+        super().__init__(self.location)
 
     async def handler(self, message: Message, state: FSMContext):
         try:

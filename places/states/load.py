@@ -1,8 +1,10 @@
 from places.states.base import *
 
-class Load(Location):
-    def __init__(self, location, handler_type):
-        super().__init__(location, handler_type)
+class Load(LocationCallbackQuery):
+    location = 'load'
+
+    def __init__(self):
+        super().__init__(self.location)
 
     async def handler(self, message: Message, state: FSMContext):
         try:

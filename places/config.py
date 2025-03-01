@@ -1,23 +1,41 @@
-from places.states import *
+import importlib
 
 
-Start('start', 'command').register()
-StartNewStory('clearing', 'callback_query').register()
-TigerHomeLocation('tiger_home','callback_query').register()
-RodsTaken('take_the_rods','callback_query').register()
-HedgehogHome('hedgehog_home','callback_query').register()
-WormsDig('worms_dig','callback_query').register()
-GoFishing('go_fishing','callback_query').register()
-GoFishingInPool('go_fishing_in_pool','callback_query').register()
-GoFishingInRiver('go_fishing_in_river','callback_query').register()
-GoFishingInSea('go_fishing_in_sea','callback_query').register()
-DoFishingByRange('do_fishing_by_range','message').register()
-News('news','message').register()
-Save('save','message').register()
-Load('load','callback_query').register()
-Inventory('load','message').register()
-EnterForest('enter_forest','callback_query').register()
-FeedHedgehog('feed_hedgehog','callback_query').register()
-VisitMouse('visit_mouse','callback_query').register()
-MouseGiveQuest('mouse_give_quest','callback_query').register()
-DoFishingInSea('do_fishing_in_sea','web_app').register()
+class StateController:
+    state_classes_dir = 'places.states'
+    file2class = {
+        #название файла : класс
+        #start (из places.states.start) : Start
+        'start': 'Start',
+        'tiger_home': 'TigerHomeLocation',
+        'do_fishing_by_range': 'DoFishingByRange',
+        'do_fishing_in_sea': 'DoFishingInSea',
+        'enter_forest': 'EnterForest',
+        'feed_hedgehog': 'FeedHedgehog',
+        'go_fishing': 'GoFishing',
+        'go_fishing_in_pool': 'GoFishingInPool',
+        'go_fishing_in_river': 'GoFishingInRiver',
+        'go_fishing_in_sea': 'GoFishingInSea',
+        'hedgehog_home': 'HedgehogHome',
+        'inventory': 'Inventory',
+        'load': 'Load',
+        'mouse_give_quest': 'MouseGiveQuest',
+        'news': 'News',
+        'rods_taken': 'RodsTaken',
+        'save': 'Save',
+        'start_new_story': 'StartNewStory',
+        'visit_mouse': 'VisitMouse',
+        'worms_dig': 'WormsDig',
+    }
+
+    def __init__(self):
+        pass
+
+    def includeClasses(self):
+        for k, v in self.file2class.items():
+            module = importlib.import_module(self.state_classes_dir + '.' + k)
+            a_class = getattr(module, v)
+            a_class().register()
+
+
+StateController().includeClasses()
