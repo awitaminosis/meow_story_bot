@@ -1,0 +1,23 @@
+from places.states import *
+
+
+Start('start', 'command').register()
+StartNewStory('clearing', 'callback_query').register()
+TigerHomeLocation('tiger_home','callback_query').register()
+RodsTaken('take_the_rods','callback_query').register()
+HedgehogHome('hedgehog_home','callback_query').register()
+WormsDig('worms_dig','callback_query').register()
+GoFishing('go_fishing','callback_query').register()
+GoFishingInPool('go_fishing_in_pool','callback_query').register()
+GoFishingInRiver('go_fishing_in_river','callback_query').register()
+GoFishingInSea('go_fishing_in_sea','callback_query').register()
+DoFishingByRange('do_fishing_by_range','message').register()
+News('news','message').register()
+Save('save','message').register()
+Load('load','callback_query').register()
+Inventory('load','message').register()
+EnterForest('enter_forest','callback_query').register()
+FeedHedgehog('feed_hedgehog','callback_query').register()
+VisitMouse('visit_mouse','callback_query').register()
+MouseGiveQuest('mouse_give_quest','callback_query').register()
+DoFishingInSea('do_fishing_in_sea','web_app').register()

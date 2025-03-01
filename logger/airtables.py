@@ -2,6 +2,7 @@ import logging
 import traceback
 import requests
 import json
+import sys
 from datetime import datetime
 from decouple import config
 
@@ -74,6 +75,7 @@ def setup_logger():
     airtable_handler.setFormatter(formatter)
 
     logger = logging.getLogger('AirtableLogger')
+    #logger = logging.StreamHandler(sys.stdout)
     logger.setLevel(logging.DEBUG)
     logger.addHandler(airtable_handler)
 
