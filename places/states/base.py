@@ -16,24 +16,29 @@ from helper.keyboards import *
 
 from main import logger
 
+
 class Location:
     def __init__(self, location):
         self.location = location
 
     def register(self):
-        raise NotImplementedError('unknow type:' + self.handler_type)
+        raise NotImplementedError('unknown type:' + self.handler_type)
+
 
 class LocationCallbackQuery(Location):
     def register(self):
         dp.callback_query.register(self.handler, self.filter)
 
+
 class LocationCommand(Location):
     def register(self):
         dp.message.register(self.handler, self.filter)
 
+
 class LocationMessage(Location):
     def register(self):
         dp.message.register(self.handler, self.filter)
+
 
 class LocationWebApp(Location):
     def register(self):

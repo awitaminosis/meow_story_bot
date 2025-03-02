@@ -31,11 +31,11 @@ class StateController:
     def __init__(self):
         pass
 
-    def includeClasses(self):
+    def include_classes(self):
         for k, v in self.file2class.items():
             module = importlib.import_module(self.state_classes_dir + '.' + k)
             a_class = getattr(module, v)
             a_class().register()
 
 
-StateController().includeClasses()
+StateController().include_classes()
