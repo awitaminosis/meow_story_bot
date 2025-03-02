@@ -29,7 +29,7 @@ class VisitMouse(LocationCallbackQuery):
             ], resize_keyboard=True)
             await bot.send_message(chat_id=chat_id, text="Я сейчас гуляю с книжкой - могу записать приключение",
                                    reply_markup=menu_kb)
-            await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
+            await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await self.get_keyboard(state))
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 

@@ -40,7 +40,7 @@ class DoFishingByRange(LocationMessage):
                             await add_fish(state, applicable_fishing_range)
 
                             await bot.send_message(chat_id=chat_id, text="Что будем делать?",
-                                                   reply_markup=await get_keyboard(state))
+                                                   reply_markup=await self.get_keyboard(state))
 
                         else:
                             # не отгадал. дадим подсказку
@@ -55,7 +55,7 @@ class DoFishingByRange(LocationMessage):
                 else:
                     await state.update_data(location='fishing_worms_ended')
                     await bot.send_message(chat_id=chat_id, text="Всё, Тигр, черви закончились. Пойдём отсюда",
-                                           reply_markup=await get_keyboard(state))
+                                           reply_markup=await self.get_keyboard(state))
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 

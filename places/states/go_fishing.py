@@ -18,14 +18,14 @@ class GoFishing(LocationCallbackQuery):
 
                 await state.update_data(location='fishing_requisites_missing')
                 await bot.send_message(chat_id=chat_id, text="Что будем делать?",
-                                       reply_markup=await get_keyboard(state))
+                                       reply_markup=await self.get_keyboard(state))
             elif worms <= 0:
                 await t_say(bot, chat_id, [
                     "Что-то мне подсказывает, что без червей рыба сегодня ловиться не будет... Вот бы где-ниубдь добыть червей..."])
 
                 await state.update_data(location='fishing_requisites_missing')
                 await bot.send_message(chat_id=chat_id, text="Что будем делать?",
-                                       reply_markup=await get_keyboard(state))
+                                       reply_markup=await self.get_keyboard(state))
             else:
                 await bot.send_message(chat_id=chat_id,
                                        text="Начинаем рыбалку",
@@ -35,7 +35,7 @@ class GoFishing(LocationCallbackQuery):
                 await state.update_data(location='fishing_go_fishing_requisites_ok')
                 await bot.send_message(chat_id=chat_id,
                                        text="Ловить можно где помельче - там легче поймать, но и рыба не такая интересная. Или же ловить там где поглубже - но и рыба там поинтересней",
-                                       reply_markup=await get_keyboard(state))
+                                       reply_markup=await self.get_keyboard(state))
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 

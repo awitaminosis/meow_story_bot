@@ -20,7 +20,7 @@ class EnterForest(LocationCallbackQuery):
                 await state.update_data(showel_taken=True)
 
             await state.update_data(location='forest')
-            await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
+            await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await self.get_keyboard(state))
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 

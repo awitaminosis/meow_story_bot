@@ -35,7 +35,7 @@ class DoFishingInSea(LocationWebApp):
                 menu_kb = ReplyKeyboardMarkup(keyboard=keyboad_actions, resize_keyboard=True)
                 await bot.send_message(chat_id=chat_id, text="Поймал!", reply_markup=menu_kb)
                 await bot.send_message(chat_id=chat_id, text="Что будем делать?",
-                                       reply_markup=await get_keyboard(state))
+                                       reply_markup=await self.get_keyboard(state))
         except Exception as e:
             logger.error(f"An error occurred: {e}")
     async def filter(self,message):

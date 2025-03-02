@@ -23,7 +23,7 @@ class GoFishingInRiver(LocationCallbackQuery):
                 await state.update_data(location='fishing_go_fishing_requisites_ok')
                 await bot.send_message(chat_id=chat_id,
                                        text="Похоже, что вся речка заросла крапивой. Жжётся, однако. Не добраться...",
-                                       reply_markup=await get_keyboard(state))
+                                       reply_markup=await self.get_keyboard(state))
             else:
                 await bot.send_message(chat_id=chat_id,
                                        text="Тут рыба хороша! Аж слюнки текут! Можно забрасывать удочку на расстояние от 1 до " + str(

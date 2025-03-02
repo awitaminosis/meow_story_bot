@@ -20,7 +20,7 @@ class StartNewStory(LocationCallbackQuery):
             await bot.send_photo(chat_id=chat_id, photo=photo)
 
             await state.update_data(location='clearing')
-            await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await get_keyboard(state))
+            await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await self.get_keyboard(state))
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 

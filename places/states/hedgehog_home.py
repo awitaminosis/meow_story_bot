@@ -13,7 +13,7 @@ class HedgehogHome(LocationCallbackQuery):
             await h_say(bot, chat_id, ["Привет, Тигр! Поможешь мне с червяками?"])
 
             await state.update_data(location='hedgehog_home')
-            await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await get_keyboard(state))
+            await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await self.get_keyboard(state))
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 

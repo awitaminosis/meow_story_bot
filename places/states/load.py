@@ -15,7 +15,7 @@ class Load(LocationCallbackQuery):
                 await bot.send_message(chat_id=chat_id,
                                        text='Тигр читает, что Мышка записала в книжке про приключение. Вроде всё вспомнил')
                 await state.set_data(loaded_data)
-                await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await get_keyboard(state))
+                await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await self.get_keyboard(state))
             else:
                 await bot.send_message(chat_id=chat_id, text='Ошибка загрузки')
         except Exception as e:
