@@ -1,11 +1,15 @@
 from places.states.base import *
 from main import version
 
+
 class Start(LocationCommand):
     location = 'start'
+    can_reach = [
+        ('start_new_story', 'start_new_story', 'inline', ''),
+    ]
 
-    def __init__(self):
-        super().__init__(self.location)
+    def __init__(self, controller):
+        super().__init__(self.location, controller)
 
     async def handler(self, message: Message, state: FSMContext):
         try:

@@ -1,10 +1,11 @@
 from places.states.base import *
 
+
 class GoFishingInPool(LocationCallbackQuery):
     location = 'go_fishing_in_pool'
 
-    def __init__(self):
-        super().__init__(self.location)
+    def __init__(self, controller):
+        super().__init__(self.location, controller)
 
     async def handler(self, message: Message, state: FSMContext):
         try:
@@ -26,4 +27,4 @@ class GoFishingInPool(LocationCallbackQuery):
             logger.error(f"An error occurred: {e}")
 
     async def filter(self,F):
-        return F.data == t_go_fish_in_pool
+        return F.data == self.location

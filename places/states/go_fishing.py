@@ -1,10 +1,20 @@
 from places.states.base import *
 
+
 class GoFishing(LocationCallbackQuery):
     location = 'go_fishing'
+    can_reach = [
+        ('tiger_home', t_go_to_tiger_home, 'inline', ''),
+        ('hedgehog_home', t_go_to_hedgehog_home, 'inline', ''),
+        ('go_fishing_in_pool', t_go_fish_in_pool, 'inline', ''),
+        ('go_fishing_in_river', t_go_fish_in_river, 'inline', ''),
+        ('go_fishing_in_sea', t_go_fish_in_sea, 'inline', ''),
+        ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest),
+        ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog),
+    ]
 
-    def __init__(self):
-        super().__init__(self.location)
+    def __init__(self, controller):
+        super().__init__(self.location, controller)
 
     async def handler(self, message: Message, state: FSMContext):
         try:
@@ -40,4 +50,4 @@ class GoFishing(LocationCallbackQuery):
             logger.error(f"An error occurred: {e}")
 
     async def filter(self,F):
-        return F.data == t_go_fishing
+        return F.data == self.location

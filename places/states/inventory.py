@@ -1,10 +1,11 @@
 from places.states.base import *
 
+
 class Inventory(LocationMessage):
     location = 'load'
 
-    def __init__(self):
-        super().__init__(self.location)
+    def __init__(self, controller):
+        super().__init__(self.location, controller)
 
     async def handler(self, message: Message, state: FSMContext):
         try:

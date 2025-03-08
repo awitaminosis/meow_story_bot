@@ -35,7 +35,7 @@ class StateController:
         for k, v in self.file2class.items():
             module = importlib.import_module(self.state_classes_dir + '.' + k)
             a_class = getattr(module, v)
-            a_class().register()
+            a_class(self).register()
 
 
 StateController().include_classes()

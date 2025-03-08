@@ -6,7 +6,7 @@ from aiogram.fsm.state import State, StatesGroup
 from logger.airtables import setup_logger
 from helper.app import *
 
-from places.config import *
+from places.controller import *
 
 logger = setup_logger()
 version = '1.8.1'
@@ -15,7 +15,6 @@ version = '1.8.1'
 class Story(StatesGroup):
     guesses = State()
     finish = State()
-
 
 
 async def main():

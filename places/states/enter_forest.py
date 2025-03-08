@@ -1,10 +1,18 @@
 from places.states.base import *
 
+
 class EnterForest(LocationCallbackQuery):
     location = 'enter_forest'
+    can_reach = [
+        ('tiger_home', t_go_to_tiger_home, 'inline', ''),
+        ('hedgehog_home', t_go_to_hedgehog_home, 'inline', ''),
+        ('go_fishing', t_go_fishing, 'inline', ''),
+        ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog),
+        ('visit_mouse', t_visit_mouse, 'inline', Transitions.can_search_mouse),
+    ]
 
-    def __init__(self):
-        super().__init__(self.location)
+    def __init__(self, controller):
+        super().__init__(self.location, controller)
 
     async def handler(self, message: Message, state: FSMContext):
         try:
@@ -25,5 +33,4 @@ class EnterForest(LocationCallbackQuery):
             logger.error(f"An error occurred: {e}")
 
     async def filter(self,F):
-        return F.data == t_go_to_forest
-
+        return F.data == self.location

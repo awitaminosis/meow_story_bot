@@ -1,11 +1,19 @@
 from aiogram.types import WebAppInfo
 from places.states.base import *
 
+
 class GoFishingInSea(LocationCallbackQuery):
     location = 'go_fishing_in_sea'
+    can_reach = [
+        ('tiger_home', t_go_to_tiger_home, 'inline', ''),
+        ('hedgehog_home', t_go_to_hedgehog_home, 'inline', ''),
+        ('go_fishing', t_go_fishing, 'inline', ''),
+        ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest),
+        ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog),
+    ]
 
-    def __init__(self):
-        super().__init__(self.location)
+    def __init__(self, controller):
+        super().__init__(self.location, controller)
 
     async def handler(self, message: Message, state: FSMContext):
         try:
@@ -19,17 +27,6 @@ class GoFishingInSea(LocationCallbackQuery):
             state_data = await state.get_data()
             mouse_quest_level = state_data.get('mouse_quest_level', 0)
 
-            # builder = InlineKeyboardBuilder()
-            # builder.row(InlineKeyboardButton(text="Закинуть удочку", web_app=types.WebAppInfo(url=config('SEA_FISH_URL'))))
-            # fish_markup = builder.as_markup()
-            #
-            # await bot.send_message(chat_id=chat_id,text='fish',reply_markup=fish_markup)
-            #
-            #
-            # keyboad_actions = [[KeyboardButton(text="fish", web_app=types.WebAppInfo(url=config('SEA_FISH_URL')))]]
-            # menu_kb = ReplyKeyboardMarkup(keyboard=keyboad_actions, resize_keyboard=True)
-            # await bot.send_message(chat_id=chat_id, text="Версия: " + version, reply_markup=menu_kb)
-
             # действует ли ограничение?
             if fishing_range == sea_range and mouse_quest_level < 2:
                 await state.update_data(location='fishing_go_fishing_requisites_ok')
@@ -37,19 +34,14 @@ class GoFishingInSea(LocationCallbackQuery):
                                        text="На море бушуют волны. Они выбрасывают солёную пену на берег. Весь берег покрыт солью и она щиплет лапки. Не подойти...",
                                        reply_markup=await self.get_keyboard(state))
             else:
-                # await bot.send_message(chat_id=chat_id,
-                #     text="Тут такая рыба, что аж даже немножко страшно! Нет, не так! Страшно интересно! Вперёд, Ёжик, поймаем её! Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров",
-                # )
                 keyboad_actions = [[KeyboardButton(text="Отправиться на морскую рыбалку",
                                                    web_app=WebAppInfo(url=config('SEA_FISH_URL')))]]
                 menu_kb = ReplyKeyboardMarkup(keyboard=keyboad_actions, resize_keyboard=True)
                 await bot.send_message(chat_id=chat_id,
                                        text="Чтобы отправить на морскую рыбалку нажми на кнопку в меню",
                                        reply_markup=menu_kb)
-
-                # await bot.send_message(chat_id=chat_id, text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
     async def filter(self,F):
-        return F.data == t_go_fish_in_sea
+        return F.data == self.location

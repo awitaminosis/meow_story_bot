@@ -1,10 +1,18 @@
 from places.states.base import *
 
+
 class Save(LocationMessage):
     location = 'save'
+    can_reach = [
+        ('tiger_home', t_go_to_tiger_home, 'inline', ''),
+        ('hedgehog_home', t_go_to_hedgehog_home, 'inline', ''),
+        ('go_fishing', t_go_fishing, 'inline', ''),
+        ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog),
+        ('mouse_give_quest', t_mouse_quest, 'inline', ''),
+    ]
 
-    def __init__(self):
-        super().__init__(self.location)
+    def __init__(self, controller):
+        super().__init__(self.location, controller)
 
     async def handler(self, message: Message, state: FSMContext):
         try:
