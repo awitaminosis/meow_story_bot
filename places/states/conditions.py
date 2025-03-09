@@ -29,3 +29,9 @@ class Transitions:
         state_data = await state.get_data()
         is_mouse_mentioned = state_data.get('mouse_mentioned', False)
         return is_mouse_mentioned
+
+    @staticmethod
+    async def can_take_rods(location_from, state: FSMContext):
+        state_data = await state.get_data()
+        rods_taken = state_data.get('fishing_rods', False)
+        return not rods_taken
