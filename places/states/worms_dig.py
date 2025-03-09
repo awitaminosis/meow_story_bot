@@ -18,7 +18,7 @@ class WormsDig(LocationCallbackQuery):
         try:
             chat_id = message.message.chat.id
             await bot.send_message(chat_id=chat_id,
-                                   text="Тигр помогает Ёжику копать червей. Ёжик облизывается и помогает",
+                                   text="Тигр помогает Ёжику копать червей. Ёжик внимательно смотрит и облизывается",
                                    )
             state_data = await state.get_data()
             worms = state_data.get('worms', 0)

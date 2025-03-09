@@ -18,8 +18,8 @@ class HedgehogHome(LocationCallbackQuery):
         try:
             chat_id = message.message.chat.id
             await bot.send_message(chat_id=chat_id,
-                                   text="Ёжик встречает Тигра рядом с компостной ямой, в которой он разводит червей.")
-            await h_say(bot, chat_id, ["Привет, Тигр! Поможешь мне с червяками?"])
+                                   text="Ёжик машет Тигру и позывает его к компостной яме, в которой он разводит червей.")
+            await h_say(bot, chat_id, ["Тигр, поможешь мне с червяками?"])
 
             await state.update_data(location='hedgehog_home')
             await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await self.get_keyboard(state))
