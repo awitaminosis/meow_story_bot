@@ -6,6 +6,8 @@ from aiogram.fsm.context import FSMContext
 from helper.constants import *
 from main import logger
 
+EASY_START = False
+
 async def add_worms(state: FSMContext):
     try:
         state_data = await state.get_data()
@@ -224,15 +226,17 @@ async def say(bot, chat_id, texts: list):
 
 async def init_new_state(state: FSMContext):
     try:
+        pool_fish_pcs = 100 if EASY_START else 0
+        river_fish_pcs = 100 if EASY_START else 0
+        sea_fish_pcs = 100 if EASY_START else 0
+        worms = 1000 if EASY_START else 0
+
         await state.update_data(location='clearing')
-        await state.update_data(worms=0)
-        await state.update_data(pool_fish_pcs=0)
-        await state.update_data(river_fish_pcs=0)
-        await state.update_data(sea_fish_pcs=0)
+        await state.update_data(worms=worms)
+        await state.update_data(pool_fish_pcs=pool_fish_pcs)
+        await state.update_data(river_fish_pcs=river_fish_pcs)
+        await state.update_data(sea_fish_pcs=sea_fish_pcs)
         await state.update_data(fishing_rods=False)
-        await state.update_data(pool_fish_pcs=0)
-        await state.update_data(river_fish_pcs=0)
-        await state.update_data(sea_fish_pcs=0)
         await state.update_data(showel_mentioned=False)
         await state.update_data(showel_taken=False)
         await state.update_data(hedgehog_hints_level=0)
