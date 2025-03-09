@@ -4,10 +4,10 @@ from places.states.base import *
 class MouseGiveQuest(LocationCallbackQuery):
     location = 'mouse_give_quest'
     can_reach = [
-        ('tiger_home', t_go_to_tiger_home, 'inline', ''),
+        # ('tiger_home', t_go_to_tiger_home, 'inline', ''),
         ('hedgehog_home', t_go_to_hedgehog_home, 'inline', ''),
-        ('go_fishing', t_go_fishing, 'inline', ''),
-        ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog),
+        # ('go_fishing', t_go_fishing, 'inline', ''),
+        # ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog),
         ('mouse_give_quest', t_mouse_quest, 'inline', ''),
     ]
 

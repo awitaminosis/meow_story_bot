@@ -5,12 +5,12 @@ class GoFishing(LocationCallbackQuery):
     location = 'go_fishing'
     can_reach = [
         ('tiger_home', t_go_to_tiger_home, 'inline', ''),
-        ('hedgehog_home', t_go_to_hedgehog_home, 'inline', ''),
+        # ('hedgehog_home', t_go_to_hedgehog_home, 'inline', ''),
         ('go_fishing_in_pool', t_go_fish_in_pool, 'inline', ''),
         ('go_fishing_in_river', t_go_fish_in_river, 'inline', ''),
         ('go_fishing_in_sea', t_go_fish_in_sea, 'inline', ''),
-        ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest),
-        ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog),
+        # ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest),
+        # ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog),
     ]
 
     def __init__(self, controller):
