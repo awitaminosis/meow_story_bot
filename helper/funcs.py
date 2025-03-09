@@ -174,8 +174,9 @@ async def m_say(bot, chat_id, texts: list):
     try:
         photo_path = "./imgs/Mouse.png"
         photo = FSInputFile(photo_path)
-        await bot.send_photo(chat_id=chat_id, photo=photo)
-        await say(bot, chat_id, texts)
+        await bot.send_photo(chat_id=chat_id, photo=photo, caption=texts[0])
+        if len(texts) > 1:
+            await say(bot, chat_id, texts[1:])
     except Exception as e:
         logger.error(f"An error occurred: {e}")
 
@@ -184,8 +185,9 @@ async def h_say(bot, chat_id, texts: list):
     try:
         photo_path = "./imgs/Hedgehog.png"
         photo = FSInputFile(photo_path)
-        await bot.send_photo(chat_id=chat_id, photo=photo)
-        await say(bot, chat_id, texts)
+        await bot.send_photo(chat_id=chat_id, photo=photo, caption=texts[0])
+        if len(texts) > 1:
+            await say(bot, chat_id, texts[1:])
     except Exception as e:
         logger.error(f"An error occurred: {e}")
 
@@ -194,8 +196,9 @@ async def hw_say(bot, chat_id, texts: list):
     try:
         photo_path = "./imgs/Hedgehog_worms.png"
         photo = FSInputFile(photo_path)
-        await bot.send_photo(chat_id=chat_id, photo=photo)
-        await say(bot, chat_id, texts)
+        await bot.send_photo(chat_id=chat_id, photo=photo, caption=texts[0])
+        if len(texts) > 1:
+            await say(bot, chat_id, texts[1:])
     except Exception as e:
         logger.error(f"An error occurred: {e}")
 
@@ -204,8 +207,9 @@ async def t_say(bot, chat_id, texts: list):
     try:
         photo_path = "./imgs/Tiger.png"
         photo = FSInputFile(photo_path)
-        await bot.send_photo(chat_id=chat_id, photo=photo)
-        await say(bot, chat_id, texts)
+        await bot.send_photo(chat_id=chat_id, photo=photo, caption=texts[0])
+        if len (texts) > 1:
+            await say(bot, chat_id, texts[1:])
     except Exception as e:
         logger.error(f"An error occurred: {e}")
 
