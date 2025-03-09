@@ -18,6 +18,8 @@ class Save(LocationMessage):
         try:
             chat_id = message.chat.id
             await save_journey(chat_id, state, message.chat.first_name, message.chat.full_name)
+            await say(bot, chat_id, ['Тигр начинает записывать приключение...'])
+            await h_say(bot, chat_id, ['Тигр, по-моему "Виличайший рыбак, а также его друг, просто Ёжик" пишется как-то по-другому. Давай лучше Мышка запишет...'])
             await m_say(bot, chat_id, [
                 'Готово, приключение записано. Вот держи книжку. Если захочешь загрузиться, и вспомнить приключение - просто прочитай его из книжки.'])
             await state.update_data(location='t_visit_mouse')
