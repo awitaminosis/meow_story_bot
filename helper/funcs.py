@@ -145,7 +145,7 @@ async def mouse_quest_levels(bot, chat_id, state: FSMContext):
                     "Тигр не слышит подробностей того, что Мышка рассказывает - он слишком занят",
                     "Ёжик не слышит подробностей того, что Мышка рассказывает - Тигр слишком громко занят рыбой",
                     "Вот, готово! Держи. Теперь у тебя есть светящаяся удочка. Возможно с её помощью даже ночью в лесу сможешь ориентироваться",
-                    "Мышка продолжает что-то рассказывать, но Тигр и Ёжик уже уходт и не слышат подробностей..."
+                    "Мышка продолжает что-то рассказывать, но Тигр и Ёжик уже уходят и не слышат подробностей..."
                 ])
                 mouse_quest_level += 1
                 await state.update_data(mouse_quest_level=mouse_quest_level)
@@ -236,17 +236,30 @@ async def init_new_state(state: FSMContext):
         pool_fish_pcs = 100 if EASY_START else 0
         river_fish_pcs = 100 if EASY_START else 0
         sea_fish_pcs = 100 if EASY_START else 0
-        worms = 1000 if EASY_START else 0
+        worms = 10000 if EASY_START else 0
+        hedgehog_hints_level = 3 if EASY_START else 0
+        mouse_quest_level = 3 if EASY_START else 0
+        showel_mentioned = True if EASY_START else False
+        showel_taken = True if EASY_START else False
+        fishing_rods = True if EASY_START else False
+        mouse_mentioned = True if EASY_START else False
+        glowing_mushroom = True if EASY_START else False
+        # glowing_mushroom = False if EASY_START else False
+
+        mouse_owl_story_stage = 0
 
         await state.update_data(location='clearing')
         await state.update_data(worms=worms)
         await state.update_data(pool_fish_pcs=pool_fish_pcs)
         await state.update_data(river_fish_pcs=river_fish_pcs)
         await state.update_data(sea_fish_pcs=sea_fish_pcs)
-        await state.update_data(fishing_rods=False)
-        await state.update_data(showel_mentioned=False)
-        await state.update_data(showel_taken=False)
-        await state.update_data(hedgehog_hints_level=0)
-        await state.update_data(mouse_quest_level=0)
+        await state.update_data(fishing_rods=fishing_rods)
+        await state.update_data(showel_mentioned=showel_mentioned)
+        await state.update_data(showel_taken=showel_taken)
+        await state.update_data(hedgehog_hints_level=hedgehog_hints_level)
+        await state.update_data(mouse_quest_level=mouse_quest_level)
+        await state.update_data(mouse_mentioned=mouse_mentioned)
+        await state.update_data(glowing_mushroom=glowing_mushroom)
+        await state.update_data(mouse_owl_story_stage=mouse_owl_story_stage)
     except Exception as e:
         logger.error(f"An error occurred: {e}")

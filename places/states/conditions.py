@@ -25,10 +25,20 @@ class Transitions:
         return is_showel_mentioned
 
     @staticmethod
-    async def can_search_mouse(location_from, state: FSMContext):
+    async def can_visit_mouse(location_from, state: FSMContext):
         state_data = await state.get_data()
         is_mouse_mentioned = state_data.get('mouse_mentioned', False)
         return is_mouse_mentioned
+
+    @staticmethod
+    async def mouse_is_missing(location_from, state: FSMContext):
+        state_data = await state.get_data()
+        mouse_quest_level = state_data.get('mouse_quest_level', 0)
+        return mouse_quest_level == 3
+
+    @staticmethod
+    async def mouse_not_missing(location_from, state: FSMContext):
+        return not await Transitions.mouse_is_missing(location_from, state)
 
     @staticmethod
     async def can_take_rods(location_from, state: FSMContext):

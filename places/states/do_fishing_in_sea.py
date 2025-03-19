@@ -5,11 +5,11 @@ from helper.filters import *
 class DoFishingInSea(LocationWebApp):
     location = 'do_fishing_in_sea'
     can_reach = [
-        ('tiger_home', t_go_to_tiger_home, 'inline', ''),
-        # ('hedgehog_home', t_go_to_hedgehog_home, 'inline', ''),
-        ('go_fishing', t_go_fishing, 'inline', Transitions.can_fish),
-        # ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest),
-        # ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog),
+        ('tiger_home', t_go_to_tiger_home, 'inline', '', {}),
+        # ('hedgehog_home', t_go_to_hedgehog_home, 'inline', '', {}),
+        ('go_fishing', t_go_fishing, 'inline', Transitions.can_fish, {}),
+        # ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest, {}),
+        # ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog, {}),
     ]
 
     def __init__(self, controller):

@@ -4,9 +4,9 @@ from places.states.base import *
 class StartNewStory(LocationCallbackQuery):
     location = 'clearing'
     can_reach = [
-        ('tiger_home', t_go_to_tiger_home, 'inline', ''),
-        ('hedgehog_home', t_go_to_hedgehog_home, 'inline', ''),
-        ('go_fishing', t_go_fishing, 'inline', ''),
+        ('tiger_home', t_go_to_tiger_home, 'inline', '', {}),
+        ('hedgehog_home', t_go_to_hedgehog_home, 'inline', '', {}),
+        ('go_fishing', t_go_fishing, 'inline', '', {}),
     ]
 
     def __init__(self, controller):

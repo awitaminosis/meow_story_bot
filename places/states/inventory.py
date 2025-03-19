@@ -19,6 +19,7 @@ class Inventory(LocationMessage):
             rods_taken = state_data.get('fishing_rods', False)
             showel_taken = state_data.get('showel_taken', False)
             glowing_rod = state_data.get('glowing_rod', False)
+            glowing_mushroom = state_data.get('glowing_mushroom', False)
 
             if worms:
                 text = f'червей: {worms}'
@@ -40,6 +41,9 @@ class Inventory(LocationMessage):
                 await bot.send_message(chat_id=chat_id, text=text)
             if glowing_rod:
                 text = f'Светящаяся удочка: есть'
+                await bot.send_message(chat_id=chat_id, text=text)
+            if glowing_mushroom:
+                text = f'Светящийся гриб: есть'
                 await bot.send_message(chat_id=chat_id, text=text)
             if not worms and not rods_taken and not showel_taken and not pool_fish_pcs and not river_fish_pcs and not sea_fish_pcs:
                 await bot.send_message(chat_id=chat_id, text='Пока что пусто')

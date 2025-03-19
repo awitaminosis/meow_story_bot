@@ -11,6 +11,7 @@ class StateController:
         'do_fishing_by_range': 'DoFishingByRange',
         'do_fishing_in_sea': 'DoFishingInSea',
         'enter_forest': 'EnterForest',
+        'night_forest': 'NightForest',
         'feed_hedgehog': 'FeedHedgehog',
         'go_fishing': 'GoFishing',
         'go_fishing_in_pool': 'GoFishingInPool',

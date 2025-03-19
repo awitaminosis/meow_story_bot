@@ -5,7 +5,7 @@ from main import version
 class Start(LocationCommand):
     location = 'start'
     can_reach = [
-        ('start_new_story', 'start_new_story', 'inline', ''),
+        ('start_new_story', 'start_new_story', 'inline', '', {}),
     ]
 
     def __init__(self, controller):

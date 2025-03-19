@@ -27,7 +27,13 @@ class Location:
 
     async def get_keyboard(self, state: FSMContext):
         builder = InlineKeyboardBuilder()
-        for place, place_text, keyboard_type, condition in self.can_reach:
+        for place, place_text, keyboard_type, condition, extra in self.can_reach:
+            if extra.get('coords',None) is not None:
+                x,y = extra['coords']
+                place += f'__{x},{y}'
+            elif extra.get('action',None) is not None:
+                action = extra['action']
+                place += f'--{action}'
             if condition:
                 if await condition(self.location, state):
                     if keyboard_type == 'inline':

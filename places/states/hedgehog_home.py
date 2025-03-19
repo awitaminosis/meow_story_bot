@@ -4,11 +4,11 @@ from places.states.base import *
 class HedgehogHome(LocationCallbackQuery):
     location = 'hedgehog_home'
     can_reach = [
-        ('tiger_home', t_go_to_tiger_home, 'inline', ''),
-        ('worms_dig', t_dig_for_worms, 'inline', ''),
-        # ('go_fishing', t_go_fishing, 'inline', ''),
-        ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog),
-        ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest),
+        ('tiger_home', t_go_to_tiger_home, 'inline', '', {}),
+        ('worms_dig', t_dig_for_worms, 'inline', '', {}),
+        # ('go_fishing', t_go_fishing, 'inline', '', {}),
+        ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog, {}),
+        ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest, {}),
     ]
 
     def __init__(self, controller):

@@ -4,8 +4,8 @@ from places.states.base import *
 class RodsTaken(LocationCallbackQuery):
     location = 'take_the_rods'
     can_reach = [
-        ('hedgehog_home', t_go_to_hedgehog_home, 'inline', ''),
-        ('go_fishing', t_go_fishing, 'inline', ''),
+        ('hedgehog_home', t_go_to_hedgehog_home, 'inline', '', {}),
+        ('go_fishing', t_go_fishing, 'inline', '', {}),
     ]
 
     def __init__(self, controller):

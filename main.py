@@ -9,7 +9,7 @@ from helper.app import *
 from places.controller import *
 
 logger = setup_logger()
-version = '1.8.1'
+version = '1.9.0'
 
 
 class Story(StatesGroup):
