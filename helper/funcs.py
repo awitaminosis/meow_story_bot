@@ -181,9 +181,9 @@ async def add_fish(state: FSMContext, applicable_fishing_range):
 
 async def m_say(bot, chat_id, texts: list):
     try:
-        photo_path = r"./imgs/Mouse.png"
-        photo = FSInputFile(photo_path)
-        # photo = 'https://raw.githubusercontent.com/awitaminosis/meow_story_bot/95ea1d3c24aa83f714eb9e4eee39988d92432aa2/imgs/Mouse.png'
+        # photo_path = r"./imgs/Mouse.png"
+        # photo = FSInputFile(photo_path)
+        photo = 'https://raw.githubusercontent.com/awitaminosis/meow_story_bot/95ea1d3c24aa83f714eb9e4eee39988d92432aa2/imgs/Mouse.png'
         await bot.send_photo(chat_id=chat_id, photo=photo)
         await say(bot, chat_id, texts)
     except Exception as e:
@@ -192,9 +192,9 @@ async def m_say(bot, chat_id, texts: list):
 
 async def h_say(bot, chat_id, texts: list):
     try:
-        photo_path = r"./imgs/Hedgehog.png"
-        photo = FSInputFile(photo_path)
-        # photo = 'https://raw.githubusercontent.com/awitaminosis/meow_story_bot/95ea1d3c24aa83f714eb9e4eee39988d92432aa2/imgs/Hedgehog.png'
+        # photo_path = r"./imgs/Hedgehog.png"
+        # photo = FSInputFile(photo_path)
+        photo = 'https://raw.githubusercontent.com/awitaminosis/meow_story_bot/95ea1d3c24aa83f714eb9e4eee39988d92432aa2/imgs/Hedgehog.png'
         await bot.send_photo(chat_id=chat_id, photo=photo)
         await say(bot, chat_id, texts)
     except Exception as e:
@@ -203,9 +203,9 @@ async def h_say(bot, chat_id, texts: list):
 
 async def hw_say(bot, chat_id, texts: list):
     try:
-        photo_path = r"./imgs/Hedgehog_worms.png"
-        photo = FSInputFile(photo_path)
-        # photo = 'https://raw.githubusercontent.com/awitaminosis/meow_story_bot/95ea1d3c24aa83f714eb9e4eee39988d92432aa2/imgs/Hedgehog_worms.png'
+        # photo_path = r"./imgs/Hedgehog_worms.png"
+        # photo = FSInputFile(photo_path)
+        photo = 'https://raw.githubusercontent.com/awitaminosis/meow_story_bot/95ea1d3c24aa83f714eb9e4eee39988d92432aa2/imgs/Hedgehog_worms.png'
         await bot.send_photo(chat_id=chat_id, photo=photo)
         await say(bot, chat_id, texts)
     except Exception as e:
@@ -214,9 +214,9 @@ async def hw_say(bot, chat_id, texts: list):
 
 async def t_say(bot, chat_id, texts: list):
     try:
-        photo_path = "./imgs/Tiger.png"
-        photo = FSInputFile(photo_path)
-        # photo = "https://github.com/awitaminosis/meow_story_bot/blob/95ea1d3c24aa83f714eb9e4eee39988d92432aa2/imgs/Tiger.png?raw=true"
+        # photo_path = "./imgs/Tiger.png"
+        # photo = FSInputFile(photo_path)
+        photo = "https://github.com/awitaminosis/meow_story_bot/blob/95ea1d3c24aa83f714eb9e4eee39988d92432aa2/imgs/Tiger.png?raw=true"
         await bot.send_photo(chat_id=chat_id, photo=photo)
         await say(bot, chat_id, texts)
     except Exception as e:
