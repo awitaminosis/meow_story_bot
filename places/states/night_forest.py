@@ -120,7 +120,7 @@ class NightForest(LocationCallbackQuery):
         if x == 6 and y == 9:
             #мячик
             state_data = await state.get_data()
-            mouse_owl_story_stage = state_data.get('mouse_owl_story_stage')
+            mouse_owl_story_stage = state_data.get('mouse_owl_story_stage',0)
             if mouse_owl_story_stage == 0:
                 self.map['6,9'] = {
                     'refuse': '',
