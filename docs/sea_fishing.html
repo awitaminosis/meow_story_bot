@@ -15,7 +15,6 @@
         .fish-2{
             top:450px;
             left:200px;
-
         }
         .fish-3{
             top:550px;
@@ -38,7 +37,7 @@
 
             $('.fish').on('click',function(){
                 data = {
-                    'fishes': '123'
+                    'fishes': 'caught'
                 }
                 tg.sendData(JSON.stringify(data));
                 tg.close();
@@ -48,9 +47,8 @@
                 return Math.random() * (max - min) + min;
             }
 
-            setInterval(function(){
-                //animate(this); // Start the animation
-                $( ".fish" ).each(function(){
+            setInterval(function() {
+                $( ".fish" ).each(function() {
                     offsetX = getRandomFloat(-1 * fishOffset, fishOffset)
                     if (offsetX < 0) {
                         offsetX = 0;
