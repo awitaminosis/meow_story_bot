@@ -14,4 +14,3 @@ t_visit_mouse = "Поискать Мышку"
 
 t_mouse_quest = 'Мышка, научи чему-нибудь'
 t_night_forest = 'Пойдём в лес искать Мышку'
-# t_night_forest = 't_night_forest'

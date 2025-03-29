@@ -1,4 +1,4 @@
-from aiogram import Bot, Dispatcher, types
+from aiogram import Bot, Dispatcher
 from aiogram import Router
 from decouple import config
 from aiogram.fsm.storage.memory import MemoryStorage

@@ -38,5 +38,4 @@ class StateController:
             a_class = getattr(module, v)
             a_class(self).register()
 
-
 StateController().include_classes()

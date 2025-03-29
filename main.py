@@ -1,20 +1,12 @@
 import asyncio
-import random
 
-
-from aiogram.fsm.state import State, StatesGroup
 from logger.airtables import setup_logger
-from helper.app import *
-
-from places.controller import *
 
 logger = setup_logger()
-version = '1.9.0'
+version = '1.9.1'
 
-
-class Story(StatesGroup):
-    guesses = State()
-    finish = State()
+from helper.app import *
+from places.controller import *
 
 
 async def main():

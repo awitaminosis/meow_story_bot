@@ -63,7 +63,6 @@ class AirtableHandler(logging.Handler):
             print(f"Failed to send log to Airtable: {response.text}")
 
 
-# Example usage
 def setup_logger():
     AIRTABlES_API_KEY = config('AIRTABlES_API_KEY')
     AIRTABlES_BASE_ID = config('AIRTABlES_BASE_ID')
@@ -79,7 +78,4 @@ def setup_logger():
     logger.setLevel(logging.DEBUG)
     logger.addHandler(airtable_handler)
 
-    # Example log messages
-    # logger.info("This is an info message.")
-    # logger.error("This is an error message.")
     return logger
