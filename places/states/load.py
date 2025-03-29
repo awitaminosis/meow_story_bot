@@ -20,12 +20,11 @@ class Load(LocationCallbackQuery):
             loaded_data = await load_journey(chat_id)
             print(loaded_data)
             if loaded_data:
-                await bot.send_message(chat_id=chat_id,
-                                       text='Тигр читает, что Мышка записала в книжке про приключение. Вроде всё вспомнил')
+                await say(bot,chat_id,['Тигр читает, что Мышка записала в книжке про приключение. Вроде всё вспомнил'])
                 await state.set_data(loaded_data)
                 await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await self.get_keyboard(state))
             else:
-                await bot.send_message(chat_id=chat_id, text='Ошибка загрузки')
+                await say(bot,chat_id,['Ошибка загрузки'])
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 

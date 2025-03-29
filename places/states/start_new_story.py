@@ -17,13 +17,7 @@ class StartNewStory(LocationCallbackQuery):
             chat_id = message.message.chat.id
             await state.clear()
             await init_new_state(state)
-            await bot.send_message(chat_id=chat_id,
-                                   text="Однажды Тигр проснулся на полянке и подумал, а почему бы не пойти на рыбалку",
-                                   )
-            photo_path = "./imgs/Tiger.png"
-            photo = FSInputFile(photo_path)
-            await bot.send_photo(chat_id=chat_id, photo=photo)
-
+            await t_say(bot, chat_id, ["Однажды Тигр проснулся на полянке и подумал, а почему бы не пойти на рыбалку"])
             await state.update_data(location='clearing')
             await bot.send_message(chat_id=chat_id, text="Куда пойдём?", reply_markup=await self.get_keyboard(state))
         except Exception as e:

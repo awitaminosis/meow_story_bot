@@ -57,7 +57,7 @@ async def maybe_eat_worms(worms, message: Message, bot, chat_id, state: FSMConte
             is_showel_mentioned = state_data.get('showel_mentioned', False)
             if not is_showel_mentioned:
                 texts.append('Кстати, Тигр, а я тут вспомнил... Я недавно лопату забыл в лесу... Лопатой бы копать поудобнее было бы...')
-                await bot.send_message(chat_id=chat_id, text='Внимание! Открыта новая локация')
+                await say(bot, chat_id, ['Внимание! Открыта новая локация'])
                 await state.update_data(showel_mentioned=True)
             print(texts)
             await hw_say(bot, chat_id, texts)
@@ -92,7 +92,7 @@ async def feed_hedgehog_level(bot, chat_id, state: FSMContext):
                 await state.update_data(river_fish_pcs=pool_fish_pcs)
                 await state.update_data(hedgehog_hints_level=hedgehog_hints_level)
                 await state.update_data(mouse_mentioned=True)
-                await bot.send_message(chat_id=chat_id, text='Внимание! В лесу открыта новая локация')
+                await say(bot, chat_id,['Внимание! В лесу открыта новая локация'])
             else:
                 await hw_say(bot, chat_id, ["Тигр, вот если бы червей было штук 50...а Ещё мне нужно 5 рыб из ближайшей лужи - я опарышей хочу развести"])
         else:

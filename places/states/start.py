@@ -14,9 +14,8 @@ class Start(LocationCommand):
     async def handler(self, message: Message, state: FSMContext):
         try:
             chat_id = message.chat.id
-            await bot.send_message(chat_id=chat_id, text="Это небольшое приключение из жизни Тигра и Ёжика.")
-            await bot.send_message(chat_id=chat_id,
-                                   text="Остальные приключения можно увидеть https://awitaminosis.github.io/pi_meow_fir/")
+            await say(bot,chat_id, ["Это небольшое приключение из жизни Тигра и Ёжика."])
+            await say(bot,chat_id,["Остальные приключения можно увидеть https://awitaminosis.github.io/pi_meow_fir/"])
 
             keyboad_actions = [[KeyboardButton(text="Инвентарь")],
                                [KeyboardButton(text="Что нового?")],

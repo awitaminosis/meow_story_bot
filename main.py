@@ -3,7 +3,7 @@ import asyncio
 from logger.airtables import setup_logger
 
 logger = setup_logger()
-version = '1.9.1'
+version = '1.9.2'
 
 from helper.app import *
 from places.controller import *

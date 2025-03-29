@@ -23,30 +23,30 @@ class Inventory(LocationMessage):
 
             if worms:
                 text = f'червей: {worms}'
-                await bot.send_message(chat_id=chat_id, text=text)
+                await say(bot, chat_id,[text])
             if rods_taken:
                 text = f'удочки: есть'
-                await bot.send_message(chat_id=chat_id, text=text)
+                await say(bot, chat_id,[text])
             if showel_taken:
                 text = f'лопата: есть'
-                await bot.send_message(chat_id=chat_id, text=text)
+                await say(bot, chat_id,[text])
             if pool_fish_pcs:
                 text = f'рыбы из лужи (штук): {pool_fish_pcs}'
-                await bot.send_message(chat_id=chat_id, text=text)
+                await say(bot, chat_id,[text])
             if river_fish_pcs:
                 text = f'рыбы из речки (штук): {river_fish_pcs}'
-                await bot.send_message(chat_id=chat_id, text=text)
+                await say(bot, chat_id,[text])
             if sea_fish_pcs:
                 text = f'рыбы из моря (штук): {sea_fish_pcs}'
-                await bot.send_message(chat_id=chat_id, text=text)
+                await say(bot, chat_id,[text])
             if glowing_rod:
                 text = f'Светящаяся удочка: есть'
-                await bot.send_message(chat_id=chat_id, text=text)
+                await say(bot, chat_id,[text])
             if glowing_mushroom:
                 text = f'Светящийся гриб: есть'
-                await bot.send_message(chat_id=chat_id, text=text)
+                await say(bot, chat_id,[text])
             if not worms and not rods_taken and not showel_taken and not pool_fish_pcs and not river_fish_pcs and not sea_fish_pcs:
-                await bot.send_message(chat_id=chat_id, text='Пока что пусто')
+                await say(bot,chat_id,['Пока что пусто'])
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 

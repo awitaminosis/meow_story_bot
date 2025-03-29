@@ -27,7 +27,7 @@ class News(LocationMessage):
                     'Возможно пригодится карта',
                     ]
             a_news = random.choice(news)
-            await bot.send_message(chat_id=chat_id, text=a_news)
+            await say(bot, chat_id,[a_news])
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 

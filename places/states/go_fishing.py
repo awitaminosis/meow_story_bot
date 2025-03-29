@@ -37,10 +37,8 @@ class GoFishing(LocationCallbackQuery):
                 await bot.send_message(chat_id=chat_id, text="Что будем делать?",
                                        reply_markup=await self.get_keyboard(state))
             else:
-                await bot.send_message(chat_id=chat_id,
-                                       text="Начинаем рыбалку",
-                                       )
-                await bot.send_message(chat_id=chat_id, text="Червей осталось: " + str(worms))
+                await say(bot, chat_id,["Начинаем рыбалку"])
+                await say(bot, chat_id,["Червей осталось: " + str(worms)])
 
                 await state.update_data(location='fishing_go_fishing_requisites_ok')
                 await bot.send_message(chat_id=chat_id,

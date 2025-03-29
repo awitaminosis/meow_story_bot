@@ -32,7 +32,7 @@ class DoFishingByRange(LocationMessage):
                         the_number = int(state_data.get('the_number'))
                         a_number = int(message.text)
                         if a_number == the_number:
-                            await bot.send_message(chat_id=chat_id, text='Клюёт!')
+                            await say(bot, chat_id, ['Клюёт!'])
                             if applicable_fishing_range == pool_range:
                                 photo_path = "./imgs/Fish_caught.png"
                             if applicable_fishing_range == river_range:
@@ -53,13 +53,11 @@ class DoFishingByRange(LocationMessage):
                         else:
                             # не отгадал. дадим подсказку
                             if the_number > a_number:
-                                await bot.send_message(chat_id=chat_id,
-                                                       text='Ёжик подсказывает, что забрасывать удочку нужно дальше')
+                                await say(bot, chat_id,['Ёжик подсказывает, что забрасывать удочку нужно дальше'])
                             else:
-                                await bot.send_message(chat_id=chat_id,
-                                                       text='Ёжик подсказывает, что забрасывать удочку нужно ближе')
+                                await say(bot, chat_id,['Ёжик подсказывает, что забрасывать удочку нужно ближе'])
                     except Exception as e:
-                        await bot.send_message(chat_id=chat_id, text='Это не число')
+                        await say(bot, chat_id, ['Это не число'])
                 else:
                     await state.update_data(location='fishing_worms_ended')
                     await bot.send_message(chat_id=chat_id, text="Всё, Тигр, черви закончились. Пойдём отсюда",

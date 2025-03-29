@@ -17,8 +17,7 @@ class HedgehogHome(LocationCallbackQuery):
     async def handler(self, message: Message, state: FSMContext):
         try:
             chat_id = message.message.chat.id
-            await bot.send_message(chat_id=chat_id,
-                                   text="Ёжик машет Тигру и позывает его к компостной яме, в которой он разводит червей.")
+            await say(bot, chat_id, ["Ёжик машет Тигру и позывает его к компостной яме, в которой он разводит червей."])
             await h_say(bot, chat_id, ["Тигр, поможешь мне с червяками?"])
 
             await state.update_data(location='hedgehog_home')

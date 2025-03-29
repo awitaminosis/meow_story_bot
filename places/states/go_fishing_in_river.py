@@ -33,13 +33,9 @@ class GoFishingInRiver(LocationCallbackQuery):
                                        text="Похоже, что вся речка заросла крапивой. Жжётся, однако. Не добраться...",
                                        reply_markup=await self.get_keyboard(state))
             else:
-                await bot.send_message(chat_id=chat_id,
-                                       text="Тут рыба хороша! Аж слюнки текут! Можно забрасывать удочку на расстояние от 1 до " + str(
-                                           fishing_range) + " метров",
-                                       )
+                await say(bot,chat_id,["Тут рыба хороша! Аж слюнки текут! Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров"])
 
-                await bot.send_message(chat_id=chat_id,
-                                       text="Напиши цифру, на сколько метров от берега забрасывать удочку?")
+                await say(bot, chat_id,["Напиши цифру, на сколько метров от берега забрасывать удочку?"])
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
