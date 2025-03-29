@@ -52,13 +52,16 @@
                         a_coords = a_visited.replaceAll("'",'').split(',');
                         a_x = parseInt(a_coords[0]);
                         a_y = parseInt(a_coords[1]);
-                        if (a_x && a_y) {
-                            hidden[a_x][a_y] = 0;
-                            hidden[a_x - 1][a_y] = 0;
-                            hidden[a_x + 1][a_y] = 0;
-                            hidden[a_x][a_y - 1] = 0;
-                            hidden[a_x][a_y + 1] = 0;
+                        if (!(a_x && a_y)) {
+                            a_x = 3;
+                            a_y = 2;
                         }
+
+                        hidden[a_x][a_y] = 0;
+                        hidden[a_x - 1][a_y] = 0;
+                        hidden[a_x + 1][a_y] = 0;
+                        hidden[a_x][a_y - 1] = 0;
+                        hidden[a_x][a_y + 1] = 0;
                     }
                 }
 
