@@ -30,7 +30,10 @@ class NightForest(LocationCallbackQuery):
 
     def construct_map_url(self):
         url = f'{self.MAP_URL}?x={self.x}&y={self.y}'
-        url += f'&visited={self.visited_places}'
+        visited_str = str(self.visited_places).replace('{','').replace('}','')
+        url += f'&visited={visited_str}'
+        url = url.replace(' ','%20')
+        print(url)
         return url
 
     async def handler(self, message: Message, state: FSMContext):
@@ -49,14 +52,6 @@ class NightForest(LocationCallbackQuery):
                         'Да и поговорка такая была - "Когда я помечаю дорогу червяками - я глух и нем"'
                         ])
 
-                    menu_kb = ReplyKeyboardMarkup(keyboard=[
-                        [KeyboardButton(text="Инвентарь")],
-                        [KeyboardButton(text="Посмотреть карту", web_app=WebAppInfo(url=self.construct_map_url()))],
-                    ], resize_keyboard=True)
-                    await bot.send_message(chat_id=chat_id,
-                                           text="Мы тут всё-таки не очень ещё ориентируемся - возможно карта пригодится...",
-                                           reply_markup=menu_kb)
-
             refuse = await self.update_reachable_coords(x, y, state, chat_id, is_lookup)
             if refuse:
                 await say(bot, chat_id,[refuse])
@@ -68,6 +63,13 @@ class NightForest(LocationCallbackQuery):
                     await t_say(bot, chat_id,[lookup])
 
                 await h_say(bot, chat_id, [f'Тигр, если тебе интересно, то по моим подсчётам мы сдвинулись на восток на {x} и на север на {y}'])
+                menu_kb = ReplyKeyboardMarkup(keyboard=[
+                    [KeyboardButton(text="Инвентарь")],
+                    [KeyboardButton(text="Посмотреть карту", web_app=WebAppInfo(url=self.construct_map_url()))],
+                ], resize_keyboard=True)
+                await bot.send_message(chat_id=chat_id,
+                                       text="И я заодно карту стараюсь вести...",
+                                       reply_markup=menu_kb)
                 await say(bot, chat_id, [random.choice(self.step_phrases)])
 
             await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await self.get_keyboard(state))
