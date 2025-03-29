@@ -65,6 +65,13 @@ class VisitMouse(LocationCallbackQuery):
                 ], resize_keyboard=True)
                 await bot.send_message(chat_id=chat_id, text="Я сейчас гуляю с книжкой - могу записать приключение",
                                        reply_markup=menu_kb)
+            if mouse_quest_level == 3:
+                menu_kb = ReplyKeyboardMarkup(keyboard=[
+                    [KeyboardButton(text="Инвентарь")],
+                    [KeyboardButton(text="Сохранить")],
+                ], resize_keyboard=True)
+                await bot.send_message(chat_id=chat_id, text="А под кустом ветер перелистывает страницы Мышкиной книжки",
+                                       reply_markup=menu_kb)
 
             await bot.send_message(chat_id=chat_id, text="Что будем делать?", reply_markup=await self.get_keyboard(state))
         except Exception as e:
