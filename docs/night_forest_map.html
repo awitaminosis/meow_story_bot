@@ -45,18 +45,19 @@
                 $('#x').offset(offsetToCords(cur_x,cur_y));
 
                 visited = urlParams.get('visited')
-                visited = visited.replace('{','').replace('}','').split(', ')
-
-                for (i=0;i<visited.length;i++){
-                    a_visited = visited[i];
-                    a_coords = a_visited.replaceAll("'",'').split(',');
-                    a_x = parseInt(a_coords[0]);
-                    a_y = parseInt(a_coords[1]);
-                    hidden[a_x][a_y] = 0;
-                    hidden[a_x - 1][a_y] = 0;
-                    hidden[a_x + 1][a_y] = 0;
-                    hidden[a_x][a_y - 1] = 0;
-                    hidden[a_x][a_y + 1] = 0;
+                if (visited) {
+                    visited = visited.replace('{','').replace('}','').split(', ')
+                    for (i=0;i<visited.length;i++){
+                        a_visited = visited[i];
+                        a_coords = a_visited.replaceAll("'",'').split(',');
+                        a_x = parseInt(a_coords[0]);
+                        a_y = parseInt(a_coords[1]);
+                        hidden[a_x][a_y] = 0;
+                        hidden[a_x - 1][a_y] = 0;
+                        hidden[a_x + 1][a_y] = 0;
+                        hidden[a_x][a_y - 1] = 0;
+                        hidden[a_x][a_y + 1] = 0;
+                    }
                 }
 
                 for (i=0;i<=11;i++){
