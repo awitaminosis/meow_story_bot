@@ -1,7 +1,9 @@
 from places.states.base import *
+from aiogram.types import WebAppInfo
 import random
 
 class NightForest(LocationCallbackQuery):
+    MAP_URL = 'https://awitaminosis.github.io/meow_story_bot/night_forest_map.html'
     location = 'night_forest'
     can_reach = [
         ('night_forest', 'пойти на север', 'inline', '', {'coords':(3,3)}),
@@ -12,6 +14,7 @@ class NightForest(LocationCallbackQuery):
     previous_coords = None
     map = dict()
     WORMS_MAX_BREADCRUMBS = 20
+    visited_places = set()
 
     # обычное перемещение
     step_phrases = [
@@ -25,6 +28,11 @@ class NightForest(LocationCallbackQuery):
         super().__init__(self.location, controller)
         self.construct_map()
 
+    def construct_map_url(self):
+        url = f'{self.MAP_URL}?x={self.x}&y={self.y}'
+        url += f'&visited={self.visited_places}'
+        return url
+
     async def handler(self, message: Message, state: FSMContext):
         try:
             chat_id = message.message.chat.id
@@ -36,12 +44,25 @@ class NightForest(LocationCallbackQuery):
                 x = self.x
                 y = self.y
                 if not is_lookup:
-                    await h_say(bot, chat_id,['Тигр, я буду помечать дорогу червяками, чтобы мы смогли найти обратный путь. Чтобы тебя не отвлекать лишний раз - я буду делать это молча - если нужно будет - загляни в инвентарь', 'Да и поговорка такая была - "Когда я помечаю дорогу червяками - я глух и нем"'])
+                    await h_say(bot, chat_id, [
+                        'Тигр, я буду помечать дорогу червяками, чтобы мы смогли найти обратный путь. Чтобы тебя не отвлекать лишний раз - я буду делать это молча - если нужно будет - загляни в инвентарь',
+                        'Да и поговорка такая была - "Когда я помечаю дорогу червяками - я глух и нем"'
+                        ])
+
+                    menu_kb = ReplyKeyboardMarkup(keyboard=[
+                        [KeyboardButton(text="Инвентарь")],
+                        [KeyboardButton(text="Посмотреть карту", web_app=WebAppInfo(url=self.construct_map_url()))],
+                    ], resize_keyboard=True)
+                    await bot.send_message(chat_id=chat_id,
+                                           text="Мы тут всё-таки не очень ещё ориентируемся - возможно карта пригодится...",
+                                           reply_markup=menu_kb)
 
             refuse = await self.update_reachable_coords(x, y, state, chat_id, is_lookup)
             if refuse:
                 await say(bot, chat_id,[refuse])
             else:
+                self.visited_places.add(f'{self.x},{self.y}')
+
                 if is_lookup:
                     lookup = await self.lookup(x, y, state, bot, chat_id)
                     await t_say(bot, chat_id,[lookup])

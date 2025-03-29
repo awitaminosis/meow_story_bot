@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<head>
+    <title>Night forest map</title>
+    <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        #x,.x,
+        #_,._
+        {
+            position:absolute;
+        }
+    </style>
+</head>
+<body>
+    <div class="map">
+        <img id="map" src="map.png">
+        <img id="x" src="x.png">
+        <script>
+            function offsetToCords(x,y){
+                x_ = x * 65 + 10;
+                y_ = 660 - y * 63;
+                return {top:y_, left:x_};
+            }
+
+            $(document).ready(function(){
+                hidden=[];
+                for (i=0;i<=11;i++){
+                    hidden[i]=[];
+                }
+                for (i=0;i<=11;i++){
+                    for (j=0;j<=11;j++){
+                        hidden[i][j] = 1;
+                    }
+                }
+
+
+                tg = window.Telegram.WebApp;
+                tg.expand();
+
+                const queryString = window.location.search;
+                const urlParams = new URLSearchParams(queryString);
+
+                cur_x = urlParams.get('x')
+                cur_y = urlParams.get('y')
+                $('#x').offset(offsetToCords(cur_x,cur_y));
+
+                visited = urlParams.get('visited')
+                visited = visited.replace('{','').replace('}','').split(', ')
+
+                for (i=0;i<visited.length;i++){
+                    a_visited = visited[i];
+                    a_coords = a_visited.replaceAll("'",'').split(',');
+                    a_x = parseInt(a_coords[0]);
+                    a_y = parseInt(a_coords[1]);
+                    hidden[a_x][a_y] = 0;
+                    hidden[a_x - 1][a_y] = 0;
+                    hidden[a_x + 1][a_y] = 0;
+                    hidden[a_x][a_y - 1] = 0;
+                    hidden[a_x][a_y + 1] = 0;
+                }
+
+                for (i=0;i<=11;i++){
+                    for (j=0;j<=11;j++){
+                        if (hidden[i][j] == 1){
+                            newImg = $('<img src="_.png" class="_">').offset(offsetToCords(i,j))
+                            $('#map').after(newImg)
+                        }
+                    }
+                }
+            });
+        </script>
+    </div>
+</body>
