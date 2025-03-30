@@ -14,7 +14,6 @@ class NightForest(LocationCallbackQuery):
     previous_coords = None
     map = dict()
     WORMS_MAX_BREADCRUMBS = 20
-    visited_places = set()
 
     # обычное перемещение
     step_phrases = [
@@ -28,9 +27,11 @@ class NightForest(LocationCallbackQuery):
         super().__init__(self.location, controller)
         self.construct_map()
 
-    def construct_map_url(self):
+    async def construct_map_url(self, state: FSMContext):
         url = f'{self.MAP_URL}?x={self.x}&y={self.y}'
-        visited_str = str(self.visited_places).replace('{','').replace('}','')
+        state_data = await state.get_data()
+        visited_places = state_data.get('visited_places',set())
+        visited_str = str(visited_places).replace('{','').replace('}','')
         url += f'&visited={visited_str}'
         url = url.replace(' ','%20')
         print(url)
@@ -56,16 +57,21 @@ class NightForest(LocationCallbackQuery):
             if refuse:
                 await say(bot, chat_id,[refuse])
             else:
-                self.visited_places.add(f'{self.x},{self.y}')
+
+                state_data = await state.get_data()
+                visited_places = state_data.get('visited_places',set())
+                visited_places.add(f'{self.x},{self.y}')
+                await state.update_data(visited_places=visited_places)
 
                 if is_lookup:
                     lookup = await self.lookup(x, y, state, bot, chat_id)
                     await t_say(bot, chat_id,[lookup])
 
                 await h_say(bot, chat_id, [f'Тигр, если тебе интересно, то по моим подсчётам мы сдвинулись на восток на {x} и на север на {y}'])
+                map_url = await self.construct_map_url(state)
                 menu_kb = ReplyKeyboardMarkup(keyboard=[
                     [KeyboardButton(text="Инвентарь")],
-                    [KeyboardButton(text="Посмотреть карту", web_app=WebAppInfo(url=self.construct_map_url()))],
+                    [KeyboardButton(text="Посмотреть карту", web_app=WebAppInfo(url=map_url))],
                 ], resize_keyboard=True)
                 await bot.send_message(chat_id=chat_id,
                                        text="И я заодно карту стараюсь вести...",

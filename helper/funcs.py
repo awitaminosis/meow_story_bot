@@ -7,6 +7,7 @@ from helper.constants import *
 from main import logger
 
 EASY_START = False
+# EASY_START = True
 
 async def add_worms(state: FSMContext):
     try:
@@ -244,7 +245,7 @@ async def init_new_state(state: FSMContext):
         fishing_rods = True if EASY_START else False
         mouse_mentioned = True if EASY_START else False
         glowing_mushroom = True if EASY_START else False
-        # glowing_mushroom = False if EASY_START else False
+        visited_places = set()
 
         mouse_owl_story_stage = 0
 
@@ -261,5 +262,6 @@ async def init_new_state(state: FSMContext):
         await state.update_data(mouse_mentioned=mouse_mentioned)
         await state.update_data(glowing_mushroom=glowing_mushroom)
         await state.update_data(mouse_owl_story_stage=mouse_owl_story_stage)
+        await state.update_data(visited_places=visited_places)
     except Exception as e:
         logger.error(f"An error occurred: {e}")
