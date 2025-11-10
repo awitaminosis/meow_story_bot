@@ -8,7 +8,8 @@ import helper.funcs
 from main import bot
 from main import dp
 from helper.texts import *
-from db.mongo_database import *
+# from db.mongo_database import *
+from db.sqlite_database import *
 
 from helper.funcs import *
 # from helper.keyboards import *

@@ -1,4 +1,5 @@
 aiogram
 python-decouple
-pymongo[srv]
+#pymongo[srv]
 requests
+sqlite3
