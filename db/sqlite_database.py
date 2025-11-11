@@ -19,7 +19,7 @@ class Journey(Base):
     user_full_name = Column(String)
 
 
-engine = create_engine(f'sqlite:///{DB_PATH}', echo=True)
+engine = create_engine(f'sqlite:///{DB_PATH}', echo=False)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base.metadata.create_all(bind=engine)
 
