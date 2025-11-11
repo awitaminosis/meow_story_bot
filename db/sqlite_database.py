@@ -1,77 +1,91 @@
-import sqlite3
 import json
 from aiogram.fsm.context import FSMContext
-from decouple import config
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Session
 
-# Database configuration
-DB_PATH = 'journey_data.db'
 
-# Connect to SQLite database
-connection = sqlite3.connect(DB_PATH)
-cursor = connection.cursor()
+DB_PATH = 'journey_data_sqlalch.db'
 
-# Create the table if it doesn't exist
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS journeys (
-    chat_id INTEGER PRIMARY KEY,
-    journey_data TEXT,
-    user_first_name TEXT,
-    user_full_name TEXT
-)
-''')
-connection.commit()
+Base = declarative_base()
+
+
+class Journey(Base):
+    __tablename__ = 'journeys'
+
+    chat_id = Column(Integer, primary_key=True)
+    journeyData = Column(String)
+    user_first_name = Column(String)
+    user_full_name = Column(String)
+
+
+engine = create_engine(f'sqlite:///{DB_PATH}', echo=True)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base.metadata.create_all(bind=engine)
+
+
+def get_db() -> Session:
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 def get_all():
-    cursor.execute("SELECT * FROM journeys")
-    all_documents = cursor.fetchall()
-    for document in all_documents:
-        print(document)
+    db = SessionLocal()
+    try:
+        all_journeys = db.query(Journey).all()
+        for journey in all_journeys:
+            print(journey)
+    finally:
+        db.close()
 
 
 def get_by_filter(chat_id):
-    cursor.execute("SELECT * FROM journeys WHERE chat_id = ?", (chat_id,))
-    documents = cursor.fetchall()
-    return documents
+    db = SessionLocal()
+    try:
+        journeys = db.query(Journey).filter(Journey.chat_id == chat_id).all()
+        return journeys
+    finally:
+        db.close()
 
 
 async def load_journey(chat_id: int):
     record_data = get_by_filter(chat_id)
     if record_data:
         record_data = record_data[0]
-        state_data = json.loads(record_data[1])  # Assuming journey_data is at index 1
+        state_data = json.loads(record_data.journey_data)
         return state_data
     else:
         return None
 
 
 async def upsert(chat_id: int, state: FSMContext = None, first_name=None, full_name=None):
-    journey_data = await state.get_data()
-    journey_data = json.dumps(journey_data)
-    record = get_by_filter(chat_id)
-
-    if record:
-        # Update existing record
-        cursor.execute('''
-            UPDATE journeys
-            SET journey_data = ?, user_first_name = ?, user_full_name = ?
-            WHERE chat_id = ?
-        ''', (journey_data, first_name, full_name, chat_id))
-    else:
-        # Insert new record
-        cursor.execute('''
-            INSERT INTO journeys (chat_id, journey_data, user_first_name, user_full_name)
-            VALUES (?, ?, ?, ?)
-        ''', (chat_id, journey_data, first_name, full_name))
-
-    connection.commit()
+    journey_data_dict = await state.get_data()
+    journey_data = json.dumps(journey_data_dict)
+    db = SessionLocal()
+    try:
+        existing = db.query(Journey).filter(Journey.chat_id == chat_id).first()
+        if existing:
+            # Update existing record
+            existing.journey_data = journey_data
+            existing.user_first_name = first_name
+            existing.user_full_name = full_name
+        else:
+            # Insert new record
+            new_journey = Journey(
+                chat_id=chat_id,
+                journey_data=journey_data,
+                user_first_name=first_name,
+                user_full_name=full_name
+            )
+            db.add(new_journey)
+        db.commit()
+    finally:
+        db.close()
 
 
 async def save_journey(chat_id: int, state: FSMContext, first_name, full_name):
     await upsert(chat_id, state, first_name, full_name)
     return 'успешно'
-
-
-# Close the connection when done
-def close_connection():
-    connection.close()
