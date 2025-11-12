@@ -56,6 +56,8 @@ async def load_journey(chat_id: int):
     if record_data:
         record_data = record_data[0]
         state_data = json.loads(record_data.journey_data)
+        if state_data['visited_places'] == []:
+            state_data['visited_places'] = set()
         return state_data
     else:
         return None
@@ -63,6 +65,8 @@ async def load_journey(chat_id: int):
 
 async def upsert(chat_id: int, state: FSMContext = None, first_name=None, full_name=None):
     journey_data_dict = await state.get_data()
+    if len(journey_data_dict['visited_places']) == 0:
+        journey_data_dict['visited_places'] = list()
     journey_data = json.dumps(journey_data_dict)
     db = SessionLocal()
     try:
