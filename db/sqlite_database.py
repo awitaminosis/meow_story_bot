@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 
 
-DB_PATH = 'journey_data_sqlalch.db'
+DB_PATH = 'journey_data_sqlalch_2.db'
 
 Base = declarative_base()
 
