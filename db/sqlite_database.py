@@ -14,7 +14,7 @@ class Journey(Base):
     __tablename__ = 'journeys'
 
     chat_id = Column(Integer, primary_key=True)
-    journeyData = Column(String)
+    journey_data = Column(String)
     user_first_name = Column(String)
     user_full_name = Column(String)
 
