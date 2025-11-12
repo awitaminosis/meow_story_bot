@@ -17,7 +17,7 @@ class Save(LocationMessage):
     async def handler(self, message: Message, state: FSMContext):
         try:
             chat_id = message.chat.id
-            state_data = state.get_data()
+            state_data = await state.get_data()
             mouse_quest_level = state_data.get('mouse_quest_level',0)
             await save_journey(chat_id, state, message.chat.first_name, message.chat.full_name)
             await say(bot, chat_id, ['Тигр начинает записывать приключение...'])
