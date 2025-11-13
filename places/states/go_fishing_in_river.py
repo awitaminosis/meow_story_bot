@@ -2,13 +2,13 @@ from places.states.base import *
 
 
 class GoFishingInRiver(LocationCallbackQuery):
-    location = 'go_fishing_in_river'
+    location = "go_fishing_in_river"
     can_reach = [
-        ('tiger_home', t_go_to_tiger_home, 'inline', '', {}),
+        ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
         # ('hedgehog_home', t_go_to_hedgehog_home, 'inline', '', {}),
-        ('go_fishing', t_go_fishing, 'inline', '', {}),
+        ("go_fishing", t_go_fishing, "inline", "", {}),
         # ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest, {}),
-        ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog, {}),
+        ("feed_hedgehog", t_feed_hedgehog, "inline", Transitions.can_feed_hedgehog, {}),
     ]
 
     def __init__(self, controller):
@@ -24,20 +24,34 @@ class GoFishingInRiver(LocationCallbackQuery):
             await state.update_data(the_number=the_number)
 
             state_data = await state.get_data()
-            mouse_quest_level = state_data.get('mouse_quest_level', 0)
+            mouse_quest_level = state_data.get("mouse_quest_level", 0)
 
             # действует ли ограничение?
             if fishing_range == river_range and mouse_quest_level < 1:
-                await state.update_data(location='fishing_go_fishing_requisites_ok')
-                await bot.send_message(chat_id=chat_id,
-                                       text="Похоже, что вся речка заросла крапивой. Жжётся, однако. Не добраться...",
-                                       reply_markup=await self.get_keyboard(state))
+                await state.update_data(location="fishing_go_fishing_requisites_ok")
+                await bot.send_message(
+                    chat_id=chat_id,
+                    text="Похоже, что вся речка заросла крапивой. Жжётся, однако. Не добраться...",
+                    reply_markup=await self.get_keyboard(state),
+                )
             else:
-                await say(bot,chat_id,["Тут рыба хороша! Аж слюнки текут! Можно забрасывать удочку на расстояние от 1 до " + str(fishing_range) + " метров"])
+                await say(
+                    bot,
+                    chat_id,
+                    [
+                        "Тут рыба хороша! Аж слюнки текут! Можно забрасывать удочку на расстояние от 1 до "
+                        + str(fishing_range)
+                        + " метров"
+                    ],
+                )
 
-                await say(bot, chat_id,["Напиши цифру, на сколько метров от берега забрасывать удочку?"])
+                await say(
+                    bot,
+                    chat_id,
+                    ["Напиши цифру, на сколько метров от берега забрасывать удочку?"],
+                )
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
-    async def filter(self,F):
+    async def filter(self, F):
         return F.data == self.location

@@ -8,10 +8,12 @@ import helper.funcs
 from main import bot
 from main import dp
 from helper.texts import *
+
 # from db.mongo_database import *
 from db.sqlite_database import *
 
 from helper.funcs import *
+
 # from helper.keyboards import *
 
 from main import logger
@@ -24,26 +26,31 @@ class Location:
         self.controller = controller
 
     def register(self):
-        raise NotImplementedError('unknown type:' + self.handler_type)
+        raise NotImplementedError("unknown type:" + self.handler_type)
 
     async def get_keyboard(self, state: FSMContext):
         builder = InlineKeyboardBuilder()
         for place, place_text, keyboard_type, condition, extra in self.can_reach:
-            if extra.get('coords',None) is not None:
-                x,y = extra['coords']
-                place += f'__{x},{y}'
-            elif extra.get('action',None) is not None:
-                action = extra['action']
-                place += f'--{action}'
+            if extra.get("coords", None) is not None:
+                x, y = extra["coords"]
+                place += f"__{x},{y}"
+            elif extra.get("action", None) is not None:
+                action = extra["action"]
+                place += f"--{action}"
             if condition:
                 if await condition(self.location, state):
-                    if keyboard_type == 'inline':
-                        builder.row(InlineKeyboardButton(text=place_text, callback_data=place))
+                    if keyboard_type == "inline":
+                        builder.row(
+                            InlineKeyboardButton(text=place_text, callback_data=place)
+                        )
             else:
-                if keyboard_type == 'inline':
-                    builder.row(InlineKeyboardButton(text=place_text, callback_data=place))
+                if keyboard_type == "inline":
+                    builder.row(
+                        InlineKeyboardButton(text=place_text, callback_data=place)
+                    )
         keyboard = builder.as_markup()
         return keyboard
+
 
 class LocationCallbackQuery(Location):
     def register(self):

@@ -6,7 +6,7 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from logger.airtables import setup_logger
 
 logger = setup_logger()
-version = '1.9.4'
+version = "1.9.4"
 
 from helper.app import *
 from places.controller import *
@@ -15,11 +15,11 @@ from places.controller import *
 # Dummy HTTP handler for Render health checks
 class RenderHealthHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path == '/':
+        if self.path == "/":
             self.send_response(200)
-            self.send_header('Content-type', 'text/plain')
+            self.send_header("Content-type", "text/plain")
             self.end_headers()
-            self.wfile.write(b'Check telegram bot: @pi_meow_fir_story_bot')
+            self.wfile.write(b"Check telegram bot: @pi_meow_fir_story_bot")
         else:
             self.send_response(404)
             self.end_headers()
@@ -28,13 +28,15 @@ class RenderHealthHandler(BaseHTTPRequestHandler):
         # Suppress logs to keep Render output clean
         pass
 
+
 def run_health_server():
     """Run a dummy HTTP server on $PORT for Render."""
-    port = int(os.environ.get('PORT', 1000))  # Render sets $PORT; default for local dev
-    server_address = ('0.0.0.0', port)  # Bind to all interfaces
+    port = int(os.environ.get("PORT", 1000))  # Render sets $PORT; default for local dev
+    server_address = ("0.0.0.0", port)  # Bind to all interfaces
     httpd = HTTPServer(server_address, RenderHealthHandler)
     # logger.info(f"Health server running on port {port}")
     httpd.serve_forever()
+
 
 async def main():
     try:

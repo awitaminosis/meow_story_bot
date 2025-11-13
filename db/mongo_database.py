@@ -4,15 +4,17 @@ from decouple import config
 import json
 
 
-MONGO_USER = config('MONGO_USER')
-MONGO_USER_PASS = config('MONGO_USER_PASS')
-MONGO_HOST = config('MONGO_HOST')
-MONGO_EXTRA_SETTINGS = config('MONGO_EXTRA_SETTINGS')
-MONGO_DB = config('MONGO_DB')
-MONGO_COLLECTION = config('MONGO_COLLECTION')
+MONGO_USER = config("MONGO_USER")
+MONGO_USER_PASS = config("MONGO_USER_PASS")
+MONGO_HOST = config("MONGO_HOST")
+MONGO_EXTRA_SETTINGS = config("MONGO_EXTRA_SETTINGS")
+MONGO_DB = config("MONGO_DB")
+MONGO_COLLECTION = config("MONGO_COLLECTION")
 
 
-connection_str = f'mongodb+srv://{MONGO_USER}:{MONGO_USER_PASS}@{MONGO_HOST}/{MONGO_EXTRA_SETTINGS}'
+connection_str = (
+    f"mongodb+srv://{MONGO_USER}:{MONGO_USER_PASS}@{MONGO_HOST}/{MONGO_EXTRA_SETTINGS}"
+)
 
 client = MongoClient(connection_str)
 db = client[MONGO_DB]
@@ -26,7 +28,7 @@ def get_all():
 
 
 def get_by_filter(chat_id):
-    filter_criteria = {'chat_id': chat_id}
+    filter_criteria = {"chat_id": chat_id}
     documents = collection.find(filter_criteria)
     return list(documents)
 
@@ -35,33 +37,35 @@ async def load_journey(chat_id: int):
     record_data = get_by_filter(chat_id)
     if record_data:
         record_data = record_data[0]
-        state_data = json.loads(record_data.get('journey_data'))
+        state_data = json.loads(record_data.get("journey_data"))
         return state_data
     else:
         return None
 
 
-async def upsert(chat_id: int, state: FSMContext = None, first_name=None, full_name=None):
+async def upsert(
+    chat_id: int, state: FSMContext = None, first_name=None, full_name=None
+):
     journey_data = await state.get_data()
     journey_data = json.dumps(journey_data)
     record = get_by_filter(chat_id)
     print(record)
     if record is not None and len(record):
-        filter_query = {'chat_id': chat_id}
+        filter_query = {"chat_id": chat_id}
         update_query = {
-            '$set': {
-                'journey_data': journey_data,
-                'user_first_name': first_name,
-                'user_full_name': full_name,
+            "$set": {
+                "journey_data": journey_data,
+                "user_first_name": first_name,
+                "user_full_name": full_name,
             }
         }
         result = collection.update_one(filter_query, update_query)
     else:
         new_entry = {
-            'chat_id': chat_id,
-            'journey_data': journey_data,
-            'user_first_name': first_name,
-            'user_full_name': full_name
+            "chat_id": chat_id,
+            "journey_data": journey_data,
+            "user_first_name": first_name,
+            "user_full_name": full_name,
         }
         result = collection.insert_one(new_entry)
     return result
@@ -69,4 +73,4 @@ async def upsert(chat_id: int, state: FSMContext = None, first_name=None, full_n
 
 async def save_journey(chat_id: int, state: FSMContext, first_name, full_name):
     await upsert(chat_id, state, first_name, full_name)
-    return 'успешно'
+    return "успешно"
