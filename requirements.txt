@@ -1,5 +1,8 @@
 aiogram
 python-decouple
 #pymongo[srv]
+aiosqlite
 requests
 SQLAlchemy
+pydantic
+pydantic-settings

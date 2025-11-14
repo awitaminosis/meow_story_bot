@@ -2,65 +2,36 @@ import json
 from aiogram.fsm.context import FSMContext
 from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy import select
+
+from kernel.models import Journey
+from kernel.models import db_helper
 
 
-DB_PATH = "journey_data_sqlalch_2.db"
-
-Base = declarative_base()
-
-
-class Journey(Base):
-    __tablename__ = "journeys"
-
-    chat_id = Column(Integer, primary_key=True)
-    journey_data = Column(String)
-    user_first_name = Column(String)
-    user_full_name = Column(String)
-
-
-engine = create_engine(f"sqlite:///{DB_PATH}", echo=False)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base.metadata.create_all(bind=engine)
-
-
-def get_db() -> Session:
-    db = SessionLocal()
+async def get_by_filter(chat_id, session: AsyncSession):
     try:
-        yield db
-    finally:
-        db.close()
-
-
-def get_all():
-    db = SessionLocal()
-    try:
-        all_journeys = db.query(Journey).all()
-        for journey in all_journeys:
-            print(journey)
-    finally:
-        db.close()
-
-
-def get_by_filter(chat_id):
-    db = SessionLocal()
-    try:
-        journeys = db.query(Journey).filter(Journey.chat_id == chat_id).all()
+        stmt = select(Journey).filter(Journey.chat_id == chat_id)
+        result = await session.execute(stmt)
+        journeys = result.scalars().all()
         return journeys
-    finally:
-        db.close()
+    except Exception as e:
+        print(f"Error: {e}")
+        raise
 
 
 async def load_journey(chat_id: int):
-    record_data = get_by_filter(chat_id)
-    if record_data:
-        record_data = record_data[0]
-        state_data = json.loads(record_data.journey_data)
-        if state_data["visited_places"] == []:
-            state_data["visited_places"] = set()
-        return state_data
-    else:
-        return None
+    async with db_helper.session_factory() as session:
+        record_data = await get_by_filter(chat_id, session)
+        if record_data:
+            record_data = record_data[0]
+            state_data = json.loads(record_data.journey_data)
+            if state_data["visited_places"] == []:
+                state_data["visited_places"] = set()
+            return state_data
+        else:
+            return None
 
 
 async def upsert(
@@ -70,26 +41,29 @@ async def upsert(
     if len(journey_data_dict["visited_places"]) == 0:
         journey_data_dict["visited_places"] = list()
     journey_data = json.dumps(journey_data_dict)
-    db = SessionLocal()
-    try:
-        existing = db.query(Journey).filter(Journey.chat_id == chat_id).first()
-        if existing:
-            # Update existing record
-            existing.journey_data = journey_data
-            existing.user_first_name = first_name
-            existing.user_full_name = full_name
-        else:
-            # Insert new record
-            new_journey = Journey(
-                chat_id=chat_id,
-                journey_data=journey_data,
-                user_first_name=first_name,
-                user_full_name=full_name,
-            )
-            db.add(new_journey)
-        db.commit()
-    finally:
-        db.close()
+    async with db_helper.session_factory() as session:
+        try:
+            stmt = select(Journey).filter(Journey.chat_id == chat_id)
+            result = await session.execute(stmt)
+            record = result.scalar_one_or_none()
+            if record:
+                # Update existing record
+                record.journey_data = journey_data
+                record.user_first_name = first_name
+                record.user_full_name = full_name
+            else:
+                # Insert new record
+                new_journey = Journey(
+                    chat_id=chat_id,
+                    journey_data=journey_data,
+                    user_first_name=first_name,
+                    user_full_name=full_name,
+                )
+                session.add(new_journey)
+            await session.commit()
+        except Exception as e:
+            print(f"Error: {e}")
+            raise
 
 
 async def save_journey(chat_id: int, state: FSMContext, first_name, full_name):

@@ -10,6 +10,7 @@ version = "1.9.4"
 
 from helper.app import *
 from places.controller import *
+from kernel.models.db_helper import db_helper
 
 
 # Dummy HTTP handler for Render health checks
@@ -40,6 +41,7 @@ def run_health_server():
 
 async def main():
     try:
+        await db_helper.init_db()
         await dp.start_polling(bot)
     except Exception as e:
         logger.error(f"An error occurred: {e}")
