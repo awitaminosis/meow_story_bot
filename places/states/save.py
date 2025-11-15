@@ -1,4 +1,23 @@
-from places.states.base import *
+# from places.states.base import *
+from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+
+
+from main import bot
+
+from helper.funcs import t_say, m_say, h_say, say, save_journey
+from helper.texts import (
+    t_go_to_hedgehog_home,
+    t_go_fishing,
+    t_go_to_tiger_home,
+    t_feed_hedgehog,
+    t_mouse_quest,
+)
+
+from places.states.conditions import Transitions
+from main import logger
+
+from places.states.base import LocationMessage
 
 
 class Save(LocationMessage):
