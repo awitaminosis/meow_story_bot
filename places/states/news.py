@@ -1,4 +1,13 @@
-from places.states.base import *
+# from places.states.base import *
+import random
+from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+
+from main import bot, logger
+
+from helper.funcs import say
+
+from places.states.base import LocationMessage
 
 
 class News(LocationMessage):
