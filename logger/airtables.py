@@ -1,9 +1,9 @@
 import json
 import logging
 import traceback
-from datetime import datetime
-
 import requests
+
+from datetime import datetime
 from decouple import config
 
 

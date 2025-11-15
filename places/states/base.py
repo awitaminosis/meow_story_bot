@@ -1,26 +1,7 @@
-# from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
-
-# from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-
-# from aiogram.filters.command import Command
-# import helper.funcs
-# from main import bot
 from helper.app import dp
-
-# from helper.texts import *
-
-# from db.mongo_database import *
-# from db.sqlite_database import *
-
-# from helper.funcs import *
-
-# from helper.keyboards import *
-
-# from main import logger
-# from places.states.conditions import Transitions
 
 
 class Location:

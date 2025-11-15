@@ -1,4 +1,3 @@
-# from places.states.base import *
 import random
 
 from aiogram.fsm.context import FSMContext

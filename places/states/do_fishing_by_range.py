@@ -1,4 +1,3 @@
-# from places.states.base import *
 from aiogram.fsm.context import FSMContext
 from aiogram.types import FSInputFile, Message
 
