@@ -1,4 +1,18 @@
-from places.states.base import *
+# from places.states.base import *
+from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+
+from main import bot
+from helper.funcs import init_new_state, t_say
+from main import logger
+from helper.texts import (
+    t_start_new_story,
+    t_go_to_tiger_home,
+    t_go_to_hedgehog_home,
+    t_go_fishing,
+)
+
+from places.states.base import LocationCallbackQuery
 
 
 class StartNewStory(LocationCallbackQuery):
