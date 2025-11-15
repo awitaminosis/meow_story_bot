@@ -4,8 +4,8 @@ from aiogram.fsm.context import FSMContext
 
 
 from main import bot
-
-from helper.funcs import t_say, m_say, h_say, say, save_journey
+from db.sqlite_database import save_journey
+from helper.funcs import t_say, m_say, h_say, say
 from helper.texts import (
     t_go_to_hedgehog_home,
     t_go_fishing,
