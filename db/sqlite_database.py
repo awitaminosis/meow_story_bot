@@ -1,9 +1,6 @@
 import json
 from aiogram.fsm.context import FSMContext
-from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy import select
 
 from kernel.models import Journey
