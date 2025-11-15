@@ -1,5 +1,15 @@
-from places.states.base import *
-from helper.filters import *
+# from places.states.base import *
+# from helper.filters import *
+from helper.texts import t_go_to_tiger_home, t_go_fishing
+from places.states.conditions import Transitions
+from places.states.base import LocationWebApp
+from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+from helper.funcs import maybe_eat_worms, add_fish
+
+from aiogram.types import FSInputFile
+from main import bot, logger
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 
 class DoFishingInSea(LocationWebApp):
