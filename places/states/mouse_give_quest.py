@@ -1,4 +1,14 @@
-from places.states.base import *
+# from places.states.base import *
+from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+
+from main import bot, logger
+from helper.funcs import t_say, mouse_quest_levels
+from helper.texts import (
+    t_go_to_hedgehog_home,
+    t_mouse_quest,
+)
+from places.states.base import LocationCallbackQuery
 
 
 class MouseGiveQuest(LocationCallbackQuery):
