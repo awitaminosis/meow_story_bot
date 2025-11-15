@@ -1,11 +1,11 @@
 # from places.states.base import *
-from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
+from aiogram.types import Message
 
-from logger.airtables import logger
 from helper.app import bot
-from places.states.base import LocationMessage
 from helper.funcs import say
+from logger.airtables import logger
+from places.states.base import LocationMessage
 
 
 class Inventory(LocationMessage):

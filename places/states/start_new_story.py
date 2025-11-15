@@ -1,17 +1,16 @@
 # from places.states.base import *
-from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
+from aiogram.types import Message
 
 from helper.app import bot
 from helper.funcs import init_new_state, t_say
-from logger.airtables import logger
 from helper.texts import (
-    t_start_new_story,
-    t_go_to_tiger_home,
-    t_go_to_hedgehog_home,
     t_go_fishing,
+    t_go_to_hedgehog_home,
+    t_go_to_tiger_home,
+    t_start_new_story,
 )
-
+from logger.airtables import logger
 from places.states.base import LocationCallbackQuery
 
 

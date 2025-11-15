@@ -1,8 +1,8 @@
-from pymongo import MongoClient
-from aiogram.fsm.context import FSMContext
-from decouple import config
 import json
 
+from aiogram.fsm.context import FSMContext
+from decouple import config
+from pymongo import MongoClient
 
 MONGO_USER = config("MONGO_USER")
 MONGO_USER_PASS = config("MONGO_USER_PASS")

@@ -1,10 +1,10 @@
 import json
-from aiogram.fsm.context import FSMContext
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 
-from kernel.models import Journey
-from kernel.models import db_helper
+from aiogram.fsm.context import FSMContext
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from kernel.models import Journey, db_helper
 
 
 async def get_by_filter(chat_id, session: AsyncSession):

@@ -1,13 +1,14 @@
 # from places.states.base import *
 import random
 
-from places.states.base import LocationCallbackQuery
-from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
-from helper.funcs import say
-from helper.constants import pool_range
-from logger.airtables import logger
+from aiogram.types import Message
+
 from helper.app import bot
+from helper.constants import pool_range
+from helper.funcs import say
+from logger.airtables import logger
+from places.states.base import LocationCallbackQuery
 
 
 class GoFishingInPool(LocationCallbackQuery):

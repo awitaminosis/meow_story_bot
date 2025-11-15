@@ -1,17 +1,15 @@
 # from places.states.base import *
-from helper.constants import version
-from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
-from places.states.base import LocationCommand
-
-from helper.app import bot
-from db.sqlite_database import load_journey
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from helper.funcs import say
-from logger.airtables import logger
-from helper.texts import t_start_new_story
-
+from aiogram.types import KeyboardButton, Message, ReplyKeyboardMarkup
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+
+from db.sqlite_database import load_journey
+from helper.app import bot
+from helper.constants import version
+from helper.funcs import say
+from helper.texts import t_start_new_story
+from logger.airtables import logger
+from places.states.base import LocationCommand
 
 
 class Start(LocationCommand):

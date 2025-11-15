@@ -1,4 +1,5 @@
-from typing import Union, Dict, Any
+from typing import Any, Dict, Union
+
 from aiogram.filters import Filter
 from aiogram.types import Message
 

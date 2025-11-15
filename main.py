@@ -1,13 +1,11 @@
 import asyncio
-import threading
 import os
-from http.server import HTTPServer, BaseHTTPRequestHandler
+import threading
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
-from logger.airtables import logger
-
-
-from helper.app import dp, bot
+from helper.app import bot, dp
 from kernel.models.db_helper import db_helper
+from logger.airtables import logger
 from places.controller import StateController
 
 StateController().include_classes()

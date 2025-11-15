@@ -1,20 +1,19 @@
 # from places.states.base import *
-from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
+from aiogram.types import Message
 
-from logger.airtables import logger
+from db.sqlite_database import load_journey
 from helper.app import bot
 from helper.funcs import say
-from db.sqlite_database import load_journey
 from helper.texts import (
+    t_feed_hedgehog,
+    t_go_fishing,
     t_go_to_hedgehog_home,
     t_go_to_tiger_home,
-    t_go_fishing,
-    t_feed_hedgehog,
     t_mouse_quest,
 )
+from logger.airtables import logger
 from places.states.base import LocationCallbackQuery
-
 from places.states.conditions import Transitions
 
 

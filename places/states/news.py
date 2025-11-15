@@ -1,13 +1,12 @@
 # from places.states.base import *
 import random
-from aiogram.types import Message
+
 from aiogram.fsm.context import FSMContext
+from aiogram.types import Message
 
-from logger.airtables import logger
 from helper.app import bot
-
 from helper.funcs import say
-
+from logger.airtables import logger
 from places.states.base import LocationMessage
 
 

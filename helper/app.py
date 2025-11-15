@@ -1,7 +1,6 @@
-from aiogram import Bot, Dispatcher
-from aiogram import Router
-from decouple import config
+from aiogram import Bot, Dispatcher, Router
 from aiogram.fsm.storage.memory import MemoryStorage
+from decouple import config
 
 bot = Bot(token=config("BOT_TOKEN"))
 dp = Dispatcher(storage=MemoryStorage())

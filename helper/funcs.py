@@ -1,14 +1,14 @@
 import random
-from aiogram.types import Message
 
 from aiogram.fsm.context import FSMContext
+from aiogram.types import Message
 
 from helper.constants import (
+    WORMS_EAT_CHANCE,
+    hedgehog_eat_worms_max_pcs,
     pool_range,
     river_range,
     sea_range,
-    WORMS_EAT_CHANCE,
-    hedgehog_eat_worms_max_pcs,
     worms_dig_max_pcs_by_hand,
     worms_dig_max_pcs_by_showel,
 )
