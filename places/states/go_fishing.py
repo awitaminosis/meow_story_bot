@@ -1,4 +1,16 @@
-from places.states.base import *
+# from places.states.base import *
+from places.states.conditions import Transitions
+from places.states.base import LocationCallbackQuery
+from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+from helper.funcs import t_say, say
+from helper.texts import (
+    t_go_fish_in_pool,
+    t_go_to_tiger_home,
+    t_go_fish_in_river,
+    t_go_fish_in_sea,
+)
+from main import bot, logger
 
 
 class GoFishing(LocationCallbackQuery):
