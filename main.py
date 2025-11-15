@@ -5,12 +5,14 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 
 from logger.airtables import setup_logger
 
+
+from helper.app import dp, bot
+from kernel.models.db_helper import db_helper
+from places.controller import StateController
+
+StateController().include_classes()
 logger = setup_logger()
 version = "1.9.4"
-
-from helper.app import *
-from places.controller import *
-from kernel.models.db_helper import db_helper
 
 
 # Dummy HTTP handler for Render health checks
