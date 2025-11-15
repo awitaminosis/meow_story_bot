@@ -2,7 +2,6 @@ import logging
 import traceback
 import requests
 import json
-import sys
 from datetime import datetime
 from decouple import config
 
