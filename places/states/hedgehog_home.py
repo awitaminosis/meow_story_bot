@@ -1,4 +1,17 @@
-from places.states.base import *
+# from places.states.base import *
+from places.states.base import LocationCallbackQuery
+from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+
+from helper.texts import (
+    t_go_to_tiger_home,
+    t_feed_hedgehog,
+    t_go_to_forest,
+    t_dig_for_worms,
+)
+from places.states.conditions import Transitions
+from main import bot, logger
+from helper.funcs import say, h_say
 
 
 class HedgehogHome(LocationCallbackQuery):
