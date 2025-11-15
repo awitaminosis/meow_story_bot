@@ -1,4 +1,11 @@
-from places.states.base import *
+# from places.states.base import *
+from places.states.conditions import Transitions
+from places.states.base import LocationCallbackQuery
+from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+from helper.funcs import t_say, feed_hedgehog_level
+from helper.texts import t_go_to_hedgehog_home, t_go_to_tiger_home, t_feed_hedgehog
+from main import bot, logger
 
 
 class FeedHedgehog(LocationCallbackQuery):
