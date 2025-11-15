@@ -1,4 +1,20 @@
-from places.states.base import *
+# from places.states.base import *
+from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+
+from places.states.conditions import Transitions
+from main import bot
+from helper.funcs import say, add_worms, maybe_eat_worms
+from main import logger
+from helper.texts import (
+    t_feed_hedgehog,
+    t_go_to_tiger_home,
+    t_dig_for_worms,
+    t_go_to_forest,
+)
+
+
+from places.states.base import LocationCallbackQuery
 
 
 class WormsDig(LocationCallbackQuery):
