@@ -9,7 +9,8 @@ from aiogram.fsm.context import FSMContext
 from helper.texts import t_go_fishing, t_go_to_tiger_home, t_feed_hedgehog
 from helper.constants import sea_range
 from places.states.conditions import Transitions
-from main import bot, logger
+from logger.airtables import logger
+from helper.app import bot
 from decouple import config
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 

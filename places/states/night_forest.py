@@ -8,7 +8,8 @@ from helper.funcs import say, hw_say, h_say, t_say
 
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
-from main import bot, logger
+from logger.airtables import logger
+from helper.app import bot
 
 
 class NightForest(LocationCallbackQuery):

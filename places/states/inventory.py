@@ -2,7 +2,8 @@
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-from main import bot, logger
+from logger.airtables import logger
+from helper.app import bot
 from places.states.base import LocationMessage
 from helper.funcs import say
 

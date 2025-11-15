@@ -1,14 +1,14 @@
 # from places.states.base import *
-from main import version
+from helper.constants import version
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 from places.states.base import LocationCommand
 
-from main import bot
+from helper.app import bot
 from db.sqlite_database import load_journey
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from helper.funcs import say
-from main import logger
+from logger.airtables import logger
 from helper.texts import t_start_new_story
 
 from aiogram.utils.keyboard import InlineKeyboardBuilder

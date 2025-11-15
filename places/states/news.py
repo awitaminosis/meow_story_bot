@@ -3,7 +3,8 @@ import random
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-from main import bot, logger
+from logger.airtables import logger
+from helper.app import bot
 
 from helper.funcs import say
 

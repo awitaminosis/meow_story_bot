@@ -2,7 +2,8 @@
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-from main import bot, logger
+from logger.airtables import logger
+from helper.app import bot
 from helper.funcs import t_say, mouse_quest_levels
 from helper.texts import (
     t_go_to_hedgehog_home,

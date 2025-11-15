@@ -3,7 +3,6 @@ from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
 
-from main import bot
 from db.sqlite_database import save_journey
 from helper.funcs import t_say, m_say, h_say, say
 from helper.texts import (
@@ -15,7 +14,8 @@ from helper.texts import (
 )
 
 from places.states.conditions import Transitions
-from main import logger
+from logger.airtables import logger
+from helper.app import bot
 
 from places.states.base import LocationMessage
 

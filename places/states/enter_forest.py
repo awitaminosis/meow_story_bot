@@ -5,7 +5,8 @@ from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 from helper.funcs import say
 from helper.texts import t_go_to_hedgehog_home, t_visit_mouse
-from main import bot, logger
+from logger.airtables import logger
+from helper.app import bot
 
 
 class EnterForest(LocationCallbackQuery):

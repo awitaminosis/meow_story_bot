@@ -3,9 +3,9 @@ from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
 from places.states.conditions import Transitions
-from main import bot
+from helper.app import bot
 from helper.funcs import t_say, say, h_say, m_say
-from main import logger
+from logger.airtables import logger
 from helper.texts import (
     t_feed_hedgehog,
     t_go_to_hedgehog_home,

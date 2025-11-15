@@ -2,9 +2,9 @@
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-from main import bot
+from helper.app import bot
 from helper.funcs import init_new_state, t_say
-from main import logger
+from logger.airtables import logger
 from helper.texts import (
     t_start_new_story,
     t_go_to_tiger_home,

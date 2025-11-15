@@ -7,3 +7,5 @@ WORMS_EAT_CHANCE = 40
 hedgehog_eat_worms_max_pcs = 5
 worms_dig_max_pcs_by_hand = 5
 worms_dig_max_pcs_by_showel = 20
+
+version = "1.9.4"

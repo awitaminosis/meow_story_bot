@@ -8,7 +8,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder
 # from aiogram.filters.command import Command
 # import helper.funcs
 # from main import bot
-from main import dp
+from helper.app import dp
 
 # from helper.texts import *
 

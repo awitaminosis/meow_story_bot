@@ -8,7 +8,8 @@ from aiogram.fsm.context import FSMContext
 from helper.funcs import maybe_eat_worms, add_fish
 
 from aiogram.types import FSInputFile
-from main import bot, logger
+from logger.airtables import logger
+from helper.app import bot
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 

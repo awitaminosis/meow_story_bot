@@ -6,7 +6,8 @@ from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 from helper.funcs import say
 from helper.constants import pool_range
-from main import bot, logger
+from logger.airtables import logger
+from helper.app import bot
 
 
 class GoFishingInPool(LocationCallbackQuery):

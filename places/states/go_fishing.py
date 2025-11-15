@@ -10,7 +10,8 @@ from helper.texts import (
     t_go_fish_in_river,
     t_go_fish_in_sea,
 )
-from main import bot, logger
+from logger.airtables import logger
+from helper.app import bot
 
 
 class GoFishing(LocationCallbackQuery):

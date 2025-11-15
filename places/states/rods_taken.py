@@ -3,14 +3,13 @@ from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
 
-from main import bot
-
+from helper.app import bot
 from helper.funcs import t_say
 from helper.texts import (
     t_go_to_hedgehog_home,
     t_go_fishing,
 )
-from main import logger
+from logger.airtables import logger
 
 from places.states.base import LocationCallbackQuery
 

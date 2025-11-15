@@ -7,7 +7,8 @@ from aiogram.fsm.context import FSMContext
 from helper.funcs import maybe_eat_worms, say, add_fish
 from helper.constants import pool_range, river_range, sea_range
 from aiogram.types import FSInputFile
-from main import bot, logger
+from logger.airtables import logger
+from helper.app import bot
 
 
 class DoFishingByRange(LocationMessage):

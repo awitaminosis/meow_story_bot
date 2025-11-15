@@ -12,7 +12,7 @@ from helper.constants import (
     worms_dig_max_pcs_by_hand,
     worms_dig_max_pcs_by_showel,
 )
-from main import logger
+from logger.airtables import logger
 
 EASY_START = False
 # EASY_START = True

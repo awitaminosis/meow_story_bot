@@ -3,7 +3,7 @@ import threading
 import os
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
-from logger.airtables import setup_logger
+from logger.airtables import logger
 
 
 from helper.app import dp, bot
@@ -11,8 +11,6 @@ from kernel.models.db_helper import db_helper
 from places.controller import StateController
 
 StateController().include_classes()
-logger = setup_logger()
-version = "1.9.4"
 
 
 # Dummy HTTP handler for Render health checks

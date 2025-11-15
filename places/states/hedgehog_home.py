@@ -10,7 +10,8 @@ from helper.texts import (
     t_dig_for_worms,
 )
 from places.states.conditions import Transitions
-from main import bot, logger
+from logger.airtables import logger
+from helper.app import bot
 from helper.funcs import say, h_say
 
 

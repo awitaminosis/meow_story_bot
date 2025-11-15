@@ -10,7 +10,8 @@ from helper.constants import river_range
 from helper.texts import t_go_fishing, t_go_to_tiger_home, t_feed_hedgehog
 
 from places.states.conditions import Transitions
-from main import bot, logger
+from logger.airtables import logger
+from helper.app import bot
 
 
 class GoFishingInRiver(LocationCallbackQuery):
