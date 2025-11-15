@@ -1,9 +1,17 @@
 import random
 from aiogram.types import Message
-from aiogram.types import FSInputFile
+
 from aiogram.fsm.context import FSMContext
 
-from helper.constants import *
+from helper.constants import (
+    pool_range,
+    river_range,
+    sea_range,
+    WORMS_EAT_CHANCE,
+    hedgehog_eat_worms_max_pcs,
+    worms_dig_max_pcs_by_hand,
+    worms_dig_max_pcs_by_showel,
+)
 from main import logger
 
 EASY_START = False
@@ -133,7 +141,7 @@ async def mouse_quest_levels(bot, chat_id, state: FSMContext):
     try:
         state_data = await state.get_data()
         mouse_quest_level = state_data.get("mouse_quest_level", 0)
-        worms = state_data.get("worms", 0)
+        # worms = state_data.get("worms", 0)
         river_fish_pcs = state_data.get("river_fish_pcs", 0)
         sea_fish_pcs = state_data.get("sea_fish_pcs", 0)
 
