@@ -1,4 +1,13 @@
-from places.states.base import *
+# from places.states.base import *
+from helper.texts import t_go_to_tiger_home, t_go_fishing
+from places.states.conditions import Transitions
+from places.states.base import LocationMessage
+from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+from helper.funcs import maybe_eat_worms, say, add_fish
+from helper.constants import pool_range, river_range, sea_range
+from aiogram.types import FSInputFile
+from main import bot, logger
 
 
 class DoFishingByRange(LocationMessage):
@@ -73,7 +82,7 @@ class DoFishingByRange(LocationMessage):
                                         "Ёжик подсказывает, что забрасывать удочку нужно ближе"
                                     ],
                                 )
-                    except Exception as e:
+                    except Exception:
                         await say(bot, chat_id, ["Это не число"])
                 else:
                     await state.update_data(location="fishing_worms_ended")
