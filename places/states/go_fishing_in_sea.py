@@ -1,5 +1,17 @@
 from aiogram.types import WebAppInfo
-from places.states.base import *
+import random
+
+# from places.states.base import *
+from places.states.base import LocationCallbackQuery
+from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+
+from helper.texts import t_go_fishing, t_go_to_tiger_home, t_feed_hedgehog
+from helper.constants import sea_range
+from places.states.conditions import Transitions
+from main import bot, logger
+from decouple import config
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 
 class GoFishingInSea(LocationCallbackQuery):
