@@ -1,4 +1,10 @@
-from places.states.base import *
+# from places.states.base import *
+from aiogram.types import Message
+from aiogram.fsm.context import FSMContext
+
+from main import bot, logger
+from places.states.base import LocationMessage
+from helper.funcs import say
 
 
 class Inventory(LocationMessage):
@@ -25,10 +31,10 @@ class Inventory(LocationMessage):
                 text = f"червей: {worms}"
                 await say(bot, chat_id, [text])
             if rods_taken:
-                text = f"удочки: есть"
+                text = "удочки: есть"
                 await say(bot, chat_id, [text])
             if showel_taken:
-                text = f"лопата: есть"
+                text = "лопата: есть"
                 await say(bot, chat_id, [text])
             if pool_fish_pcs:
                 text = f"рыбы из лужи (штук): {pool_fish_pcs}"
@@ -40,10 +46,10 @@ class Inventory(LocationMessage):
                 text = f"рыбы из моря (штук): {sea_fish_pcs}"
                 await say(bot, chat_id, [text])
             if glowing_rod:
-                text = f"Светящаяся удочка: есть"
+                text = "Светящаяся удочка: есть"
                 await say(bot, chat_id, [text])
             if glowing_mushroom:
-                text = f"Светящийся гриб: есть"
+                text = "Светящийся гриб: есть"
                 await say(bot, chat_id, [text])
             if (
                 not worms
