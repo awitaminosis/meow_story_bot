@@ -8,7 +8,6 @@ from helper.app import bot
 from helper.constants import sea_range
 from helper.texts import t_feed_hedgehog, t_go_fishing, t_go_to_tiger_home
 from logger.airtables import logger
-
 from places.states.base import LocationCallbackQuery
 from places.states.conditions import Transitions
 

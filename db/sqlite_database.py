@@ -27,8 +27,7 @@ async def load_journey(chat_id: int):
             if state_data["visited_places"] == []:
                 state_data["visited_places"] = set()
             return state_data
-        else:
-            return None
+        return None
 
 
 async def upsert(

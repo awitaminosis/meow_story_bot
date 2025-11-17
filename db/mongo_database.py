@@ -39,8 +39,7 @@ async def load_journey(chat_id: int):
         record_data = record_data[0]
         state_data = json.loads(record_data.get("journey_data"))
         return state_data
-    else:
-        return None
+    return None
 
 
 async def upsert(

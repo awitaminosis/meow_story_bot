@@ -1,6 +1,7 @@
 from aiogram.fsm.context import FSMContext
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+
 from helper.app import dp
 
 
@@ -27,11 +28,10 @@ class Location:
                         builder.row(
                             InlineKeyboardButton(text=place_text, callback_data=place)
                         )
-            else:
-                if keyboard_type == "inline":
-                    builder.row(
-                        InlineKeyboardButton(text=place_text, callback_data=place)
-                    )
+            elif keyboard_type == "inline":
+                builder.row(
+                    InlineKeyboardButton(text=place_text, callback_data=place)
+                )
         keyboard = builder.as_markup()
         return keyboard
 

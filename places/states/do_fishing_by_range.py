@@ -64,24 +64,23 @@ class DoFishingByRange(LocationMessage):
                                 reply_markup=await self.get_keyboard(state),
                             )
 
+                        # не отгадал. дадим подсказку
+                        elif the_number > a_number:
+                            await say(
+                                bot,
+                                chat_id,
+                                [
+                                    "Ёжик подсказывает, что забрасывать удочку нужно дальше"
+                                ],
+                            )
                         else:
-                            # не отгадал. дадим подсказку
-                            if the_number > a_number:
-                                await say(
-                                    bot,
-                                    chat_id,
-                                    [
-                                        "Ёжик подсказывает, что забрасывать удочку нужно дальше"
-                                    ],
-                                )
-                            else:
-                                await say(
-                                    bot,
-                                    chat_id,
-                                    [
-                                        "Ёжик подсказывает, что забрасывать удочку нужно ближе"
-                                    ],
-                                )
+                            await say(
+                                bot,
+                                chat_id,
+                                [
+                                    "Ёжик подсказывает, что забрасывать удочку нужно ближе"
+                                ],
+                            )
                     except Exception:
                         await say(bot, chat_id, ["Это не число"])
                 else:

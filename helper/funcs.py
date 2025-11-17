@@ -61,8 +61,7 @@ async def maybe_eat_worms(worms, message: Message, bot, chat_id, state: FSMConte
             texts = list()
             texts.append(random.choice(hedgehog_phrases))
             print(texts)
-            if worms < 0:
-                worms = 0
+            worms = max(worms, 0)
 
             # открываем дорогу в лес
             state_data = await state.get_data()
