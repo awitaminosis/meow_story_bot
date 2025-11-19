@@ -23,14 +23,16 @@ class RenderHealthHandler(BaseHTTPRequestHandler):
             self.send_response(404)
             self.end_headers()
 
-    def log_message(self, format, *args):
+    def log_message(self, format_, *args):
         # Suppress logs to keep Render output clean
         pass
 
 
 def run_health_server():
     """Run a dummy HTTP server on $PORT for Render."""
-    port = int(os.environ.get("PORT", 1000))  # Render sets $PORT; default for local dev
+    port = int(
+        os.environ.get("PORT", "1000")
+    )  # Render sets $PORT; default for local dev
     server_address = ("0.0.0.0", port)  # Bind to all interfaces
     httpd = HTTPServer(server_address, RenderHealthHandler)
     # logger.info(f"Health server running on port {port}")
