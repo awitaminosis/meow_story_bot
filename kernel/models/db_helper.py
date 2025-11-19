@@ -8,7 +8,7 @@ from kernel.models.base import Base
 
 
 class DatabaseHelper:
-    def __init__(self, url: str, echo: bool = False):
+    def __init__(self, url: str, echo: bool = False):  # noqa: FBT002, FBT001
         self.engine = create_async_engine(
             url=url,
             echo=echo,
