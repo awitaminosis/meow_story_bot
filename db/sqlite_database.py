@@ -12,10 +12,11 @@ async def get_by_filter(chat_id, session: AsyncSession):
         stmt = select(Journey).filter(Journey.chat_id == chat_id)
         result = await session.execute(stmt)
         journeys = result.scalars().all()
-        return journeys
     except Exception as e:
         print(f"Error: {e}")
         raise
+    else:
+        return journeys
 
 
 async def load_journey(chat_id: int):
@@ -35,7 +36,7 @@ async def upsert(
 ):
     journey_data_dict = await state.get_data()
     if len(journey_data_dict["visited_places"]) == 0:
-        journey_data_dict["visited_places"] = list()
+        journey_data_dict["visited_places"] = []
     journey_data = json.dumps(journey_data_dict)
     async with db_helper.session_factory() as session:
         try:
