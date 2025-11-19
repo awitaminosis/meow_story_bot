@@ -86,5 +86,17 @@ lint.ignore = [
     "COM812",
 
     'S104',
-    'BLE001'
+    'BLE001',
+    'RUF001'
 ]
+
+[lint.isort]
+# Just having this section enables import sorting + fixing
+# Optional but strongly recommended:
+known-first-party = ["myapp"]   # ← CHANGE "myapp" to your actual package name
+# or if your project has multiple top-level packages:
+# known-first-party = ["myapp", "utils", "core"]
+
+# Optional nice defaults:
+combine-as-imports = true
+force-wrap-aliases = true

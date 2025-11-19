@@ -6,6 +6,11 @@ from aiogram.types import Message
 from helper.constants import (
     WORMS_EAT_CHANCE,
     hedgehog_eat_worms_max_pcs,
+    hedgehog_hints_0_worms_requirement,
+    hedgehog_hints_1_pool_fish_requirement,
+    hedgehog_hints_1_worms_requirement,
+    mouse_quest_1_river_fish_requirements,
+    mouse_quest_2_sea_fish_requirements,
     pool_range,
     river_range,
     sea_range,
@@ -58,7 +63,7 @@ async def maybe_eat_worms(worms, message: Message, bot, chat_id, state: FSMConte
                 "Ням!",
             ]
 
-            texts = list()
+            texts = []
             texts.append(random.choice(hedgehog_phrases))
             print(texts)
             worms = max(worms, 0)
@@ -74,10 +79,10 @@ async def maybe_eat_worms(worms, message: Message, bot, chat_id, state: FSMConte
                 await state.update_data(showel_mentioned=True)
             print(texts)
             await hw_say(bot, chat_id, texts)
-
-        return worms
     except Exception as e:
         logger.error(f"An error occurred: {e}")
+    else:
+        return worms
 
 
 async def feed_hedgehog_level(bot, chat_id, state: FSMContext):
@@ -87,13 +92,13 @@ async def feed_hedgehog_level(bot, chat_id, state: FSMContext):
         worms = state_data.get("worms", 0)
         pool_fish_pcs = state_data.get("pool_fish_pcs", 0)
         if hedgehog_hints_level == 0:
-            if worms >= 10:
+            if worms >= hedgehog_hints_0_worms_requirement:
                 await hw_say(
                     bot,
                     chat_id,
                     ["Чем крупнее водоём, тем рыба вкуснее, но тем сложнее её поймать"],
                 )
-                worms -= 10
+                worms -= hedgehog_hints_0_worms_requirement
                 hedgehog_hints_level += 1
                 await state.update_data(worms=worms)
                 await state.update_data(hedgehog_hints_level=hedgehog_hints_level)
@@ -106,7 +111,10 @@ async def feed_hedgehog_level(bot, chat_id, state: FSMContext):
                     ],
                 )
         elif hedgehog_hints_level == 1:
-            if worms >= 50 and pool_fish_pcs >= 5:
+            if (
+                worms >= hedgehog_hints_1_worms_requirement
+                and pool_fish_pcs >= hedgehog_hints_1_pool_fish_requirement
+            ):
                 await hw_say(
                     bot,
                     chat_id,
@@ -159,8 +167,8 @@ async def mouse_quest_levels(bot, chat_id, state: FSMContext):
             mouse_quest_level += 1
             await state.update_data(mouse_quest_level=mouse_quest_level)
         elif mouse_quest_level == 1:
-            if river_fish_pcs >= 10:
-                river_fish_pcs -= 10
+            if river_fish_pcs >= mouse_quest_1_river_fish_requirements:
+                river_fish_pcs -= mouse_quest_1_river_fish_requirements
                 await state.update_data(river_fish_pcs=river_fish_pcs)
                 await m_say(
                     bot,
@@ -184,9 +192,9 @@ async def mouse_quest_levels(bot, chat_id, state: FSMContext):
                     ],
                 )
 
-        elif mouse_quest_level == 2:
-            if sea_fish_pcs >= 15:
-                sea_fish_pcs -= 15
+        elif mouse_quest_level == 2:  # noqa: PLR2004
+            if sea_fish_pcs >= mouse_quest_2_sea_fish_requirements:
+                sea_fish_pcs -= mouse_quest_2_sea_fish_requirements
                 await state.update_data(river_fish_pcs=sea_fish_pcs)
                 await m_say(
                     bot,
@@ -310,11 +318,11 @@ async def init_new_state(state: FSMContext):
         worms = 10000 if EASY_START else 0
         hedgehog_hints_level = 3 if EASY_START else 0
         mouse_quest_level = 3 if EASY_START else 0
-        showel_mentioned = True if EASY_START else False
-        showel_taken = True if EASY_START else False
-        fishing_rods = True if EASY_START else False
-        mouse_mentioned = True if EASY_START else False
-        glowing_mushroom = True if EASY_START else False
+        showel_mentioned = bool(EASY_START)
+        showel_taken = bool(EASY_START)
+        fishing_rods = bool(EASY_START)
+        mouse_mentioned = bool(EASY_START)
+        glowing_mushroom = bool(EASY_START)
         visited_places = set()
 
         mouse_owl_story_stage = 0
