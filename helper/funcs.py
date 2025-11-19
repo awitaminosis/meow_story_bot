@@ -1,7 +1,6 @@
 import random
 
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message
 
 from helper.constants import (
     WORMS_EAT_CHANCE,
@@ -35,7 +34,7 @@ async def add_worms(state: FSMContext):
         logger.error(f"An error occurred: {e}")
 
 
-async def maybe_eat_worms(worms, message: Message, bot, chat_id, state: FSMContext):
+async def maybe_eat_worms(worms, bot, chat_id, state: FSMContext):
     try:
         chance = random.randint(1, 100)
         if chance > 100 - WORMS_EAT_CHANCE:

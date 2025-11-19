@@ -31,9 +31,7 @@ class DoFishingInSea(LocationWebApp):
 
                 worms = state_data.get("worms", 0)
                 worms -= 1
-                worms = await maybe_eat_worms(
-                    worms, message, bot, message.chat.id, state
-                )
+                worms = await maybe_eat_worms(worms, bot, message.chat.id, state)
                 await state.update_data(worms=worms)
                 photo_path = "./imgs/Fish_caught_bigest.png"
                 photo = FSInputFile(photo_path)

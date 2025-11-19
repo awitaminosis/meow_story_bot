@@ -40,9 +40,7 @@ class WormsDig(LocationCallbackQuery):
             state_data = await state.get_data()
             worms = state_data.get("worms", 0)
             worms += await add_worms(state)
-            worms = await maybe_eat_worms(
-                worms, message, bot, message.message.chat.id, state
-            )
+            worms = await maybe_eat_worms(worms, bot, message.message.chat.id, state)
 
             await state.update_data(worms=worms)
             await say(bot, chat_id, ["Червей: " + str(worms)])

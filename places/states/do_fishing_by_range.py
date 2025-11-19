@@ -33,9 +33,7 @@ class DoFishingByRange(LocationMessage):
             if requested_range > 0 and requested_range <= applicable_fishing_range:
                 worms = state_data.get("worms", 0)
                 worms -= 1
-                worms = await maybe_eat_worms(
-                    worms, message, bot, message.chat.id, state
-                )
+                worms = await maybe_eat_worms(worms, bot, message.chat.id, state)
                 await state.update_data(worms=worms)
 
                 if worms > 0:
