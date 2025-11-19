@@ -5,7 +5,5 @@ from aiogram.types import Message
 
 
 class WebAppDataFilter(Filter):
-    async def __call__(self, message: Message, **kwargs) -> bool | dict[str, Any]:
-        return (
-            dict(web_app_data=message.web_app_data) if message.web_app_data else False
-        )
+    async def __call__(self, message: Message) -> bool | dict[str, Any]:
+        return {"web_app_data": message.web_app_data} if message.web_app_data else False
