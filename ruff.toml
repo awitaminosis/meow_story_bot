@@ -87,7 +87,8 @@ lint.ignore = [
 
     'S104',
     'BLE001',
-    'RUF001'
+    'RUF001',
+    'RUF003'
 ]
 
 [lint.isort]

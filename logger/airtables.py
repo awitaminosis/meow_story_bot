@@ -1,7 +1,7 @@
+import datetime
 import json
 import logging
 import traceback
-from datetime import datetime
 
 import requests
 from decouple import config
@@ -24,8 +24,8 @@ class AirtableHandler(logging.Handler):
         }
 
     def control_records_count(self):
-        response = requests.get(self.url, headers=self.headers)
-        if response.status_code == 200:
+        response = requests.get(self.url, headers=self.headers, timeout=10)
+        if response.status_code == 200:  # noqa: PLR2004
             records = json.loads(response.text)["records"]
 
             if len(records) > self.OLD_RECORDS_DELETE_THRESHOLD:
@@ -38,9 +38,9 @@ class AirtableHandler(logging.Handler):
             url = f"{self.url}/{record_id}"
             headers = self.headers
 
-            response = requests.delete(url, headers=headers)
+            response = requests.delete(url, headers=headers, timeout=10)
 
-            if response.status_code == 200:
+            if response.status_code == 200:  # noqa: PLR2004
                 print(f"Deleted record {record_id}")
             else:
                 print(
@@ -54,25 +54,27 @@ class AirtableHandler(logging.Handler):
         data = {
             "fields": {
                 "Level": record.levelname,
-                "Timestamp": datetime.utcnow().isoformat(),
+                "Timestamp": datetime.datetime.now(tz=datetime.UTC).isoformat(),
                 "Filename": record.filename,
                 "Function": record.funcName,
                 "Lineno": str(record.lineno),
                 "Message": log_entry + traceback.format_exc(),
             }
         }
-        response = requests.post(self.url, headers=self.headers, data=json.dumps(data))
-        if response.status_code != 200:
+        response = requests.post(
+            self.url, headers=self.headers, data=json.dumps(data), timeout=10
+        )
+        if response.status_code != 200:  # noqa: PLR2004
             print(f"Failed to send log to Airtable: {response.text}")
 
 
 def setup_logger():
-    AIRTABlES_API_KEY = config("AIRTABlES_API_KEY")
-    AIRTABlES_BASE_ID = config("AIRTABlES_BASE_ID")
-    AIRTABlES_TABLE_NAME = config("AIRTABlES_TABLE_NAME")
+    airtables_api_key = config("AIRTABlES_API_KEY")
+    airtables_base_id = config("AIRTABlES_BASE_ID")
+    airtables_table_name = config("AIRTABlES_TABLE_NAME")
 
     airtable_handler = AirtableHandler(
-        AIRTABlES_API_KEY, AIRTABlES_BASE_ID, AIRTABlES_TABLE_NAME
+        airtables_api_key, airtables_base_id, airtables_table_name
     )
     # formatter = logging.Formatter('%(levelname)s - %(name)s - %(funcName)s - %(lineno)s - %(message)s')
     formatter = logging.Formatter("%(message)s")
