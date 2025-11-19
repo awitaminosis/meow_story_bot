@@ -18,20 +18,17 @@ class Location:
         for place, place_text, keyboard_type, condition, extra in self.can_reach:
             if extra.get("coords", None) is not None:
                 x, y = extra["coords"]
-                place += f"__{x},{y}"
+                place += f"__{x},{y}"  # noqa: PLW2901
             elif extra.get("action", None) is not None:
                 action = extra["action"]
-                place += f"--{action}"
+                place += f"--{action}"  # noqa: PLW2901
             if condition:
-                if await condition(self.location, state):
-                    if keyboard_type == "inline":
-                        builder.row(
-                            InlineKeyboardButton(text=place_text, callback_data=place)
-                        )
+                if await condition(self.location, state) and keyboard_type == "inline":
+                    builder.row(
+                        InlineKeyboardButton(text=place_text, callback_data=place)
+                    )
             elif keyboard_type == "inline":
-                builder.row(
-                    InlineKeyboardButton(text=place_text, callback_data=place)
-                )
+                builder.row(InlineKeyboardButton(text=place_text, callback_data=place))
         keyboard = builder.as_markup()
         return keyboard
 
