@@ -18,15 +18,21 @@ from places.states.conditions import Transitions
 
 class Load(LocationCallbackQuery):
     location = "load"
-    can_reach = [
-        ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
-        ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
-        ("go_fishing", t_go_fishing, "inline", "", {}),
-        ("feed_hedgehog", t_feed_hedgehog, "inline", Transitions.can_feed_hedgehog, {}),
-        ("mouse_give_quest", t_mouse_quest, "inline", "", {}),
-    ]
 
     def __init__(self, controller):
+        self.can_reach = [
+            ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
+            ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
+            ("go_fishing", t_go_fishing, "inline", "", {}),
+            (
+                "feed_hedgehog",
+                t_feed_hedgehog,
+                "inline",
+                Transitions.can_feed_hedgehog,
+                {},
+            ),
+            ("mouse_give_quest", t_mouse_quest, "inline", "", {}),
+        ]
         super().__init__(self.location, controller)
 
     async def handler(self, message: Message, state: FSMContext):
@@ -53,5 +59,5 @@ class Load(LocationCallbackQuery):
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
-    async def filter(self, F):
+    async def filter(self, F):  #TODO
         return F.data == "Загрузить"
