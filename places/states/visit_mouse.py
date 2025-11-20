@@ -17,22 +17,34 @@ from places.states.conditions import Transitions
 
 class VisitMouse(LocationCallbackQuery):
     location = "visit_mouse"
-    can_reach = [
-        # ('tiger_home', t_go_to_tiger_home, 'inline', '', {}),
-        ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
-        ("go_fishing", t_go_fishing, "inline", "", {}),
-        ("feed_hedgehog", t_feed_hedgehog, "inline", Transitions.can_feed_hedgehog, {}),
-        (
-            "mouse_give_quest",
-            t_mouse_quest,
-            "inline",
-            Transitions.mouse_not_missing,
-            {},
-        ),
-        ("night_forest", t_night_forest, "inline", Transitions.mouse_is_missing, {}),
-    ]
 
     def __init__(self, controller):
+        self.can_reach = [
+            # ('tiger_home', t_go_to_tiger_home, 'inline', '', {}),
+            ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
+            ("go_fishing", t_go_fishing, "inline", "", {}),
+            (
+                "feed_hedgehog",
+                t_feed_hedgehog,
+                "inline",
+                Transitions.can_feed_hedgehog,
+                {},
+            ),
+            (
+                "mouse_give_quest",
+                t_mouse_quest,
+                "inline",
+                Transitions.mouse_not_missing,
+                {},
+            ),
+            (
+                "night_forest",
+                t_night_forest,
+                "inline",
+                Transitions.mouse_is_missing,
+                {},
+            ),
+        ]
         super().__init__(self.location, controller)
 
     async def handler(self, message: Message, state: FSMContext):
@@ -59,7 +71,7 @@ class VisitMouse(LocationCallbackQuery):
                         "У куста барбариса Мышки нет. На земле лежит несколько надгрызанных ягод. И видны следы, уходящие в направлении берёзовой рощицы. Там Мышка собирает опавшую бересту. Она замечает Тигра и Ёжика, и приветственно машет им лапкой"
                     ],
                 )
-            elif mouse_quest_level == 2:
+            elif mouse_quest_level == 2:    #noqa: PLR2004
                 await say(
                     bot,
                     chat_id,
@@ -67,8 +79,8 @@ class VisitMouse(LocationCallbackQuery):
                         "Тигр и Ёжик при входе в лес слышат какие-то звуки лёгких ударов. Они идут на звук. Оказывается в ближайшем ельнике Мышка чеканит мячик ракеткой"
                     ],
                 )
-            elif mouse_quest_level == 3:
-                if mouse_owl_story_stage != 4:
+            elif mouse_quest_level == 3:    #noqa: PLR2004
+                if mouse_owl_story_stage != 4:  #noqa: PLR2004
                     await say(
                         bot,
                         chat_id,
@@ -146,7 +158,7 @@ class VisitMouse(LocationCallbackQuery):
                     )
                     mouse_quest_level = 4
                     await state.update_data(mouse_quest_level=mouse_quest_level)
-            if mouse_quest_level != 3:
+            if mouse_quest_level != 3:  #noqa: PLR2004
                 await m_say(bot, chat_id, ["Привет, Тигр. Привет, Ёжик."])
                 menu_kb = ReplyKeyboardMarkup(
                     keyboard=[
@@ -160,7 +172,7 @@ class VisitMouse(LocationCallbackQuery):
                     text="Я сейчас гуляю с книжкой - могу записать приключение",
                     reply_markup=menu_kb,
                 )
-            if mouse_quest_level == 3:
+            if mouse_quest_level == 3:  #noqa: PLR2004
                 menu_kb = ReplyKeyboardMarkup(
                     keyboard=[
                         [KeyboardButton(text="Инвентарь")],
@@ -182,5 +194,5 @@ class VisitMouse(LocationCallbackQuery):
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
-    async def filter(self, F):
+    async def filter(self, F):  # TODO
         return F.data == self.location
