@@ -15,7 +15,7 @@ class News(LocationMessage):
     def __init__(self, controller):
         super().__init__(self.location, controller)
 
-    async def handler(self, message: Message, state: FSMContext):
+    async def handler(self, message: Message, state: FSMContext):  # TODO
         try:
             chat_id = message.chat.id
             news = [
@@ -40,5 +40,5 @@ class News(LocationMessage):
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
-    async def filter(self, F):
+    async def filter(self, F):  # TODO
         return F.text == "Что нового?"
