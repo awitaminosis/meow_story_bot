@@ -63,5 +63,5 @@ class Inventory(LocationMessage):
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
-    async def filter(self, F):
+    async def filter(self, F):  # TODO
         return F.text == "Инвентарь"

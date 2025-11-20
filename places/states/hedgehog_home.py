@@ -60,5 +60,5 @@ class HedgehogHome(LocationCallbackQuery):
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
-    async def filter(self, F):  #TODO
+    async def filter(self, F):  # TODO
         return F.data == self.location
