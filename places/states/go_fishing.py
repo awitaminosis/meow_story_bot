@@ -16,17 +16,29 @@ from places.states.conditions import Transitions
 
 class GoFishing(LocationCallbackQuery):
     location = "go_fishing"
-    can_reach = [
-        ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
-        # ('hedgehog_home', t_go_to_hedgehog_home, 'inline', '', {}),
-        ("go_fishing_in_pool", t_go_fish_in_pool, "inline", Transitions.can_fish, {}),
-        ("go_fishing_in_river", t_go_fish_in_river, "inline", Transitions.can_fish, {}),
-        ("go_fishing_in_sea", t_go_fish_in_sea, "inline", Transitions.can_fish, {}),
-        # ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest, {}),
-        # ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog, {}),
-    ]
 
     def __init__(self, controller):
+        self.can_reach = [
+            ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
+            # ('hedgehog_home', t_go_to_hedgehog_home, 'inline', '', {}),
+            (
+                "go_fishing_in_pool",
+                t_go_fish_in_pool,
+                "inline",
+                Transitions.can_fish,
+                {},
+            ),
+            (
+                "go_fishing_in_river",
+                t_go_fish_in_river,
+                "inline",
+                Transitions.can_fish,
+                {},
+            ),
+            ("go_fishing_in_sea", t_go_fish_in_sea, "inline", Transitions.can_fish, {}),
+            # ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest, {}),
+            # ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog, {}),
+        ]
         super().__init__(self.location, controller)
 
     async def handler(self, message: Message, state: FSMContext):
@@ -78,5 +90,5 @@ class GoFishing(LocationCallbackQuery):
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
-    async def filter(self, F):
+    async def filter(self, F):  # TODO
         return F.data == self.location
