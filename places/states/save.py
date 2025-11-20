@@ -18,15 +18,21 @@ from places.states.conditions import Transitions
 
 class Save(LocationMessage):
     location = "save"
-    can_reach = [
-        ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
-        ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
-        ("go_fishing", t_go_fishing, "inline", "", {}),
-        ("feed_hedgehog", t_feed_hedgehog, "inline", Transitions.can_feed_hedgehog, {}),
-        ("mouse_give_quest", t_mouse_quest, "inline", "", {}),
-    ]
 
     def __init__(self, controller):
+        self.can_reach = [
+            ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
+            ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
+            ("go_fishing", t_go_fishing, "inline", "", {}),
+            (
+                "feed_hedgehog",
+                t_feed_hedgehog,
+                "inline",
+                Transitions.can_feed_hedgehog,
+                {},
+            ),
+            ("mouse_give_quest", t_mouse_quest, "inline", "", {}),
+        ]
         super().__init__(self.location, controller)
 
     async def handler(self, message: Message, state: FSMContext):
@@ -38,7 +44,7 @@ class Save(LocationMessage):
                 chat_id, state, message.chat.first_name, message.chat.full_name
             )
             await say(bot, chat_id, ["Тигр начинает записывать приключение..."])
-            if mouse_quest_level != 3:
+            if mouse_quest_level != 3:  # noqa: PLR2004
                 await h_say(
                     bot,
                     chat_id,
@@ -73,5 +79,5 @@ class Save(LocationMessage):
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
-    async def filter(self, F):
+    async def filter(self, F):  # TODO
         return F.text == "Сохранить"
