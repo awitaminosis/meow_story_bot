@@ -15,14 +15,14 @@ from places.states.conditions import Transitions
 
 class TigerHomeLocation(LocationCallbackQuery):
     location = "tiger_home"
-    can_reach = [
-        ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
-        ("go_fishing", t_go_fishing, "inline", "", {}),
-        ("take_the_rods", t_take_the_rods, "inline", Transitions.can_take_rods, {}),
-        # ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest, {}),
-    ]
 
     def __init__(self, controller):
+        self.can_reach = [
+            ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
+            ("go_fishing", t_go_fishing, "inline", "", {}),
+            ("take_the_rods", t_take_the_rods, "inline", Transitions.can_take_rods, {}),
+            # ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest, {}),
+        ]
         super().__init__(self.location, controller)
 
     async def handler(self, message: Message, state: FSMContext):
@@ -45,5 +45,5 @@ class TigerHomeLocation(LocationCallbackQuery):
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
-    async def filter(self, F):
+    async def filter(self, F):  # TODO
         return F.data == self.location
