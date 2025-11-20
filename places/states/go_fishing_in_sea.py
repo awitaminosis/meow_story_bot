@@ -14,15 +14,21 @@ from places.states.conditions import Transitions
 
 class GoFishingInSea(LocationCallbackQuery):
     location = "go_fishing_in_sea"
-    can_reach = [
-        ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
-        # ('hedgehog_home', t_go_to_hedgehog_home, 'inline', '', {}),
-        ("go_fishing", t_go_fishing, "inline", "", {}),
-        # ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest, {}),
-        ("feed_hedgehog", t_feed_hedgehog, "inline", Transitions.can_feed_hedgehog, {}),
-    ]
 
     def __init__(self, controller):
+        self.can_reach = [
+            ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
+            # ('hedgehog_home', t_go_to_hedgehog_home, 'inline', '', {}),
+            ("go_fishing", t_go_fishing, "inline", "", {}),
+            # ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest, {}),
+            (
+                "feed_hedgehog",
+                t_feed_hedgehog,
+                "inline",
+                Transitions.can_feed_hedgehog,
+                {},
+            ),
+        ]
         super().__init__(self.location, controller)
 
     async def handler(self, message: Message, state: FSMContext):
@@ -37,7 +43,7 @@ class GoFishingInSea(LocationCallbackQuery):
             mouse_quest_level = state_data.get("mouse_quest_level", 0)
 
             # действует ли ограничение?
-            if fishing_range == sea_range and mouse_quest_level < 2:
+            if fishing_range == sea_range and mouse_quest_level < 2:  # noqa: PLR2004
                 await state.update_data(location="fishing_go_fishing_requisites_ok")
                 await bot.send_message(
                     chat_id=chat_id,
@@ -64,5 +70,5 @@ class GoFishingInSea(LocationCallbackQuery):
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
-    async def filter(self, F):
+    async def filter(self, F):  # TODO
         return F.data == self.location
