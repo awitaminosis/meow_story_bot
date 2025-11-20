@@ -16,15 +16,27 @@ from places.states.conditions import Transitions
 
 class WormsDig(LocationCallbackQuery):
     location = "worms_dig"
-    can_reach = [
-        ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
-        ("worms_dig", t_dig_for_worms, "inline", "", {}),
-        # ('go_fishing', t_go_fishing, 'inline', '', {}),
-        ("enter_forest", t_go_to_forest, "inline", Transitions.can_go_to_forest, {}),
-        ("feed_hedgehog", t_feed_hedgehog, "inline", Transitions.can_feed_hedgehog, {}),
-    ]
 
     def __init__(self, controller):
+        self.can_reach = [
+            ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
+            ("worms_dig", t_dig_for_worms, "inline", "", {}),
+            # ('go_fishing', t_go_fishing, 'inline', '', {}),
+            (
+                "enter_forest",
+                t_go_to_forest,
+                "inline",
+                Transitions.can_go_to_forest,
+                {},
+            ),
+            (
+                "feed_hedgehog",
+                t_feed_hedgehog,
+                "inline",
+                Transitions.can_feed_hedgehog,
+                {},
+            ),
+        ]
         super().__init__(self.location, controller)
 
     async def handler(self, message: Message, state: FSMContext):
@@ -54,5 +66,5 @@ class WormsDig(LocationCallbackQuery):
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
-    async def filter(self, F):
+    async def filter(self, F):  # TODO
         return F.data == self.location
