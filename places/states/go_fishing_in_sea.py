@@ -28,7 +28,6 @@ class GoFishingInSea(LocationCallbackQuery):
     async def handler(self, message: Message, state: FSMContext):
         try:
             chat_id = message.message.chat.id
-            global fishing_range
             fishing_range = sea_range
             await state.update_data(fishing_range=fishing_range)
             the_number = random.randint(1, fishing_range)
