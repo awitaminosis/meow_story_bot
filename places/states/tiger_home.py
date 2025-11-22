@@ -21,7 +21,6 @@ class TigerHomeLocation(LocationCallbackQuery):
             ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
             ("go_fishing", t_go_fishing, "inline", "", {}),
             ("take_the_rods", t_take_the_rods, "inline", Transitions.can_take_rods, {}),
-            # ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest, {}),
         ]
         super().__init__(self.location, controller)
 

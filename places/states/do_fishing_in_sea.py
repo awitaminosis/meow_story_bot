@@ -15,10 +15,7 @@ class DoFishingInSea(LocationWebApp):
     def __init__(self, controller):
         self.can_reach = [
             ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
-            # ('hedgehog_home', t_go_to_hedgehog_home, 'inline', '', {}),
             ("go_fishing", t_go_fishing, "inline", Transitions.can_fish, {}),
-            # ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest, {}),
-            # ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog, {}),
         ]
         super().__init__(self.location, controller)
 

@@ -21,7 +21,6 @@ class WormsDig(LocationCallbackQuery):
         self.can_reach = [
             ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
             ("worms_dig", t_dig_for_worms, "inline", "", {}),
-            # ('go_fishing', t_go_fishing, 'inline', '', {}),
             (
                 "enter_forest",
                 t_go_to_forest,

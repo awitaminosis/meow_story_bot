@@ -20,7 +20,6 @@ class GoFishing(LocationCallbackQuery):
     def __init__(self, controller):
         self.can_reach = [
             ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
-            # ('hedgehog_home', t_go_to_hedgehog_home, 'inline', '', {}),
             (
                 "go_fishing_in_pool",
                 t_go_fish_in_pool,
@@ -36,8 +35,6 @@ class GoFishing(LocationCallbackQuery):
                 {},
             ),
             ("go_fishing_in_sea", t_go_fish_in_sea, "inline", Transitions.can_fish, {}),
-            # ('enter_forest', t_go_to_forest, 'inline', Transitions.can_go_to_forest, {}),
-            # ('feed_hedgehog', t_feed_hedgehog, 'inline', Transitions.can_feed_hedgehog, {}),
         ]
         super().__init__(self.location, controller)
 

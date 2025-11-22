@@ -20,7 +20,6 @@ class VisitMouse(LocationCallbackQuery):
 
     def __init__(self, controller):
         self.can_reach = [
-            # ('tiger_home', t_go_to_tiger_home, 'inline', '', {}),
             ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
             ("go_fishing", t_go_fishing, "inline", "", {}),
             (
