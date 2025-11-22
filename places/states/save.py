@@ -79,5 +79,5 @@ class Save(LocationMessage):
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
-    async def filter(self, F):  # TODO
-        return F.text == "Сохранить"
+    async def filter(self, message):
+        return message.text == "Сохранить"
