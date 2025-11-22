@@ -11,7 +11,6 @@ from helper.texts import (
 )
 from logger.airtables import logger
 from places.states.base import LocationCallbackQuery
-from places.states.conditions import Transitions
 
 
 class GoFishing(LocationCallbackQuery):
@@ -20,21 +19,9 @@ class GoFishing(LocationCallbackQuery):
     def __init__(self, controller):
         self.can_reach = [
             ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
-            (
-                "go_fishing_in_pool",
-                t_go_fish_in_pool,
-                "inline",
-                Transitions.can_fish,
-                {},
-            ),
-            (
-                "go_fishing_in_river",
-                t_go_fish_in_river,
-                "inline",
-                Transitions.can_fish,
-                {},
-            ),
-            ("go_fishing_in_sea", t_go_fish_in_sea, "inline", Transitions.can_fish, {}),
+            ("go_fishing_in_pool", t_go_fish_in_pool, "inline", "can_fish", {}),
+            ("go_fishing_in_river", t_go_fish_in_river, "inline", "can_fish", {}),
+            ("go_fishing_in_sea", t_go_fish_in_sea, "inline", "can_fish", {}),
         ]
         super().__init__(self.location, controller)
 

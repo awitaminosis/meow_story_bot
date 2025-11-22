@@ -13,7 +13,6 @@ from helper.texts import (
 )
 from logger.airtables import logger
 from places.states.base import LocationMessage
-from places.states.conditions import Transitions
 
 
 class Save(LocationMessage):
@@ -25,13 +24,7 @@ class Save(LocationMessage):
             ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
             ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
             ("go_fishing", t_go_fishing, "inline", "", {}),
-            (
-                "feed_hedgehog",
-                t_feed_hedgehog,
-                "inline",
-                Transitions.can_feed_hedgehog,
-                {},
-            ),
+            ("feed_hedgehog", t_feed_hedgehog, "inline", "can_feed_hedgehog", {}),
             ("mouse_give_quest", t_mouse_quest, "inline", "", {}),
         ]
         super().__init__(self.location, controller)

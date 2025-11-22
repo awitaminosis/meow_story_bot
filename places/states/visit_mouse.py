@@ -12,7 +12,6 @@ from helper.texts import (
 )
 from logger.airtables import logger
 from places.states.base import LocationCallbackQuery
-from places.states.conditions import Transitions
 
 
 class VisitMouse(LocationCallbackQuery):
@@ -22,27 +21,9 @@ class VisitMouse(LocationCallbackQuery):
         self.can_reach = [
             ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
             ("go_fishing", t_go_fishing, "inline", "", {}),
-            (
-                "feed_hedgehog",
-                t_feed_hedgehog,
-                "inline",
-                Transitions.can_feed_hedgehog,
-                {},
-            ),
-            (
-                "mouse_give_quest",
-                t_mouse_quest,
-                "inline",
-                Transitions.mouse_not_missing,
-                {},
-            ),
-            (
-                "night_forest",
-                t_night_forest,
-                "inline",
-                Transitions.mouse_is_missing,
-                {},
-            ),
+            ("feed_hedgehog", t_feed_hedgehog, "inline", "can_feed_hedgehog", {}),
+            ("mouse_give_quest", t_mouse_quest, "inline", "mouse_not_missing", {}),
+            ("night_forest", t_night_forest, "inline", "mouse_is_missing", {}),
         ]
         super().__init__(self.location, controller)
 

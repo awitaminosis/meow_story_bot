@@ -1,7 +1,7 @@
 from aiogram.fsm.context import FSMContext
 from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
-
+from places.states.conditions import Transitions
 from helper.app import dp
 
 
@@ -23,7 +23,10 @@ class Location:
                 action = extra["action"]
                 place += f"--{action}"  # noqa: PLW2901
             if condition:
-                if await condition(state, self.location) and keyboard_type == "inline":
+                if (
+                    await Transitions.check(condition, state, self.location)
+                    and keyboard_type == "inline"
+                ):
                     builder.row(
                         InlineKeyboardButton(text=place_text, callback_data=place)
                     )

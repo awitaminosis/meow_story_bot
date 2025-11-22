@@ -6,7 +6,6 @@ from helper.funcs import add_fish, maybe_eat_worms
 from helper.texts import t_go_fishing, t_go_to_tiger_home
 from logger.airtables import logger
 from places.states.base import LocationWebApp
-from places.states.conditions import Transitions
 
 
 class DoFishingInSea(LocationWebApp):
@@ -15,7 +14,7 @@ class DoFishingInSea(LocationWebApp):
     def __init__(self, controller):
         self.can_reach = [
             ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
-            ("go_fishing", t_go_fishing, "inline", Transitions.can_fish, {}),
+            ("go_fishing", t_go_fishing, "inline", "can_fish", {}),
         ]
         super().__init__(self.location, controller)
 

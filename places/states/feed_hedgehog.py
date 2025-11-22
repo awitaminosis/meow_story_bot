@@ -6,7 +6,6 @@ from helper.funcs import feed_hedgehog_level, t_say
 from helper.texts import t_feed_hedgehog, t_go_to_hedgehog_home, t_go_to_tiger_home
 from logger.airtables import logger
 from places.states.base import LocationCallbackQuery
-from places.states.conditions import Transitions
 
 
 class FeedHedgehog(LocationCallbackQuery):
@@ -16,13 +15,7 @@ class FeedHedgehog(LocationCallbackQuery):
         self.can_reach = [
             ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
             ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
-            (
-                "feed_hedgehog",
-                t_feed_hedgehog,
-                "inline",
-                Transitions.can_feed_hedgehog,
-                {},
-            ),
+            ("feed_hedgehog", t_feed_hedgehog, "inline", "can_feed_hedgehog", {}),
         ]
         super().__init__(self.location, controller)
 

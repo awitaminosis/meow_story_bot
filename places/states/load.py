@@ -13,24 +13,15 @@ from helper.texts import (
 )
 from logger.airtables import logger
 from places.states.base import LocationCallbackQuery
-from places.states.conditions import Transitions
 
 
 class Load(LocationCallbackQuery):
-    location = "load"
-
     def __init__(self, controller):
         self.can_reach = [
             ("tiger_home", t_go_to_tiger_home, "inline", "", {}),
             ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
             ("go_fishing", t_go_fishing, "inline", "", {}),
-            (
-                "feed_hedgehog",
-                t_feed_hedgehog,
-                "inline",
-                Transitions.can_feed_hedgehog,
-                {},
-            ),
+            ("feed_hedgehog", t_feed_hedgehog, "inline", "can_feed_hedgehog", {}),
             ("mouse_give_quest", t_mouse_quest, "inline", "", {}),
         ]
         super().__init__(self.location, controller)
@@ -61,3 +52,5 @@ class Load(LocationCallbackQuery):
 
     async def filter(self, callback_query):
         return callback_query.data == "Загрузить"
+
+    location = "load"

@@ -6,7 +6,6 @@ from helper.funcs import say
 from helper.texts import t_go_to_hedgehog_home, t_visit_mouse
 from logger.airtables import logger
 from places.states.base import LocationCallbackQuery
-from places.states.conditions import Transitions
 
 
 class EnterForest(LocationCallbackQuery):
@@ -15,7 +14,7 @@ class EnterForest(LocationCallbackQuery):
     def __init__(self, controller):
         self.can_reach = [
             ("hedgehog_home", t_go_to_hedgehog_home, "inline", "", {}),
-            ("visit_mouse", t_visit_mouse, "inline", Transitions.can_visit_mouse, {}),
+            ("visit_mouse", t_visit_mouse, "inline", "can_visit_mouse", {}),
         ]
         super().__init__(self.location, controller)
 
