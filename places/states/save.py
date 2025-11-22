@@ -18,6 +18,7 @@ from places.states.conditions import Transitions
 
 class Save(LocationMessage):
     location = "save"
+    filter_activation_text = "Сохранить"
 
     def __init__(self, controller):
         self.can_reach = [
@@ -78,6 +79,3 @@ class Save(LocationMessage):
             )
         except Exception as e:
             logger.error(f"An error occurred: {e}")
-
-    async def filter(self, message):
-        return message.text == "Сохранить"

@@ -11,6 +11,7 @@ from places.states.base import LocationMessage
 
 class News(LocationMessage):
     location = "news"
+    filter_activation_text = "Что нового?"
 
     def __init__(self, controller):
         super().__init__(self.location, controller)
@@ -39,6 +40,3 @@ class News(LocationMessage):
             await say(bot, chat_id, [a_news])
         except Exception as e:
             logger.error(f"An error occurred: {e}")
-
-    async def filter(self, message):
-        return message.text == "Что нового?"

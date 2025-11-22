@@ -50,6 +50,9 @@ class LocationMessage(Location):
     def register(self):
         dp.message.register(self.handler, self.filter)
 
+    async def filter(self, message):
+        return message.text == self.filter_activation_text
+
 
 class LocationWebApp(Location):
     def register(self):

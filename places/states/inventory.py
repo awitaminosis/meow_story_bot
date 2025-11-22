@@ -9,6 +9,7 @@ from places.states.base import LocationMessage
 
 class Inventory(LocationMessage):
     location = "load"
+    filter_activation_text = "Инвентарь"
 
     def __init__(self, controller):
         super().__init__(self.location, controller)
@@ -62,6 +63,3 @@ class Inventory(LocationMessage):
                 await say(bot, chat_id, ["Пока что пусто"])
         except Exception as e:
             logger.error(f"An error occurred: {e}")
-
-    async def filter(self, message):
-        return message.text == "Инвентарь"
