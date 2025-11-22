@@ -23,7 +23,7 @@ class Location:
                 action = extra["action"]
                 place += f"--{action}"  # noqa: PLW2901
             if condition:
-                if await condition(self.location, state) and keyboard_type == "inline":
+                if await condition(state, self.location) and keyboard_type == "inline":
                     builder.row(
                         InlineKeyboardButton(text=place_text, callback_data=place)
                     )
