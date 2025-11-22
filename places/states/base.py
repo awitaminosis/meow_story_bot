@@ -37,6 +37,9 @@ class LocationCallbackQuery(Location):
     def register(self):
         dp.callback_query.register(self.handler, self.filter)
 
+    async def filter(self, callback_query):
+        return callback_query.data == self.location
+
 
 class LocationCommand(Location):
     def register(self):

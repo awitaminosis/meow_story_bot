@@ -65,6 +65,3 @@ class WormsDig(LocationCallbackQuery):
             )
         except Exception as e:
             logger.error(f"An error occurred: {e}")
-
-    async def filter(self, callback_query):
-        return callback_query.data == self.location
