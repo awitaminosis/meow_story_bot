@@ -16,7 +16,7 @@ class News(LocationMessage):
     def __init__(self, controller):
         super().__init__(self.location, controller)
 
-    async def handler(self, message: Message, state: FSMContext):  # TODO
+    async def handler(self, message: Message):
         try:
             chat_id = message.chat.id
             news = [

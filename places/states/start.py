@@ -20,7 +20,7 @@ class Start(LocationCommand):
         ]
         super().__init__(self.location, controller)
 
-    async def handler(self, message: Message, state: FSMContext):
+    async def handler(self, message: Message):
         try:
             chat_id = message.chat.id
             await say(
