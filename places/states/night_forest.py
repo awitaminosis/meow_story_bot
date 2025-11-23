@@ -4,20 +4,30 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import KeyboardButton, Message, ReplyKeyboardMarkup, WebAppInfo
 
 from helper.app import bot
+from helper.coords import coords
 from helper.funcs import h_say, hw_say, say, t_say
 from logger.airtables import logger
 from places.states.base import LocationCallbackQuery
+
+
+# карта https://github.com/awitaminosis/meow_story_bot/blob/main/docs/map.png
 
 
 class NightForest(LocationCallbackQuery):
     MAP_URL = "https://awitaminosis.github.io/meow_story_bot/night_forest_map.html"
     location = "night_forest"
     can_reach = [
-        ("night_forest", "пойти на север", "inline", "", {"coords": (3, 3)}),
+        (
+            "night_forest",
+            "пойти на север",
+            "inline",
+            "",
+            {"coords": (coords.NIGHT_FOREST_EXIT_X, coords.NIGHT_FOREST_EXIT_Y)},
+        ),
         ("night_forest", "осмотреться", "inline", "", {"action": "lookup"}),
     ]
-    x = 3
-    y = 2
+    x = coords.NIGHT_FOREST_START_X
+    y = coords.NIGHT_FOREST_START_Y
     previous_coords = None
     map = dict()
     WORMS_MAX_BREADCRUMBS = 20
@@ -111,8 +121,8 @@ class NightForest(LocationCallbackQuery):
         except Exception as e:
             logger.error(f"An error occurred: {e}")
 
-    async def filter(self, F):
-        return self.location in F.data
+    async def filter(self, callback_query):
+        return self.location in callback_query.data
 
     async def update_reachable_coords(self, x, y, state, chat_id, is_lookup):
         new_x = int(x)
@@ -124,7 +134,10 @@ class NightForest(LocationCallbackQuery):
             self.x = new_x
             self.y = new_y
             self.previous_coords = (self.x, self.y)
-            if self.x == 3 and self.y == 2:
+            if (
+                self.x == coords.NIGHT_FOREST_START_X
+                and self.y == coords.NIGHT_FOREST_START_Y
+            ):
                 # вход в лес - можно только вверх
                 self.can_reach = [
                     (
@@ -142,7 +155,10 @@ class NightForest(LocationCallbackQuery):
                 if not is_lookup:
                     worms = worms - random.randint(1, self.WORMS_MAX_BREADCRUMBS)
                 if worms > 0:
-                    if self.x == 8 and self.y == 1:
+                    if (
+                        self.x == coords.CAVE_MUSHROOMS_X
+                        and self.y == coords.CAVE_MUSHROOMS_Y
+                    ):
                         # из пещеры прямого хода на болото нет
                         self.can_reach = [
                             (
@@ -225,8 +241,8 @@ class NightForest(LocationCallbackQuery):
                     self.can_reach = [
                         ("visit_mouse", "назад из тёмного леса", "inline", "", {}),
                     ]
-                    self.x = 3
-                    self.y = 2
+                    self.x = coords.NIGHT_FOREST_START_X
+                    self.y = coords.NIGHT_FOREST_START_Y
                     return "Нам нужно подготовиться получше"
                 await state.update_data(worms=worms)
         else:
@@ -237,7 +253,7 @@ class NightForest(LocationCallbackQuery):
         state_data = await state.get_data()
         glowing_mushroom = state_data.get("glowing_mushroom")
         key = "light" if glowing_mushroom else "dark"
-        if x == 8 and y == 1:
+        if x == coords.CAVE_MUSHROOMS_X and y == coords.CAVE_MUSHROOMS_Y:
             if not glowing_mushroom:
                 await state.update_data(glowing_mushroom=True)
                 await h_say(
@@ -247,7 +263,7 @@ class NightForest(LocationCallbackQuery):
                         "Тигр, осторожно! Давай лучше я понесу этот гриб - он может быть червивым. Зато нам теперь виднее будет!"
                     ],
                 )
-        if x == 6 and y == 9:
+        if x == coords.BALL_X and y == coords.BALL_Y:
             # мячик
             state_data = await state.get_data()
             mouse_owl_story_stage = state_data.get("mouse_owl_story_stage", 0)
@@ -275,7 +291,7 @@ class NightForest(LocationCallbackQuery):
                 await t_say(bot, chat_id, ["Что бы это всё могло значить?"])
                 mouse_owl_story_stage = 3
                 await state.update_data(mouse_owl_story_stage=mouse_owl_story_stage)
-        if x == 10 and y == 9:
+        if x == coords.OWL_X and y == coords.OWL_Y:
             # Сова
             state_data = await state.get_data()
             mouse_owl_story_stage = state_data.get("mouse_owl_story_stage", 0)
@@ -443,21 +459,24 @@ class NightForest(LocationCallbackQuery):
             self.map[place] = {"refuse": owl_refusal}
 
         # закрытые локации
-        self.map["0,5"]["refuse"] = (
-            "Дальше начинается пустыня. Пока что там, видимо, пыльная буря - потому что завывает ветер, секут песчинки, и дорога туда сейчас совершенно не видима"
-        )
-        self.map["6,0"]["refuse"] = (
-            "Громко квакают лягушки, шуршит болотная трава, раздаётся протяжный крик выпи, как бы говорящий, что на болото ночью идти не надо"
-        )
-        self.map["8,11"]["refuse"] = (
-            "Тропка далее поведёт к горам. Но сейчас туда не добраться - путь перегородило огроменное бревно - ни обойти, ни перелезть"
-        )
+        self.map["0,5"][
+            "refuse"
+        ] = "Дальше начинается пустыня. Пока что там, видимо, пыльная буря - потому что завывает ветер, секут песчинки, и дорога туда сейчас совершенно не видима"
+        self.map["6,0"][
+            "refuse"
+        ] = "Громко квакают лягушки, шуршит болотная трава, раздаётся протяжный крик выпи, как бы говорящий, что на болото ночью идти не надо"
+        self.map["8,11"][
+            "refuse"
+        ] = "Тропка далее поведёт к горам. Но сейчас туда не добраться - путь перегородило огроменное бревно - ни обойти, ни перелезть"
 
         for i in range(1, 11):
             for j in range(1, 11):
                 key = f"{i},{j}"
                 if not self.map.get(key):
-                    if i < 4 and j < 3:
+                    if (
+                        i < coords.LOOK_NIGHT_FOREST_ENTRY_X
+                        and j < coords.LOOK_NIGHT_FOREST_ENTRY_Y
+                    ):
                         # рядом со входом в лес
                         passable = [
                             (
@@ -477,7 +496,10 @@ class NightForest(LocationCallbackQuery):
                                 "Наверняка Мышка где-то далеко",
                             ),
                         ]
-                    elif i in [5, 6] and j < 3:
+                    elif (
+                        coords.LOOK_SWAMP_X_MIN <= i <= coords.LOOK_SWAMP_X_MAX
+                        and j < coords.LOOK_SWAMP_Y
+                    ):
                         # рядом со входом на болото
                         passable = [
                             (
@@ -513,7 +535,7 @@ class NightForest(LocationCallbackQuery):
                                 "Мышка ягоды то любит, но тут ягоды выглядят не тронутыми",
                             ),
                         ]
-                    elif i > 6 and j == 3:
+                    elif i > coords.CAVE_MAW_X and j == coords.CAVE_MAW_Y:
                         # рядом со входом в пещеру
                         passable = [
                             (
@@ -534,7 +556,7 @@ class NightForest(LocationCallbackQuery):
                                 "Ёжик, а вот эта пещера поблизости - она не от того, что ты червей копать пытался?",
                             ),
                         ]
-                    elif i >= 8 and j <= 2:
+                    elif i >= coords.INSIDE_CAVE_X and j <= coords.INSIDE_CAVE_Y:
                         # в пещере
                         passable = [
                             (
@@ -555,7 +577,12 @@ class NightForest(LocationCallbackQuery):
                                 "Видимо в пещере дотаточная сырость и вообще нужный климат, чтобы там могли расти светящиеся грибы",
                             ),
                         ]
-                    elif i >= 8 and j in [4, 5, 6]:
+                    elif (
+                        i >= coords.HEDGEHOG_HOUSE_X
+                        and coords.HEDGEHOG_HOUSE_Y_MIN
+                        <= j
+                        <= coords.HEDGEHOG_HOUSE_Y_MAX
+                    ):
                         # пень для Ежа и корабль
                         passable = [
                             (
@@ -568,7 +595,10 @@ class NightForest(LocationCallbackQuery):
                             ),
                             ("", ""),
                         ]
-                    elif i in [5, 6] and j in [4, 5, 6]:
+                    elif (
+                        coords.MOUSE_HOUSE_X_MIN <= i <= coords.MOUSE_HOUSE_X_MAX
+                        and coords.MOUSE_HOUSE_Y_MIN <= j <= coords.MOUSE_HOUSE_Y_MAX
+                    ):
                         # рядом с Мышкиным домиком
                         passable = [
                             ("", "Это место однозначно приглянулось Мышке"),
@@ -593,7 +623,10 @@ class NightForest(LocationCallbackQuery):
                                 "А тут Мышка, вероятно качели когда-то собралась приделать",
                             ),
                         ]
-                    elif i in [1, 2] and j in [4, 5, 6]:
+                    elif (
+                        coords.DESERT_X_MIN <= i <= coords.DESERT_X_MAX
+                        and coords.DESERT_Y_MIN <= j <= coords.DESERT_Y_MAX
+                    ):
                         # у входа в пустыню
                         passable = [
                             ("", "Следы заметает песком"),
@@ -610,7 +643,9 @@ class NightForest(LocationCallbackQuery):
                                 "Следов Мышки нет. Да тут вообще следы быстро заметает.",
                             ),
                         ]
-                    elif i in [2, 3] and j >= 7:
+                    elif (
+                        coords.SEA_X_MIN <= i <= coords.SEA_X_MAX and j >= coords.SEA_Y
+                    ):
                         # у моря
                         passable = [
                             ("", "Тут слышен морской, рыбный прибой"),
@@ -626,7 +661,7 @@ class NightForest(LocationCallbackQuery):
                                 "Сомнительно, что Мышку сюда могло приманить. Тут скорее Тигра приманит",
                             ),
                         ]
-                    elif i >= 4 and j == 7:
+                    elif i >= coords.NORTHERN_ROAD_X and j == coords.NORTHERN_ROAD_Y:
                         # северная дорога
                         passable = [
                             (
@@ -649,7 +684,12 @@ class NightForest(LocationCallbackQuery):
                                 "Старнно, деревья тут, в основном, лиственные, а на земле кое-где хвоя валяется",
                             ),
                         ]
-                    elif i in [4, 5, 6] and j in [8, 9]:
+                    elif (
+                        coords.BALL_VICINITY_X_MIN <= i <= coords.BALL_VICINITY_X_MAX
+                        and coords.BALL_VICINITY_Y_MIN
+                        <= j
+                        <= coords.BALL_VICINITY_Y_MAX
+                    ):
                         # рядом с мячиком
                         passable = [
                             (
@@ -665,7 +705,7 @@ class NightForest(LocationCallbackQuery):
                             ("", "Тут что-то катилось. И это был не Ёжик"),
                             ("", "Хммм... Перья?"),
                         ]
-                    elif i >= 4 and j == 10:
+                    elif i >= coords.MOUNTAIN_SPURS_X and j == coords.MOUNTAIN_SPURS_Y:
                         # у отрогов гор
                         passable = [
                             ("", "Тут проходит старая дорожка у отогов северных гор"),
@@ -684,7 +724,10 @@ class NightForest(LocationCallbackQuery):
                             ),
                             ("", "Идёт снег..."),
                         ]
-                    elif i >= 8 and j in [8, 9]:
+                    elif (
+                        i >= coords.OWL_VICINITY_X
+                        and coords.OWL_VICINITY_Y_MIN <= j <= coords.OWL_VICINITY_Y_MAX
+                    ):
                         # рядом с Совой
                         passable = [
                             ("", "На земле валяется множество птичьих перьев"),
@@ -723,6 +766,9 @@ class NightForest(LocationCallbackQuery):
             # светло - можно всё рассмотреть
             return None
         # недостаточно светло - далеко не уйти
-        if new_y <= 3 or (new_y <= 6 and new_x >= 7):
+
+        if new_y <= coords.DARK_LINE_BASE_Y or (
+            new_y <= coords.DARK_LINE_SQARE_Y and new_x >= coords.DARK_LINE_SQARE_X
+        ):
             return None
         return "Пожалуй одной только удочки для освещения не хватит. Без какого-то дополнительного источника освещения далеко не уйти"
