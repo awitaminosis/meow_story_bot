@@ -6,9 +6,9 @@ from aiogram.types import KeyboardButton, Message, ReplyKeyboardMarkup, WebAppIn
 from helper.app import bot
 from helper.coords import Coords
 from helper.funcs import h_say, hw_say, say, t_say
+from helper.texts import NightForestTexts as NF  # noqa: N814
 from logger.airtables import logger
 from places.states.base import LocationCallbackQuery
-
 
 # карта https://github.com/awitaminosis/meow_story_bot/blob/main/docs/map.png
 
@@ -16,31 +16,32 @@ from places.states.base import LocationCallbackQuery
 class NightForest(LocationCallbackQuery):
     MAP_URL = "https://awitaminosis.github.io/meow_story_bot/night_forest_map.html"
     location = "night_forest"
-    can_reach = [
-        (
-            "night_forest",
-            "пойти на север",
-            "inline",
-            "",
-            {"coords": (Coords.NIGHT_FOREST_EXIT_X, Coords.NIGHT_FOREST_EXIT_Y)},
-        ),
-        ("night_forest", "осмотреться", "inline", "", {"action": "lookup"}),
-    ]
-    x = Coords.NIGHT_FOREST_START_X
-    y = Coords.NIGHT_FOREST_START_Y
-    previous_coords = None
-    map = dict()
+
     WORMS_MAX_BREADCRUMBS = 20
 
-    # обычное перемещение
-    step_phrases = [
-        "В лесу темно",
-        "Эх, поскорее бы Мышку найти",
-        "Что это хрустнуло!? А, ничего страшного, это прсто Ёжик хрустит червяками...",
-        "Мышка, ты где!?",
-    ]
-
     def __init__(self, controller):
+        self.can_reach = [
+            (
+                "night_forest",
+                "пойти на север",
+                "inline",
+                "",
+                {"coords": (Coords.NIGHT_FOREST_EXIT_X, Coords.NIGHT_FOREST_EXIT_Y)},
+            ),
+            ("night_forest", "осмотреться", "inline", "", {"action": "lookup"}),
+        ]
+        self.x = Coords.NIGHT_FOREST_START_X
+        self.y = Coords.NIGHT_FOREST_START_Y
+        self.previous_coords = None
+        self.map = {}
+        # обычное перемещение
+        self.step_phrases = [
+            "В лесу темно",
+            "Эх, поскорее бы Мышку найти",
+            "Что это хрустнуло!? А, ничего страшного, это прсто Ёжик хрустит червяками...",
+            "Мышка, ты где!?",
+        ]
+
         super().__init__(self.location, controller)
         self.construct_map()
 
@@ -241,7 +242,8 @@ class NightForest(LocationCallbackQuery):
                 await state.update_data(worms=worms)
         else:
             self.x, self.y = self.previous_coords
-            return refuse
+
+        return refuse
 
     async def lookup(self, x, y, state, bot, chat_id):
         state_data = await state.get_data()
@@ -275,7 +277,7 @@ class NightForest(LocationCallbackQuery):
                 )
                 mouse_owl_story_stage = 1
                 await state.update_data(mouse_owl_story_stage=mouse_owl_story_stage)
-            if mouse_owl_story_stage == 2:
+            if mouse_owl_story_stage == 2:  # noqa: PLR2004
                 self.map["6,9"] = {
                     "refuse": "",
                     "dark": "",
@@ -311,7 +313,7 @@ class NightForest(LocationCallbackQuery):
                 await h_say(bot, chat_id, ["Интересно, куда Сова полетела?"])
                 mouse_owl_story_stage = 2
                 await state.update_data(mouse_owl_story_stage=mouse_owl_story_stage)
-            if mouse_owl_story_stage == 3:
+            if mouse_owl_story_stage == 3:  # noqa: PLR2004
                 self.map["10,9"] = {
                     "refuse": "",
                     "dark": "",
@@ -384,33 +386,27 @@ class NightForest(LocationCallbackQuery):
             },
         }
 
-        # impassible
-        border_text = "Нет, что-то подсказывает, что Мышка сейчас туда точно не могла пойти. И мы сейчас туда тоже не пойдём."
-        entrance_refusal = "Вокруг этой части леса колючие ветки растут слишком густо - лучше не сходить с тропы"
-        swamp_refusal = "Воздух пронизан болотными миазмами. Ночью тут лучше не ходить несмотря на зазывающий звон комаров"
-        cave_refusal = "Хвойные породы деревьев тут с трудом цепляются за обветренные развалы горной породы. Интерено, как они получают нужную воду. Быть может где-то рядом пещера"
-        desert_refusal = "Тут возвышаются наносы барханов из ближайшей пустыни. Днём они обжигающе горячие, а ночью так же обжгающе холодные"
-        mouse_new_house_refusal = "Эти деревья, перемежающиеся кустами и клочками воздеываемых грядок, наверняка пиглянулись Мышке для постройки там её домика. Не будем топтать"
-        hedgehog_new_house_refusal = "В окрестностях этой местности маячит силуэт огромного трухлявого пня. Ёжик заинтересовано фыркает и принюхивается. Тигр, ходи аккуратнее, не распугай личинок и жучков, возможно я туда свой домик перенесу"
-        ship_refusal = "Повсюду раскиданы карты, гербарии, рисунки скрещённых костей и черепа. Карамба, что-то не хочется туда идти"
-        tiger_new_house_refusal = "Вдали слышится шум прибоя, а также плеск волн и рыбы. Пожалуй это удобное место, чтобы тут мог обосноваться Тигр - думает Тигр. Ёжик замечает размышления Тигра о постройке домика у моря и предлагает не отвлекаться"
-        ball_refusal = "Тут повсюду деревья с очень густыми ветками"
-        owl_refusal = "В эти деревья идти совершенно не хочется. Они какие-то неправильные. Даже эхо в них раздаётся какое-то угукающее"
+        self.construct_map_border_refuse()
+        self.construct_map_blocked_refuse()
+        self.construct_map_location_closed_yet()
+        self.construct_map_passable()
 
+    def construct_map_border_refuse(self):
         for i in range(1, 11):
             self.map[str(f"0,{i}")] = {
-                "refuse": border_text,
+                "refuse": NF.border_text,
             }
             self.map[str(f"11,{i}")] = {
-                "refuse": border_text,
+                "refuse": NF.border_text,
             }
             self.map[str(f"{i},0")] = {
-                "refuse": border_text,
+                "refuse": NF.border_text,
             }
             self.map[str(f"{i},11")] = {
-                "refuse": border_text,
+                "refuse": NF.border_text,
             }
 
+    def construct_map_blocked_refuse(self):  # noqa: C901
         blocked_around_entrance = ["2,1", "2,2", "3,1", "4,1", "4,2"]
         blocked_around_swamp = ["7,1", "6,2", "7,2"]
         blocked_around_cave = ["8,2", "10,2"]
@@ -431,26 +427,27 @@ class NightForest(LocationCallbackQuery):
         blocked_around_owl = ["9,10", "10,10", "10,8"]
 
         for place in blocked_around_entrance:
-            self.map[place] = {"refuse": entrance_refusal}
+            self.map[place] = {"refuse": NF.entrance_refusal}
         for place in blocked_around_swamp:
-            self.map[place] = {"refuse": swamp_refusal}
+            self.map[place] = {"refuse": NF.swamp_refusal}
         for place in blocked_around_cave:
-            self.map[place] = {"refuse": cave_refusal}
+            self.map[place] = {"refuse": NF.cave_refusal}
         for place in blocked_around_desert:
-            self.map[place] = {"refuse": desert_refusal}
+            self.map[place] = {"refuse": NF.desert_refusal}
         for place in blocked_around_mouse_new_house:
-            self.map[place] = {"refuse": mouse_new_house_refusal}
+            self.map[place] = {"refuse": NF.mouse_new_house_refusal}
         for place in blocked_around_hedgehog_new_house:
-            self.map[place] = {"refuse": hedgehog_new_house_refusal}
+            self.map[place] = {"refuse": NF.hedgehog_new_house_refusal}
         for place in blocked_around_ship_house:
-            self.map[place] = {"refuse": ship_refusal}
+            self.map[place] = {"refuse": NF.ship_refusal}
         for place in blocked_around_tiger_new_house:
-            self.map[place] = {"refuse": tiger_new_house_refusal}
+            self.map[place] = {"refuse": NF.tiger_new_house_refusal}
         for place in blocked_around_ball:
-            self.map[place] = {"refuse": ball_refusal}
+            self.map[place] = {"refuse": NF.ball_refusal}
         for place in blocked_around_owl:
-            self.map[place] = {"refuse": owl_refusal}
+            self.map[place] = {"refuse": NF.owl_refusal}
 
+    def construct_map_location_closed_yet(self):
         # закрытые локации
         self.map["0,5"][
             "refuse"
@@ -462,261 +459,49 @@ class NightForest(LocationCallbackQuery):
             "refuse"
         ] = "Тропка далее поведёт к горам. Но сейчас туда не добраться - путь перегородило огроменное бревно - ни обойти, ни перелезть"
 
+    def construct_map_passable(self):  # noqa: PLR0912, C901
         for i in range(1, 11):
             for j in range(1, 11):
                 key = f"{i},{j}"
                 if not self.map.get(key):
                     if Coords.is_night_forest_entry(i, j):
                         # рядом со входом в лес
-                        passable = [
-                            (
-                                "В этой части леса деревья густые и тропки труднопроходимы",
-                                "Хорошо, что Ёжик отмечает дорогу, иначе вернуться к их домикам было бы сложно. Есть в этом какое-то очарование",
-                            ),
-                            (
-                                "Тропки тут едва хожены",
-                                "Из следов на лесной подстилке тут видно только червяков",
-                            ),
-                            (
-                                "Отсюда виднеется дорожка, по которой они попали в эту часть леса.",
-                                "Эты часть леса выглядит симпатичнее. Вероятно тут им всем понравится",
-                            ),
-                            (
-                                "Мышки поблизости не видно",
-                                "Наверняка Мышка где-то далеко",
-                            ),
-                        ]
+                        passable = NF.get_passable_for_entry()
                     elif Coords.is_swamp(i, j):
                         # рядом со входом на болото
-                        passable = [
-                            (
-                                "В воздухе писутствуют болотные миазмы",
-                                "В воздухе писутствуют болотные миазмы - это потому что рядом болото",
-                            ),
-                            (
-                                "Тут туча комаров",
-                                "Тут туча комаров. Чуть дальше слышны лягушки. Какие-то мелкие болотные птицы",
-                            ),
-                            (
-                                "Хлюп!",
-                                "Если тут и были Мышкины следы, то они бы уже давно затянулись",
-                            ),
-                            (
-                                "Под ногами что-о извивается",
-                                "Ёжик, тут копать нет смысла - Мышки тут нет, тут только мотыль",
-                            ),
-                            (
-                                "Вокруг растёт камыш",
-                                "Стена камыша выглядит очень камышово. А кое-где выглядывает осока",
-                            ),
-                            (
-                                "Интересно, тут есть рыба?",
-                                "Тигр, тут нет смысла светить удочкой в воду - Мышки тут нет, там только рыба",
-                            ),
-                            (
-                                "Ой, почва тут не надёжна",
-                                "По бокам тропы видно много вкусных болотных ягод",
-                            ),
-                            (
-                                "Мокро",
-                                "Мышка ягоды то любит, но тут ягоды выглядят не тронутыми",
-                            ),
-                        ]
+                        passable = NF.get_passable_for_swamp()
                     elif Coords.is_cave_maw(i, j):
                         # рядом со входом в пещеру
-                        passable = [
-                            (
-                                "Камни, камни, нет камней, опять камни",
-                                "Кварц, известняк, песчаник, дыра, песчаник, кварц",
-                            ),
-                            (
-                                "С одной стороны шумят деревья, с другой стороны не шумят камни",
-                                "Напротив сплошного древесного массива, массив камня, в котором виднеется дырка",
-                            ),
-                            (
-                                "А может это Мышка дыру в песчанике прогрызла?",
-                                "После тщательного исследования Ёжик утверждает что края пещеры совершенно не прогрызаны",
-                            ),
-                            ("Эхо!", "Эхо!!"),
-                            (
-                                "Есть тут кто-нибудь?",
-                                "Ёжик, а вот эта пещера поблизости - она не от того, что ты червей копать пытался?",
-                            ),
-                        ]
+                        passable = NF.get_passable_for_cave_maw()
                     elif Coords.is_inside_cave(i, j):
                         # в пещере
-                        passable = [
-                            (
-                                "Прохладно",
-                                "Кап-кап-кап. Вроде не видно, а по звуку - где-то должно быть подземное озеро",
-                            ),
-                            ("Это сталагмит?", "Нет, это сталактит"),
-                            (
-                                "Пол тут твёрдый, каменный",
-                                "На таком полу не могло остаться никаких следов. Вот-вот, знаешь сколько червей требуется, чтобы надёжно пометить дорогу?!",
-                            ),
-                            (
-                                "Интересно, но чем глубже в пещеру тем становистя светлее",
-                                "Тигр, похоже в пещере есть какой-то источник освещения!",
-                            ),
-                            (
-                                "В пещере что-то явно светится. Может фонарик Мышки?",
-                                "Видимо в пещере дотаточная сырость и вообще нужный климат, чтобы там могли расти светящиеся грибы",
-                            ),
-                        ]
+                        passable = NF.get_passable_for_inside_cave()
                     elif Coords.is_hedgehog_house(i, j):
                         # пень для Ежа и корабль
-                        passable = [
-                            (
-                                "Ого, какой огромный силуэт пня видно издалека",
-                                "Ого, какой огромный пень видно издалека",
-                            ),
-                            (
-                                "Отличное место для зимовки. Ёжик, сейчас не время для этого!",
-                                "Отличное место для зимовки. Ёжик, сейчас не время для этого!",
-                            ),
-                            ("", ""),
-                        ]
+                        passable = NF.get_passable_for_hedgehog_house()
                     elif Coords.is_mouse_house(i, j):
                         # рядом с Мышкиным домиком
-                        passable = [
-                            ("", "Это место однозначно приглянулось Мышке"),
-                            (
-                                "",
-                                "В кустах лежат инструменты, записки, какие-то заметки - Мышка явно собирается обустраиваться где-то поблизости",
-                            ),
-                            (
-                                "",
-                                "Тут много следов Мышки. Она явно тут много ходила. Пожалуй даже слишком много следов - не разобраться",
-                            ),
-                            (
-                                "",
-                                "Интересно, а на огороде у Мышки компостная яма есть?",
-                            ),
-                            (
-                                "",
-                                "Хм... морковная грядка. А когда идёшь рядом - какое-то эхо снизу гулко раздаётся",
-                            ),
-                            (
-                                "",
-                                "А тут Мышка, вероятно качели когда-то собралась приделать",
-                            ),
-                        ]
+                        passable = NF.get_passable_for_mouse_house()
                     elif Coords.is_desert(i, j):
                         # у входа в пустыню
-                        passable = [
-                            ("", "Следы заметает песком"),
-                            ("", "С запада дует сильный песчаный суховей"),
-                            (
-                                "",
-                                "Хорошо, что сейчас ночь, а то тут столько песка, который намекает из пустыни, что западнее... -  было бы очень горячо",
-                            ),
-                            ("", "Деревья тут чахлые, пескоустойчивые"),
-                            ("", "Ёжик, ты же вроде песчаные замки любил делать..."),
-                            ("", "Ёжик, а ты червей не потеряешь в этом песке?"),
-                            (
-                                "",
-                                "Следов Мышки нет. Да тут вообще следы быстро заметает.",
-                            ),
-                        ]
+                        passable = NF.get_passable_for_desert()
                     elif Coords.is_sea(i, j):
                         # у моря
-                        passable = [
-                            ("", "Тут слышен морской, рыбный прибой"),
-                            ("", "Пожалуй, тут будет хорошее место для домика Тигра"),
-                            ("", "Интересно, а рыба тут есть?"),
-                            ("", "Тут снуют крабы"),
-                            (
-                                "",
-                                'Ёжик, смотри: "Тут был Тигр". Как где? Да вот - я только что написал',
-                            ),
-                            (
-                                "",
-                                "Сомнительно, что Мышку сюда могло приманить. Тут скорее Тигра приманит",
-                            ),
-                        ]
+                        passable = NF.get_passable_for_sea()
                     elif Coords.is_northern_road(i, j):
                         # северная дорога
-                        passable = [
-                            (
-                                "",
-                                "Деревья образуют нечто вроде коридора и тут постоянно дует холодный ветер",
-                            ),
-                            ("", "Кажется Мышка тут вполне могла пройти"),
-                            (
-                                "",
-                                "Ветер заметает следы. И Мышкиных следов тут как раз не видно. Всё сходится!",
-                            ),
-                            (
-                                "",
-                                "Если тут постоянно дует ветер, то почему на земле постоянно валяются листья?",
-                            ),
-                            ("", "Ёжик, а червей не сдует?"),
-                            ("", "Ветер свистит в снастях Тигровой удочки"),
-                            (
-                                "",
-                                "Старнно, деревья тут, в основном, лиственные, а на земле кое-где хвоя валяется",
-                            ),
-                        ]
+                        passable = NF.get_passable_for_northern_road()
                     elif Coords.is_ball_vicinity(i, j):
                         # рядом с мячиком
-                        passable = [
-                            (
-                                "",
-                                "Если приглядеться, то кое-где в кронах деревьев видна дырка",
-                            ),
-                            (
-                                "",
-                                "Местность в окрестностях образует нечто вроде амфитеатра с понижением в центре. Там, недалеко, почти виднеется пенёк",
-                            ),
-                            ("", "На земле валяются сбитые ветки"),
-                            ("", "Очень много следов. Всё затоптано"),
-                            ("", "Тут что-то катилось. И это был не Ёжик"),
-                            ("", "Хммм... Перья?"),
-                        ]
+                        passable = NF.get_passable_for_ball_vicinity()
                     elif Coords.is_mountain_spur(i, j):
                         # у отрогов гор
-                        passable = [
-                            ("", "Тут проходит старая дорожка у отогов северных гор"),
-                            ("", "Холодно тут"),
-                            (
-                                "",
-                                "Холодно и сырость, в воздухе. Интересно, Мышка могла заинтересоваться этой доржкой - тут всё-таки СЫРо?",
-                            ),
-                            (
-                                "",
-                                "О, а вон снеговичок. А, нет - это просто на Ёжика кухта упала",
-                            ),
-                            (
-                                "",
-                                "Следов Мышки тут не было. Если только не выпал свежий снег",
-                            ),
-                            ("", "Идёт снег..."),
-                        ]
+                        passable = NF.get_passable_for_mountain_spur()
                     elif Coords.is_owl_vicinity(i, j):
                         # рядом с Совой
-                        passable = [
-                            ("", "На земле валяется множество птичьих перьев"),
-                            ("", "Мышка сюда вот точно не хотела бы идти"),
-                            (
-                                "",
-                                "Откуда-то из ветвей рядом раздаётся хищный угукающий клёкот",
-                            ),
-                            (
-                                "",
-                                "Ёжик, ты же не боишься Совы? Это хорошо. Также хорошо, что и я её не боюсь. Хорошо, что мы Сову не боимся. Но на всякий случай держись рядом со мной",
-                            ),
-                            ("", "Эх, а Мышка то Сову боится"),
-                            (
-                                "",
-                                "Судя по тому, что видно на земле, где-то рядом обитает хищная Сова",
-                            ),
-                        ]
+                        passable = NF.get_passable_for_owl_vicinity()
                     else:
-                        passable = [
-                            ("пусто", "совсем пусто"),
-                            ("тут ничего нет", "ничего интересного тут не видно"),
-                        ]
+                        passable = NF.get_passable_default()
 
                     self.map[key] = {
                         "refuse": "",
